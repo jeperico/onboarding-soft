@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suite Store PDV - Products</title>
+  </head>
+  <body>
+    <header>
+      <h1>Products</h1>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">History</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <!-- Base form -->
+      <form>
+        <div>
+          <label for="product">Product name</label>
+          <input type="text" name="product" id="product" />
+        </div>
+        <div>
+          <label for="amount">Amount</label>
+          <input type="number" name="amount" id="amount" />
+        </div>
+        <div>
+          <label for="price">Unit price</label>
+          <input type="number" name="price" id="price" />
+        </div>
+        <div>
+          <label for="category">Category</label>
+          <select name="category" id="category"></select>
+        </div>
+        <button type="submit">Add Product</button>
+      </form>
+      <!-- Base Table -->
+      <table>
+        <thead>
+          <th>Code</th>
+          <th>Product</th>
+          <th>Amount</th>
+          <th>Unit price</th>
+          <th>Category</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>001</td>
+            <td>Rice</td>
+            <td>10</td>
+            <td>20.00</td>
+            <td>Food</td>
+            <td>
+              <button>Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>
