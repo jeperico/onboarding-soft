@@ -30,5 +30,6 @@
 
 - id: int
 - product_id: uuid fk(products)
+- state: 'active' | 'deleted' | 'bought'
 - amount: int
 - created_at: date
