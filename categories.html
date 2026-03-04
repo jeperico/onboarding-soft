@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suite Store PDV - Categories</title>
+  </head>
+  <body>
+    <header>
+      <h1>Categories</h1>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">History</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <!-- Base form -->
+      <form>
+        <div>
+          <label for="category">Category name</label>
+          <input type="text" name="category" id="category" />
+        </div>
+        <div>
+          <label for="tax">Tax</label>
+          <input type="number" name="tax" id="tax" />
+        </div>
+        <button type="submit">Add Category</button>
+      </form>
+      <!-- Base Table -->
+      <table>
+        <thead>
+          <th>Code</th>
+          <th>Category</th>
+          <th>Tax</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>001</td>
+            <td>Food</td>
+            <td>10%</td>
+            <td>
+              <button>Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>
