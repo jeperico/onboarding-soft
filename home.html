@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Suite Store PDV</title>
     <link rel="stylesheet" href="./assets/styles/base.css" />
+    <link rel="stylesheet" href="./assets/styles/header.css" />
+    <link rel="stylesheet" href="./assets/styles/main.css" />
   </head>
   <body>
     <header>
@@ -39,44 +41,49 @@
         </div>
         <button type="submit">Add Product</button>
       </form>
-      <!-- Base Table -->
-      <table>
-        <thead>
-          <th>Product</th>
-          <th>Tax</th>
-          <th>Unit price</th>
-          <th>Amount</th>
-          <th>Total</th>
-          <th></th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Rice</td>
-            <td>$2.00</td>
-            <td>$20.0</td>
-            <td>2</td>
-            <td>40.00</td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- Finish buy form -->
-      <form action="">
-        <div>
-          <label for="total-tax">Tax</label>
-          <input type="number" name="total-tax" id="total-tax" disabled />
-        </div>
-        <div>
-          <label for="total">Total</label>
-          <input type="number" name="total" id="total" disabled />
-        </div>
-        <div>
-          <button>Cancel</button>
-          <button type="submit">Finish</button>
-        </div>
-      </form>
+      <!-- Cart Division -->
+      <div>
+        <!-- Base Table -->
+        <table>
+          <thead>
+            <th>Product</th>
+            <th>Tax</th>
+            <th>Unit price</th>
+            <th>Amount</th>
+            <th>Total</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rice</td>
+              <td>$2.00</td>
+              <td>$20.0</td>
+              <td>2</td>
+              <td>40.00</td>
+              <td>
+                <button>Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Horizontal Line -->
+        <span id="horizontal-line"></span>
+        <!-- Finish buy form -->
+        <form action="">
+          <div>
+            <label for="total-tax">Tax</label>
+            <input type="number" name="total-tax" id="total-tax" disabled />
+          </div>
+          <div>
+            <label for="total">Total</label>
+            <input type="number" name="total" id="total" disabled />
+          </div>
+          <div>
+            <button>Cancel</button>
+            <button type="submit">Finish</button>
+          </div>
+        </form>
+      </div>
     </main>
   </body>
 </html>

@@ -1,0 +1,28 @@
+:root {
+  /* PRIMITIVE COLORS */
+  --blue: #424874;
+  --gray: #dcd6f7;
+  --light: #faf5fa;
+  --dark: #020122;
+
+  /* SEMANTIC COLORS */
+  --background: #faf5fa;
+  --background-navbar: #424874;
+  --foreground: #020122;
+  --foreground-navbar: #dcd6f7;
+  --button: #424874;
+  --button-cancel: #dcd6f7;
+}
+
+main {
+  display: flex;
+  justify-content: space-between;
+  min-width: 1240px;
+  width: 72%;
+  margin: auto;
+  background-color: chocolate;
+}
+
+#horizontal-line {
+  display: block;
+}

@@ -1,16 +1,17 @@
 :root {
   /* PRIMITIVE COLORS */
-  --blue: #6a65ff;
-  --gray: #c5c5c5;
+  --blue: #424874;
+  --gray: #dcd6f7;
   --light: #faf5fa;
   --dark: #020122;
 
   /* SEMANTIC COLORS */
-  --button: #6a65ff;
-  --foreground-navbar: #6a65ff;
-  --button-cancel: #c5c5c5;
   --background: #faf5fa;
+  --background-navbar: #424874;
   --foreground: #020122;
+  --foreground-navbar: #dcd6f7;
+  --button: #424874;
+  --button-cancel: #dcd6f7;
 }
 
 * {
@@ -58,5 +59,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: bolder;
+  font-weight: 700;
+}
+
+a {
+  text-decoration: none;
+  color: var(--foreground);
 }
