@@ -1,0 +1,62 @@
+:root {
+  /* PRIMITIVE COLORS */
+  --blue: #6a65ff;
+  --gray: #c5c5c5;
+  --light: #faf5fa;
+  --dark: #020122;
+
+  /* SEMANTIC COLORS */
+  --button: #6a65ff;
+  --foreground-navbar: #6a65ff;
+  --button-cancel: #c5c5c5;
+  --background: #faf5fa;
+  --foreground: #020122;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin: 0.75em 0;
+}
+
+h3 {
+  font-size: 1.17em;
+  margin: 0.83em 0;
+}
+
+h5 {
+  font-size: 0.83em;
+  margin: 1.5em 0;
+}
+
+h6 {
+  font-size: 0.75em;
+  margin: 1.67em 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bolder;
+}
