@@ -1,3 +1,4 @@
+/* COLOR VARIABLES */
 :root {
   /* PRIMITIVE COLORS */
   --blue: #424874;
@@ -18,6 +19,7 @@
   --border-button: var(--dark);
 }
 
+/* BASE HTML CONFIGURATION */
 * {
   padding: 0;
   margin: 0;
@@ -29,12 +31,42 @@
 
 body {
   background-color: var(--background);
-  color: var(--foreground);
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
+/* IMPORTANT CONTAINERS */
+header {
+  background-color: var(--background-navbar);
+  color: var(--foreground-navbar);
+  height: 4rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  gap: 3rem;
+}
+
+main {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1240px;
+  width: 92%;
+  height: 100%;
+  margin: 2rem auto;
+}
+
+section {
+  width: 100%;
+  height: 100%;
+  margin: 2rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADINGS & TEXTS */
 h1 {
   font-size: 2em;
   margin: 0.67em 0;
@@ -66,15 +98,20 @@ h3,
 h4,
 h5,
 h6 {
+  color: var(--foreground);
   font-weight: 700;
 }
 
-a {
-  text-decoration: none;
+p {
   color: var(--foreground);
 }
 
-/* UTILITIES */
+a {
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+/* UTILITIES CLASSES */
 .font-bold {
   font-weight: 700;
 }
