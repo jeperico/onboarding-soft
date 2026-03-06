@@ -38,24 +38,10 @@ header {
 
 /* HOME */
 #home-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
   & > :nth-child(2) {
     display: grid;
     grid-template-columns: 5fr 2fr 3fr;
     gap: 0.5rem;
-  }
-}
-
-#home-table {
-  & th,
-  & td {
-    &:first-child {
-      width: 60%;
-      min-width: 80px;
-    }
   }
 }
 
@@ -92,5 +78,14 @@ header {
     & button {
       width: 160px;
     }
+  }
+}
+
+/* PRODUCTS */
+#product-form {
+  & > div {
+    display: grid;
+    grid-template-columns: 6fr 4fr;
+    gap: 0.5rem;
   }
 }

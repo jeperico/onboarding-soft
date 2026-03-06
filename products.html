@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Suite Store PDV - Products</title>
+    <link rel="stylesheet" href="./assets/styles/base.css" />
+    <link rel="stylesheet" href="./assets/styles/components.css" />
+    <link rel="stylesheet" href="./assets/styles/main.css" />
   </head>
   <body>
     <header>
@@ -18,49 +21,76 @@
       </nav>
     </header>
     <main>
-      <!-- Base form -->
-      <form>
-        <div>
-          <label for="product">Product name</label>
-          <input type="text" name="product" id="product" />
-        </div>
-        <div>
-          <label for="amount">Amount</label>
-          <input type="number" name="amount" id="amount" />
-        </div>
-        <div>
-          <label for="price">Unit price</label>
-          <input type="number" name="price" id="price" />
-        </div>
-        <div>
-          <label for="category">Category</label>
-          <select name="category" id="category"></select>
-        </div>
-        <button type="submit">Add Product</button>
-      </form>
-      <!-- Base Table -->
-      <table>
-        <thead>
-          <th>Code</th>
-          <th>Product</th>
-          <th>Amount</th>
-          <th>Unit price</th>
-          <th>Category</th>
-          <th></th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>001</td>
-            <td>Rice</td>
-            <td>10</td>
-            <td>20.00</td>
-            <td>Food</td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <section>
+        <!-- Base form -->
+        <form id="product-form">
+          <div>
+            <select name="product" id="product" required>
+              <option value="" disabled selected hidden>Product</option>
+              <option value="">Coffee</option>
+              <option value="">Beans</option>
+              <option value="">Rice</option>
+            </select>
+            <input
+              type="number"
+              name="amount"
+              id="amount"
+              placeholder="Amount"
+              min="1"
+              step="1"
+              required
+            />
+          </div>
+          <div>
+            <select name="category" id="category" required>
+              <option value="" disabled selected hidden>Category</option>
+              <option value="">Coffee</option>
+              <option value="">Beans</option>
+              <option value="">Rice</option>
+            </select>
+            <input
+              type="number"
+              min="0"
+              name="price"
+              id="price"
+              placeholder="Price"
+              required
+            />
+          </div>
+
+          <button type="submit" class="button-primary">Add Product</button>
+        </form>
+      </section>
+      <!-- Horizontal Line -->
+      <span class="horizontal-line"></span>
+      <section>
+        <!-- Base Table -->
+        <table>
+          <thead>
+            <th class="font-bold">Code</th>
+            <th class="font-bold">Product</th>
+            <th class="font-bold">Amount</th>
+            <th class="font-bold">Unit price</th>
+            <th class="font-bold">Category</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>001</td>
+              <td>Rice</td>
+              <td>10</td>
+              <td>20.00</td>
+              <td>Food</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
   </body>
 </html>

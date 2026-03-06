@@ -26,6 +26,13 @@
   height: 100%;
 }
 
+/* FORM BASE */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 /* FORM INPUTS */
 select,
 input {
