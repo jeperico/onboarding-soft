@@ -6,12 +6,16 @@
   --dark: #020122;
 
   /* SEMANTIC COLORS */
-  --background: #faf5fa;
-  --background-navbar: #424874;
-  --foreground: #020122;
-  --foreground-navbar: #dcd6f7;
-  --button: #424874;
-  --button-cancel: #dcd6f7;
+  --background: var(--light);
+  --background-navbar: var(--blue);
+  --background-input: var(--gray);
+  --foreground: var(--dark);
+  --foreground-navbar: var(--gray);
+  --foreground-muted: var(--blue);
+  --button: var(--blue);
+  --button-cancel: var(--gray);
+  --border: var(--gray);
+  --border-button: var(--dark);
 }
 
 * {
@@ -26,6 +30,9 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 h1 {

@@ -22,25 +22,35 @@
     </header>
     <main>
       <!-- Base form -->
-      <form>
+      <form id="home-form">
+        <select name="product" id="product" required>
+          <option value="" disabled selected hidden>Product</option>
+          <option value="">Coffee</option>
+          <option value="">Beans</option>
+          <option value="">Rice</option>
+        </select>
         <div>
-          <label for="product">Product</label>
-          <select name="product" id="product"></select>
-        </div>
-        <div>
-          <label for="amount">Amount</label>
-          <input type="number" name="amount" id="amount" />
-        </div>
-        <div>
-          <label for="tax">Tax value</label>
-          <input type="number" name="tax" id="tax" disabled />
-        </div>
-        <div>
-          <label for="price">Unit price</label>
-          <input type="number" name="price" id="price" disabled />
+          <input
+            type="number"
+            name="amount"
+            id="amount"
+            placeholder="Amount"
+            min="1"
+            step="1"
+          />
+          <input type="number" min="1" name="tax" id="tax" placeholder="Tax" />
+          <input
+            type="number"
+            min="0"
+            name="price"
+            id="price"
+            placeholder="Price"
+          />
         </div>
         <button type="submit">Add Product</button>
       </form>
+      <!-- Horizontal Line -->
+      <span id="horizontal-line"></span>
       <!-- Cart Division -->
       <div>
         <!-- Base Table -->
@@ -66,8 +76,6 @@
             </tr>
           </tbody>
         </table>
-        <!-- Horizontal Line -->
-        <span id="horizontal-line"></span>
         <!-- Finish buy form -->
         <form action="">
           <div>
