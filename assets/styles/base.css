@@ -74,6 +74,7 @@ a {
   color: var(--foreground);
 }
 
+/* UTILITIES */
 .font-bold {
   font-weight: 700;
 }

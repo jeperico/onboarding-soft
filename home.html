@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Suite Store PDV</title>
     <link rel="stylesheet" href="./assets/styles/base.css" />
+    <link rel="stylesheet" href="./assets/styles/components.css" />
     <link rel="stylesheet" href="./assets/styles/header.css" />
     <link rel="stylesheet" href="./assets/styles/main.css" />
   </head>
@@ -54,21 +55,21 @@
               placeholder="Price"
             />
           </div>
-          <button type="submit">Add Product</button>
+          <button type="submit" class="button-primary">Add Product</button>
         </form>
       </section>
       <!-- Horizontal Line -->
-      <span id="horizontal-line"></span>
+      <span class="horizontal-line"></span>
       <!-- Cart Division -->
-      <section>
+      <section id="chart-section">
         <!-- Base Table -->
         <table id="home-table">
           <thead>
-            <th>Product</th>
-            <th>Tax</th>
-            <th>Price</th>
-            <th>Amount</th>
-            <th>Total</th>
+            <th class="font-bold">Product</th>
+            <th class="font-bold">Tax</th>
+            <th class="font-bold">Price</th>
+            <th class="font-bold">Amount</th>
+            <th class="font-bold">Total</th>
           </thead>
           <tbody>
             <tr>
@@ -77,6 +78,13 @@
               <td>$20.0</td>
               <td>2</td>
               <td>40.00</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
           </tbody>
         </table>
@@ -93,8 +101,8 @@
             </div>
           </div>
           <div>
-            <button>Cancel</button>
-            <button type="submit">Finish</button>
+            <button class="button-secondary">Cancel</button>
+            <button type="submit" class="button-primary">Finish</button>
           </div>
         </form>
       </section>

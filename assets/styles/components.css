@@ -1,0 +1,66 @@
+:root {
+  /* PRIMITIVE COLORS */
+  --blue: #424874;
+  --gray: #dcd6f7;
+  --light: #faf5fa;
+  --dark: #020122;
+
+  /* SEMANTIC COLORS */
+  --background: var(--light);
+  --background-navbar: var(--blue);
+  --background-input: var(--gray);
+  --foreground: var(--dark);
+  --foreground-navbar: var(--gray);
+  --foreground-muted: var(--blue);
+  --button: var(--blue);
+  --button-cancel: var(--gray);
+  --border: var(--gray);
+  --border-button: var(--dark);
+}
+
+.horizontal-line {
+  background-color: var(--border);
+  width: 0.25rem;
+  height: 100%;
+}
+
+/* FORM INPUTS */
+select,
+input {
+  width: 100%;
+  appearance: none;
+  background-color: var(--background-input);
+  color: var(--foreground-muted);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--input-border);
+  cursor: pointer;
+
+  &::placeholder {
+    color: var(--foreground-muted);
+  }
+  &:valid {
+    color: var(--foreground);
+  }
+  &:focus {
+    outline: 1px solid var(--input-border);
+  }
+}
+
+/* BUTTONS */
+button {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+}
+
+.button-primary {
+  background-color: var(--background-navbar);
+  color: var(--foreground-navbar);
+}
+.button-secondary {
+  background-color: var(--background-input);
+  color: var(--foreground);
+}
