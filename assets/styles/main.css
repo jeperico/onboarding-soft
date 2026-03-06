@@ -19,15 +19,20 @@
 }
 
 /* NAVBAR */
-nav > ul {
-  list-style-type: none;
-  display: flex;
-  gap: 1rem;
-
-  & a {
+header {
+  & h1 {
     color: var(--foreground-navbar);
-    font-weight: 600;
-    font-size: 1.25rem;
+  }
+  & ul {
+    list-style-type: none;
+    display: flex;
+    gap: 1rem;
+
+    & a {
+      color: var(--foreground-navbar);
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
   }
 }
 
@@ -39,8 +44,8 @@ nav > ul {
 
   & > :nth-child(2) {
     display: grid;
-    grid-template-columns: 6fr 2fr 3fr;
-    gap: 1rem;
+    grid-template-columns: 5fr 2fr 3fr;
+    gap: 0.5rem;
   }
 }
 
@@ -49,7 +54,7 @@ nav > ul {
   & td {
     &:first-child {
       width: 60%;
-      min-width: 200px;
+      min-width: 80px;
     }
   }
 }
