@@ -73,3 +73,7 @@ a {
   text-decoration: none;
   color: var(--foreground);
 }
+
+.font-bold {
+  font-weight: 700;
+}
