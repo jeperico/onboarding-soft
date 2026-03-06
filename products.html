@@ -25,12 +25,13 @@
         <!-- Base form -->
         <form id="product-form">
           <div>
-            <select name="product" id="product" required>
-              <option value="" disabled selected hidden>Product</option>
-              <option value="">Coffee</option>
-              <option value="">Beans</option>
-              <option value="">Rice</option>
-            </select>
+            <input
+              type="text"
+              name="product"
+              id="product"
+              required
+              placeholder="Product"
+            />
             <input
               type="number"
               name="amount"
@@ -53,6 +54,7 @@
               min="0"
               name="price"
               id="price"
+              step="0.1"
               placeholder="Price"
               required
             />
