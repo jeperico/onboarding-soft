@@ -37,12 +37,10 @@ header {
 }
 
 /* HOME */
-#home-form {
-  & > :nth-child(2) {
-    display: grid;
-    grid-template-columns: 5fr 2fr 3fr;
-    gap: 0.5rem;
-  }
+#home-form > :nth-child(2) {
+  display: grid;
+  grid-template-columns: 5fr 2fr 3fr;
+  gap: 0.5rem;
 }
 
 #chart-section {
@@ -82,10 +80,15 @@ header {
 }
 
 /* PRODUCTS */
-#product-form {
-  & > div {
-    display: grid;
-    grid-template-columns: 6fr 4fr;
-    gap: 0.5rem;
-  }
+#product-form > div {
+  display: grid;
+  grid-template-columns: 6fr 4fr;
+  gap: 0.5rem;
+}
+
+/* CATEGORIES */
+#category-form > div {
+  display: grid;
+  grid-template-columns: 6fr 4fr;
+  gap: 0.5rem;
 }

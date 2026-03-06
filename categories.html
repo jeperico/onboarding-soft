@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Suite Store PDV - Categories</title>
+    <link rel="stylesheet" href="./assets/styles/base.css" />
+    <link rel="stylesheet" href="./assets/styles/components.css" />
+    <link rel="stylesheet" href="./assets/styles/main.css" />
   </head>
   <body>
     <header>
@@ -18,37 +21,52 @@
       </nav>
     </header>
     <main>
-      <!-- Base form -->
-      <form>
-        <div>
-          <label for="category">Category name</label>
-          <input type="text" name="category" id="category" />
-        </div>
-        <div>
-          <label for="tax">Tax</label>
-          <input type="number" name="tax" id="tax" />
-        </div>
-        <button type="submit">Add Category</button>
-      </form>
+      <section>
+        <!-- Base form -->
+        <form id="category-form">
+          <div>
+            <select name="category" id="category" required>
+              <option value="" disabled selected hidden>Category</option>
+              <option value="">Coffee</option>
+              <option value="">Beans</option>
+              <option value="">Rice</option>
+            </select>
+            <input
+              type="number"
+              min="1"
+              name="tax"
+              id="tax"
+              placeholder="Tax"
+              required
+            />
+          </div>
+          <button type="submit" class="button-primary">Add Category</button>
+        </form>
+      </section>
+      <!-- Horizontal Line -->
+      <span class="horizontal-line"></span>
       <!-- Base Table -->
-      <table>
-        <thead>
-          <th>Code</th>
-          <th>Category</th>
-          <th>Tax</th>
-          <th></th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>001</td>
-            <td>Food</td>
-            <td>10%</td>
-            <td>
-              <button>Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <section>
+        <table>
+          <thead>
+            <th class="font-bold">Code</th>
+            <th class="font-bold">Category</th>
+            <th class="font-bold">Tax</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>001</td>
+              <td>Food</td>
+              <td>10%</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
   </body>
 </html>
