@@ -21,47 +21,54 @@
       </nav>
     </header>
     <main>
-      <!-- Base form -->
-      <form id="home-form">
-        <select name="product" id="product" required>
-          <option value="" disabled selected hidden>Product</option>
-          <option value="">Coffee</option>
-          <option value="">Beans</option>
-          <option value="">Rice</option>
-        </select>
-        <div>
-          <input
-            type="number"
-            name="amount"
-            id="amount"
-            placeholder="Amount"
-            min="1"
-            step="1"
-          />
-          <input type="number" min="1" name="tax" id="tax" placeholder="Tax" />
-          <input
-            type="number"
-            min="0"
-            name="price"
-            id="price"
-            placeholder="Price"
-          />
-        </div>
-        <button type="submit">Add Product</button>
-      </form>
+      <section>
+        <!-- Base form -->
+        <form id="home-form">
+          <select name="product" id="product" required>
+            <option value="" disabled selected hidden>Product</option>
+            <option value="">Coffee</option>
+            <option value="">Beans</option>
+            <option value="">Rice</option>
+          </select>
+          <div>
+            <input
+              type="number"
+              name="amount"
+              id="amount"
+              placeholder="Amount"
+              min="1"
+              step="1"
+            />
+            <input
+              type="number"
+              min="1"
+              name="tax"
+              id="tax"
+              placeholder="Tax"
+            />
+            <input
+              type="number"
+              min="0"
+              name="price"
+              id="price"
+              placeholder="Price"
+            />
+          </div>
+          <button type="submit">Add Product</button>
+        </form>
+      </section>
       <!-- Horizontal Line -->
       <span id="horizontal-line"></span>
       <!-- Cart Division -->
-      <div>
+      <section>
         <!-- Base Table -->
-        <table>
+        <table id="home-table">
           <thead>
             <th>Product</th>
             <th>Tax</th>
-            <th>Unit price</th>
+            <th>Price</th>
             <th>Amount</th>
             <th>Total</th>
-            <th></th>
           </thead>
           <tbody>
             <tr>
@@ -70,9 +77,6 @@
               <td>$20.0</td>
               <td>2</td>
               <td>40.00</td>
-              <td>
-                <button>Delete</button>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -91,7 +95,7 @@
             <button type="submit">Finish</button>
           </div>
         </form>
-      </div>
+      </section>
     </main>
   </body>
 </html>
