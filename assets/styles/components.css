@@ -60,7 +60,6 @@ button {
 /* TABLE COMPONENT */
 table {
   height: 100%;
-  position: relative;
   border-collapse: collapse;
   color: var(--foreground);
 
@@ -90,15 +89,11 @@ table {
     & .action-delete,
     & .action-view {
       visibility: hidden;
-      position: absolute;
-      right: 0;
-      transform: translateY(-1px);
     }
 
     & > tr:hover .action-delete,
     & > tr:hover .action-view {
       visibility: visible;
-      border: 0;
     }
   }
 }
