@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "outDir": "./assets/build", // Where .js files will go
+    "rootDir": "./assets", // Where your .ts files are
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["assets/**/*"],
+  "exclude": ["node_modules"]
+}
