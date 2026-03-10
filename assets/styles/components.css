@@ -87,14 +87,16 @@ table {
 
   tbody {
     /* ACTION DELETE BUTTON */
-    & .action-delete {
+    & .action-delete,
+    & .action-view {
       visibility: hidden;
       position: absolute;
       right: 0;
       transform: translateY(-1px);
     }
 
-    & > tr:hover .action-delete {
+    & > tr:hover .action-delete,
+    & > tr:hover .action-view {
       visibility: visible;
       border: 0;
     }
