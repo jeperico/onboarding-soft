@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./assets/styles/base.css" />
     <link rel="stylesheet" href="./assets/styles/components.css" />
     <link rel="stylesheet" href="./assets/styles/main.css" />
+    <script src="./assets/services/category.ts"></script>
   </head>
   <body>
     <header>
@@ -22,13 +23,12 @@
     <main>
       <section>
         <!-- Base form -->
-        <form id="category-form">
+        <form id="category-form" onsubmit="createCategory(event)">
           <div>
             <input
               type="text"
               name="category"
               id="category"
-              required
               placeholder="Category"
             />
             <input
@@ -37,7 +37,6 @@
               name="tax"
               id="tax"
               placeholder="Tax"
-              required
             />
           </div>
           <button type="submit" class="button-primary">Add Category</button>
