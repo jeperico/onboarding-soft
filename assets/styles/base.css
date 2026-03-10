@@ -5,11 +5,13 @@
   --gray: #dcd6f7;
   --light: #faf5fa;
   --dark: #020122;
+  --dark-gray: rgb(220, 214, 247, 0.4);
 
   /* SEMANTIC COLORS */
   --background: var(--light);
   --background-navbar: var(--blue);
   --background-input: var(--gray);
+  --background-input-disabled: var(--dark-gray);
   --foreground: var(--dark);
   --foreground-navbar: var(--gray);
   --foreground-muted: var(--blue);
@@ -51,8 +53,7 @@ header {
 main {
   display: flex;
   justify-content: space-between;
-  max-width: 1240px;
-  width: 96%;
+  width: 100%;
   height: 100%;
   margin: 2rem auto;
 }
@@ -60,7 +61,7 @@ main {
 section {
   width: 100%;
   height: 100%;
-  margin: 1rem;
+  margin: 1rem 2vw;
   padding-bottom: 2rem;
   display: flex;
   flex-direction: column;

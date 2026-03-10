@@ -10,10 +10,9 @@
   </head>
   <body>
     <header>
-      <h1>Products</h1>
+      <a href="./home.html"><h1>Suite Store</h1></a>
       <nav>
         <ul>
-          <li><a href="./home.html">Home</a></li>
           <li><a href="./products.html">Products</a></li>
           <li><a href="./categories.html">Categories</a></li>
           <li><a href="./history.html">History</a></li>
@@ -32,15 +31,6 @@
               required
               placeholder="Product"
             />
-            <input
-              type="number"
-              name="amount"
-              id="amount"
-              placeholder="Amount"
-              min="1"
-              step="1"
-              required
-            />
           </div>
           <div>
             <select name="category" id="category" required>
@@ -56,6 +46,15 @@
               id="price"
               step="0.1"
               placeholder="Price"
+              required
+            />
+            <input
+              type="number"
+              name="amount"
+              id="amount"
+              placeholder="Amount"
+              min="1"
+              step="1"
               required
             />
           </div>
@@ -74,6 +73,7 @@
             <th class="font-bold">Amount</th>
             <th class="font-bold">Unit price</th>
             <th class="font-bold">Category</th>
+            <th class="font-bold">Action</th>
           </thead>
           <tbody>
             <tr>
@@ -82,8 +82,12 @@
               <td>10</td>
               <td>20.00</td>
               <td>Food</td>
+              <td>
+                <button class="action-delete button-secondary">DELETE</button>
+              </td>
             </tr>
             <tr>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>

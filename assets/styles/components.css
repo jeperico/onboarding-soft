@@ -34,6 +34,9 @@ input {
   &:focus {
     outline: 1px solid var(--input-border);
   }
+  &:disabled {
+    background-color: var(--background-input-disabled);
+  }
 }
 
 /* BUTTONS */
@@ -63,15 +66,15 @@ table {
   /* ROWS */
   th,
   td {
-    height: 1rem;
+    height: 2.5rem;
     padding: 0.25rem;
     text-align: left;
   }
 
   /* BORDERS */
-  th:not(:last-child),
-  td:not(:last-child) {
-    border-right: 2px solid var(--border);
+  th:not(:first-child),
+  td:not(:first-child) {
+    border-left: 2px solid var(--border);
   }
   tr:not(:last-child) td,
   tr th {
@@ -79,5 +82,18 @@ table {
   }
   tr:last-child {
     height: 100%;
+  }
+
+  tbody {
+    /* ACTION DELETE BUTTON */
+    & .action-delete,
+    & .action-view {
+      visibility: hidden;
+    }
+
+    & > tr:hover .action-delete,
+    & > tr:hover .action-view {
+      visibility: visible;
+    }
   }
 }
