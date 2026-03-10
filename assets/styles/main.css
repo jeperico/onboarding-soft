@@ -47,6 +47,10 @@ header {
       flex-direction: column;
       gap: 0.25rem;
     }
+
+    & > div:last-child {
+      text-align: end;
+    }
   }
 
   & > div:last-child {
