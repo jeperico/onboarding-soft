@@ -60,21 +60,22 @@ button {
 /* TABLE COMPONENT */
 table {
   height: 100%;
+  position: relative;
   border-collapse: collapse;
   color: var(--foreground);
 
   /* ROWS */
   th,
   td {
-    height: 1rem;
+    height: 2.5rem;
     padding: 0.25rem;
     text-align: left;
   }
 
   /* BORDERS */
-  th:not(:last-child),
-  td:not(:last-child) {
-    border-right: 2px solid var(--border);
+  th:not(:first-child),
+  td:not(:first-child) {
+    border-left: 2px solid var(--border);
   }
   tr:not(:last-child) td,
   tr th {
@@ -82,5 +83,20 @@ table {
   }
   tr:last-child {
     height: 100%;
+  }
+
+  tbody {
+    /* ACTION DELETE BUTTON */
+    & .action-delete {
+      visibility: hidden;
+      position: absolute;
+      right: 0;
+      transform: translateY(-1px);
+    }
+
+    & > tr:hover .action-delete {
+      visibility: visible;
+      border: 0;
+    }
   }
 }
