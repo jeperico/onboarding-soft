@@ -34,6 +34,9 @@ input {
   &:focus {
     outline: 1px solid var(--input-border);
   }
+  &:disabled {
+    background-color: var(--background-input-disabled);
+  }
 }
 
 /* BUTTONS */

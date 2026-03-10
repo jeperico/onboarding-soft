@@ -5,11 +5,13 @@
   --gray: #dcd6f7;
   --light: #faf5fa;
   --dark: #020122;
+  --dark-gray: rgb(220, 214, 247, 0.4);
 
   /* SEMANTIC COLORS */
   --background: var(--light);
   --background-navbar: var(--blue);
   --background-input: var(--gray);
+  --background-input-disabled: var(--dark-gray);
   --foreground: var(--dark);
   --foreground-navbar: var(--gray);
   --foreground-muted: var(--blue);

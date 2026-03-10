@@ -1,7 +1,6 @@
 /* NAVBAR */
 header {
   & h1 {
-    width: 200px;
     color: var(--foreground-navbar);
   }
   & ul {
