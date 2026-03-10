@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./assets/styles/base.css" />
     <link rel="stylesheet" href="./assets/styles/components.css" />
     <link rel="stylesheet" href="./assets/styles/main.css" />
-    <script src="./assets/services/category.ts"></script>
+    <script src="./assets/build/services/category.js"></script>
   </head>
   <body>
     <header>
@@ -23,21 +23,10 @@
     <main>
       <section>
         <!-- Base form -->
-        <form id="category-form" onsubmit="createCategory(event)">
+        <form id="category-form" onsubmit="return createCategory(event);">
           <div>
-            <input
-              type="text"
-              name="category"
-              id="category"
-              placeholder="Category"
-            />
-            <input
-              type="number"
-              min="1"
-              name="tax"
-              id="tax"
-              placeholder="Tax"
-            />
+            <input type="text" id="category" placeholder="Category" />
+            <input type="number" min="1" id="tax" placeholder="Tax" />
           </div>
           <button type="submit" class="button-primary">Add Category</button>
         </form>
