@@ -29,7 +29,8 @@
 > transaction:
 
 - id: int
-- product_id: uuid fk(products)
-- state: 'active' | 'deleted' | 'bought'
+- state: 'active' | 'bought'
 - amount: int
+- product_id: uuid fk(products)
 - created_at: date
+- is_active: boolean
