@@ -19,14 +19,12 @@ const createCategory = (event) => {
     if (!category || !tax)
         return;
     const current = baseView("category", { variant: "list" });
-    console.log(current);
     const payload = {
         id: id,
         name: category,
         tax: tax,
         is_active: true,
     };
-    console.log();
     // 4° - OUTPUT
     localStorage.setItem("category", JSON.stringify([...current, payload]));
 };

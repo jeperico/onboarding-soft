@@ -27,7 +27,6 @@ const createCategory = (event: SubmitEvent) => {
   // 3° - PROCESS
   if (!category || !tax) return;
   const current: Array<ICategory> = baseView("category", { variant: "list" });
-  console.log(current);
 
   const payload: ICategory = {
     id: id,
@@ -35,8 +34,6 @@ const createCategory = (event: SubmitEvent) => {
     tax: tax,
     is_active: true,
   };
-
-  console.log();
 
   // 4° - OUTPUT
   localStorage.setItem("category", JSON.stringify([...current, payload]));
