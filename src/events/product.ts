@@ -1,4 +1,4 @@
 import { createProduct, renderProducts } from "../services/product.js";
-import { baseEvent } from "./base-event.js";
+import { baseEvent } from "../utils/base-event.js";
 
 baseEvent("products", createProduct, renderProducts);

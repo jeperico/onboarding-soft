@@ -1,4 +1,4 @@
-import { baseDelete } from "../utils/base-delete.js";
+import { baseDelete } from "./base-delete.js";
 
 interface EventListenerOptions {
   table: string;
