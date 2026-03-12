@@ -70,6 +70,22 @@ const renderProducts = () => {
     code.textContent = formatCode(index);
     row.appendChild(code);
 
+    const product = td.cloneNode();
+    product.textContent = el.name;
+    row.appendChild(product);
+
+    const amount = td.cloneNode();
+    amount.textContent = el.stock.toString();
+    row.appendChild(amount);
+
+    const price = td.cloneNode();
+    price.textContent = el.price.toString();
+    row.appendChild(price);
+
+    const category = td.cloneNode();
+    category.textContent = el.category_id;
+    row.appendChild(category);
+
     const button = document.createElement("button");
     button.textContent = "DELETE";
     button.className = "action-delete button-secondary";
