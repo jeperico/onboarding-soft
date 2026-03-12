@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
+    "moduleResolution": "Bundler",
     "outDir": "./assets/build", // Where .js files will go
     "rootDir": "./assets", // Where your .ts files are
     "strict": true,
