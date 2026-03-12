@@ -7,7 +7,7 @@ import { formatCode } from "../utils/format-code.js";
  *
  * @returns void
  */
-const renderHistory = () => {
+const renderDetails = () => {
   // 1° - INPUT
   const table = document.querySelector("tbody");
   const data: Array<ITransaction> | [] = baseView("transactions", {
@@ -28,6 +28,18 @@ const renderHistory = () => {
     code.textContent = formatCode(index);
     row.appendChild(code);
 
+    const product = td.cloneNode();
+    product.textContent = "product";
+    row.appendChild(product);
+
+    const amount = td.cloneNode();
+    amount.textContent = "amount";
+    row.appendChild(amount);
+
+    const category = td.cloneNode();
+    category.textContent = "category";
+    row.appendChild(category);
+
     const tax = td.cloneNode();
     tax.textContent = el.product_id.toString();
     row.appendChild(tax);
@@ -36,23 +48,12 @@ const renderHistory = () => {
     total.textContent = el.price.toString();
     row.appendChild(total);
 
-    const button = document.createElement("button");
-    button.textContent = "VIEW";
-    button.className = "action-view button-secondary";
-    button.id = el.id;
-    const link = document.createElement("a");
-    link.href = "./details.html";
-    link.appendChild(button);
-    const action = td.cloneNode();
-    action.appendChild(link);
-    row.appendChild(action);
-
     table.appendChild(row);
   });
 
   const row = document.createElement("tr");
-  for (let i = 0; i < 4; i++) row.appendChild(document.createElement("td"));
+  for (let i = 0; i < 6; i++) row.appendChild(document.createElement("td"));
   table.appendChild(row);
 };
 
-export { renderHistory };
+export { renderDetails };

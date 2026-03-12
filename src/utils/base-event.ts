@@ -3,7 +3,7 @@ import { baseDelete } from "./base-delete.js";
 interface EventListenerOptions {
   table: string;
   render: () => void;
-  variant: "delete" | "view";
+  variant: "delete" | "view" | "none";
   handler?: (event: SubmitEvent) => void;
 }
 
