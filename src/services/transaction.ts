@@ -43,7 +43,7 @@ const createTransaction = (event: SubmitEvent) => {
   };
 
   // 4° - OUTPUT
-  localStorage.setItem("transaction", JSON.stringify([...current, payload]));
+  localStorage.setItem("transactions", JSON.stringify([...current, payload]));
   window.location.reload();
 };
 

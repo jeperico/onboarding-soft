@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="./../styles/base.css" />
     <link rel="stylesheet" href="./../styles/components.css" />
     <link rel="stylesheet" href="./../styles/main.css" />
+    <script type="module" src="./../build/services/transaction.js"></script>
+    <script type="module" src="./../build/events/transaction.js"></script>
   </head>
   <body>
     <header>
@@ -23,11 +25,11 @@
       <section>
         <!-- Base form -->
         <form id="home-form">
-          <select name="product" id="product" name="product" required>
+          <select name="product" id="product" name="product">
             <option value="" disabled selected hidden>Product</option>
-            <option value="">Coffee</option>
-            <option value="">Beans</option>
-            <option value="">Rice</option>
+            <option value="coffee">Coffee</option>
+            <option value="beans">Beans</option>
+            <option value="rice">Rice</option>
           </select>
           <div>
             <input
@@ -37,7 +39,6 @@
               placeholder="Amount"
               min="1"
               step="1"
-              required
             />
             <input
               type="number"
@@ -45,18 +46,14 @@
               name="tax"
               id="tax"
               placeholder="Tax"
-              required
-              disabled
             />
             <input
               type="number"
               min="0"
               name="price"
               id="price"
-              step="0.1"
+              step="1"
               placeholder="Price"
-              required
-              disabled
             />
           </div>
           <button type="submit" class="button-primary">Add Product</button>

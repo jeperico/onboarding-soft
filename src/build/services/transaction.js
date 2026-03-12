@@ -32,7 +32,7 @@ const createTransaction = (event) => {
         is_active: true,
     };
     // 4° - OUTPUT
-    localStorage.setItem("transaction", JSON.stringify([...current, payload]));
+    localStorage.setItem("transactions", JSON.stringify([...current, payload]));
     window.location.reload();
 };
 export { createTransaction };
