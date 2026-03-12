@@ -1,3 +1,10 @@
+/**
+ * Retrieves records from LocalStorage.
+ *
+ * @param table - LocalStorage table key.
+ * @param options - View configuration.
+ * @returns Stored data or empty array if not found.
+ */
 const baseView = (table, options) => {
     // 1° - INPUT
     const raw = localStorage.getItem(table);

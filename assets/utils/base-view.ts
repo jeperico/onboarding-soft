@@ -1,8 +1,20 @@
+/**
+ * Configuration for retrieving records from storage.
+ */
 export interface ViewOptions {
+  /** Query mode */
   variant: "single" | "list";
+  /** Record identifier (used when variant = "single") */
   id?: string;
 }
 
+/**
+ * Retrieves records from LocalStorage.
+ *
+ * @param table - LocalStorage table key.
+ * @param options - View configuration.
+ * @returns Stored data or empty array if not found.
+ */
 const baseView = (table: string, options: ViewOptions) => {
   // 1° - INPUT
   const raw = localStorage.getItem(table);
