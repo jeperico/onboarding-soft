@@ -36,12 +36,21 @@ const renderHistory = () => {
     total.textContent = el.price.toString();
     row.appendChild(total);
 
+    //   <td>
+    //   <a href="./details.html">
+    //     <button class="action-view button-secondary">VIEW</button>
+    //   </a>
+    // </td>
+
     const button = document.createElement("button");
     button.textContent = "VIEW";
     button.className = "action-view button-secondary";
     button.id = el.id;
+    const link = document.createElement("a");
+    link.href = "./details.html";
+    link.appendChild(button);
     const action = td.cloneNode();
-    action.appendChild(button);
+    action.appendChild(link);
     row.appendChild(action);
 
     table.appendChild(row);
