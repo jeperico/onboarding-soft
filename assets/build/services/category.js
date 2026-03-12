@@ -1,18 +1,21 @@
 const createCategory = (event) => {
     event.preventDefault();
-    alert("TESTE");
-    const category = document.querySelector("#category");
-    const tax = document.querySelector("#tax");
-    // TODO: Validate inputs
+    console.log("event:", event);
+    const form = event.target;
+    const category = form.elements.namedItem("category")
+        .value;
+    const tax = form.elements.namedItem("tax").value;
+    // // TODO: Validate inputs
     if (!category || !tax)
         return;
-    // TODO: Handle values
+    // // TODO: Handle values
     const payload = {
         id: 1,
-        name: category.value,
-        tax: parseInt(tax.value) || 0,
+        name: category,
+        tax: parseInt(tax) || 0,
         is_active: true,
     };
     localStorage.setItem("category", JSON.stringify(payload));
 };
-export {};
+document.querySelector("form")?.addEventListener("submit", createCategory);
+export default createCategory;
