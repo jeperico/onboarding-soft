@@ -1,4 +1,4 @@
-import { baseView } from "./base-view";
+import { baseView } from "./base-view.js";
 
 /**
  * Options used to identify a record for deletion.

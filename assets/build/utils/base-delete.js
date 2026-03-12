@@ -1,4 +1,4 @@
-import { baseView } from "./base-view";
+import { baseView } from "./base-view.js";
 /**
  * Soft deletes a record by setting `is_active` to false.
  *
