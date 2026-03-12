@@ -7,6 +7,7 @@ import { baseView } from "./base-view.js";
  * @returns void
  */
 const baseDelete = (table, options) => {
+    console.log(options.id);
     // 1° - INPUT
     const raw = baseView(table, {
         variant: "list",
@@ -21,5 +22,6 @@ const baseDelete = (table, options) => {
     });
     // 3° - OUTPUT
     localStorage.setItem(table, JSON.stringify(raw));
+    window.location.reload();
 };
 export { baseDelete };

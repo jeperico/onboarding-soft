@@ -53,7 +53,11 @@ const tableCategory = () => {
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;
-  data.forEach((el, index) => {
+
+  const payload = data.filter((el: { is_active: boolean }) => {
+    return el.is_active;
+  });
+  payload.forEach((el, index) => {
     const row = document.createElement("tr");
     const td = document.createElement("td");
 
@@ -72,6 +76,7 @@ const tableCategory = () => {
     const button = document.createElement("button");
     button.textContent = "DELETE";
     button.className = "action-delete button-secondary";
+    button.id = el.id;
     const action = td.cloneNode();
     action.appendChild(button);
     row.appendChild(action);
@@ -89,12 +94,16 @@ const tableCategory = () => {
  * ====================================================== */
 document.querySelector("form")?.addEventListener("submit", createCategory);
 
-document.addEventListener("DOMContentLoaded", tableCategory);
+document.addEventListener("DOMContentLoaded", () => {
+  tableCategory();
 
-const buttons = document.querySelectorAll<HTMLButtonElement>(".action-delete");
-buttons.forEach((el) => {
-  el.addEventListener("click", () => {
-    baseDelete("category", { id: "123" });
+  const buttons =
+    document.querySelectorAll<HTMLButtonElement>(".action-delete");
+  buttons.forEach((el) => {
+    el.addEventListener("click", () => {
+      const id = el.id;
+      baseDelete("category", { id: id });
+    });
   });
 });
 
