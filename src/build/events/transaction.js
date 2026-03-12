@@ -1,8 +1,8 @@
-import { createTransaction } from "../services/transaction.js";
+import { createTransaction, renderTransaction, } from "../services/transaction.js";
 import { baseDelete } from "../utils/base-delete.js";
 document.querySelector("form")?.addEventListener("submit", createTransaction);
 document.addEventListener("DOMContentLoaded", () => {
-    // renderProducts();
+    renderTransaction();
     const buttons = document.querySelectorAll(".action-delete");
     buttons.forEach((el) => {
         el.addEventListener("click", () => {
