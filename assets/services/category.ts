@@ -1,30 +1,31 @@
 import { ICategory } from "../interfaces/category";
 
 const createCategory = (event: SubmitEvent) => {
+  // ENVIRONMENT
   event.preventDefault();
   console.log("event:", event);
 
+  // INPUT
+  const id = crypto.randomUUID();
   const form = event.target as HTMLFormElement;
   const category = (form.elements.namedItem("category") as HTMLInputElement)
     .value;
-  const tax = (form.elements.namedItem("tax") as HTMLInputElement).value;
-  const id = crypto.randomUUID();
+  const tax = parseInt(
+    (form.elements.namedItem("tax") as HTMLInputElement).value,
+  );
 
-  // // TODO: Validate inputs
+  // PROCESS
   if (!category || !tax) return;
 
-  // TODO:
-
-  // // TODO: Handle values
   const payload: ICategory = {
     id: id,
     name: category,
-    tax: parseInt(tax) || 0,
+    tax: tax,
     is_active: true,
   };
 
+  // OUTPUT
   localStorage.setItem("category", JSON.stringify(payload));
-  console.log(JSON.stringify(payload));
 };
 
 document.querySelector("form")?.addEventListener("submit", createCategory);
