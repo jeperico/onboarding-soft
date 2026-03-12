@@ -1,13 +1,21 @@
 import { baseDelete } from "./base-delete.js";
-const baseEvent = (table, handler, render) => {
-    document.querySelector("form")?.addEventListener("submit", handler);
+const baseEvent = (table, render, variant, handler) => {
+    if (handler)
+        document.querySelector("form")?.addEventListener("submit", handler);
     document.addEventListener("DOMContentLoaded", () => {
         render();
-        const buttons = document.querySelectorAll(".action-delete");
+        const buttons = document.querySelectorAll(variant === "delete" ? ".action-delete" : ".action-view");
         buttons.forEach((el) => {
             el.addEventListener("click", () => {
                 const id = el.id;
-                baseDelete(table, { id: id });
+                switch (variant) {
+                    case "delete":
+                        baseDelete(table, { id: id });
+                        break;
+                    case "view":
+                        // baseView()
+                        break;
+                }
             });
         });
     });
