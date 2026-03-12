@@ -3,7 +3,7 @@ interface IProduct {
   name: string;
   stock: number;
   price: number;
-  category_id: number;
+  category_id: string;
   is_active: boolean;
 }
 

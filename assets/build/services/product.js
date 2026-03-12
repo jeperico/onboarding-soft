@@ -1,6 +1,42 @@
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
 /**
+ * Handles product form submission.
+ *
+ * @param event - Form submit event.
+ * @returns void
+ */
+const createProduct = (event) => {
+    // 1° - ENVIRONMENT
+    event.preventDefault();
+    // 2° - INPUT
+    const id = crypto.randomUUID();
+    const form = event.target;
+    const product = form.elements.namedItem("product")
+        .value;
+    const category = form.elements.namedItem("category")
+        .value;
+    const price = parseInt(form.elements.namedItem("price").value);
+    const amount = parseInt(form.elements.namedItem("amount").value);
+    // 3° - PROCESS
+    console.log(product, category, price, amount);
+    if (!product || !category || !price || !amount)
+        return;
+    console.log(product, category, price, amount);
+    const current = baseView("products", { variant: "list" });
+    const payload = {
+        id: id,
+        name: product,
+        stock: amount,
+        price: price,
+        category_id: "1",
+        is_active: true,
+    };
+    // 4° - OUTPUT
+    localStorage.setItem("products", JSON.stringify([...current, payload]));
+    window.location.reload();
+};
+/**
  * Renders products rows inside `<tbody>`.
  *
  * @returns void
@@ -35,4 +71,4 @@ const renderProducts = () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
-export { renderProducts };
+export { createProduct, renderProducts };
