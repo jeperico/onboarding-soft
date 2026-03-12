@@ -27,9 +27,7 @@ const createProduct = (event: SubmitEvent) => {
   );
 
   // 3° - PROCESS
-  console.log(product, category, price, amount);
   if (!product || !category || !price || !amount) return;
-  console.log(product, category, price, amount);
   const current: Array<IProduct> = baseView("products", { variant: "list" });
 
   const payload: IProduct = {

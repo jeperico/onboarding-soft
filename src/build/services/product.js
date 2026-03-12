@@ -19,10 +19,8 @@ const createProduct = (event) => {
     const price = parseInt(form.elements.namedItem("price").value);
     const amount = parseInt(form.elements.namedItem("amount").value);
     // 3° - PROCESS
-    console.log(product, category, price, amount);
     if (!product || !category || !price || !amount)
         return;
-    console.log(product, category, price, amount);
     const current = baseView("products", { variant: "list" });
     const payload = {
         id: id,

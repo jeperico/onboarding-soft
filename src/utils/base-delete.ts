@@ -16,7 +16,6 @@ export interface DeleteOptions {
  * @returns void
  */
 const baseDelete = (table: string, options: DeleteOptions) => {
-  console.log(options.id);
   // 1° - INPUT
   const raw: Array<{ id: string; is_active: boolean }> | [] = baseView(table, {
     variant: "list",
