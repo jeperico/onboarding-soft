@@ -12,14 +12,14 @@
 
 > categories:
 
-- id: int
+- id: uuid
 - name: string
 - tax: number
 - is_active: boolean
 
 > products:
 
-- id: int
+- id: uuid
 - name: string
 - stock: int
 - price: int
@@ -28,9 +28,10 @@
 
 > transaction:
 
-- id: int
+- id: uuid
 - state: 'active' | 'bought'
 - amount: int
+- price: int
 - product_id: uuid fk(products)
 - created_at: date
 - is_active: boolean
