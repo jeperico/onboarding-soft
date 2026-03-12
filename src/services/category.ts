@@ -1,4 +1,4 @@
-import { ICategory } from "../interfaces/category";
+import { ICategory } from "../interfaces/category.js";
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
 
