@@ -1,8 +1,4 @@
-/* ======================================================
- * IMPORTS
- * ====================================================== */
 import { ICategory } from "../interfaces/category";
-import { baseDelete } from "../utils/base-delete.js";
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
 
@@ -46,7 +42,7 @@ const createCategory = (event: SubmitEvent) => {
  *
  * @returns void
  */
-const tableCategory = () => {
+const renderCategory = () => {
   // 1° - INPUT
   const table = document.querySelector("tbody");
   const data: Array<ICategory> | [] = baseView("category", { variant: "list" });
@@ -89,25 +85,4 @@ const tableCategory = () => {
   table.appendChild(row);
 };
 
-/* ======================================================
- * EVENT LISTENERS
- * ====================================================== */
-document.querySelector("form")?.addEventListener("submit", createCategory);
-
-document.addEventListener("DOMContentLoaded", () => {
-  tableCategory();
-
-  const buttons =
-    document.querySelectorAll<HTMLButtonElement>(".action-delete");
-  buttons.forEach((el) => {
-    el.addEventListener("click", () => {
-      const id = el.id;
-      baseDelete("category", { id: id });
-    });
-  });
-});
-
-/* ======================================================
- * EXPORTS
- * ====================================================== */
-export { createCategory, baseView };
+export { createCategory, renderCategory };
