@@ -1,5 +1,5 @@
 interface ICategory {
-  id: number;
+  id: string;
   name: string;
   tax: number;
   is_active: boolean;

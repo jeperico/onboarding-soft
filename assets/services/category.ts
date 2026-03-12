@@ -8,19 +8,23 @@ const createCategory = (event: SubmitEvent) => {
   const category = (form.elements.namedItem("category") as HTMLInputElement)
     .value;
   const tax = (form.elements.namedItem("tax") as HTMLInputElement).value;
+  const id = crypto.randomUUID();
 
   // // TODO: Validate inputs
   if (!category || !tax) return;
 
+  // TODO:
+
   // // TODO: Handle values
   const payload: ICategory = {
-    id: 1,
+    id: id,
     name: category,
     tax: parseInt(tax) || 0,
     is_active: true,
   };
 
   localStorage.setItem("category", JSON.stringify(payload));
+  console.log(JSON.stringify(payload));
 };
 
 document.querySelector("form")?.addEventListener("submit", createCategory);
