@@ -1,4 +1,11 @@
 import { baseView } from "./base-view";
+/**
+ * Soft deletes a record by setting `is_active` to false.
+ *
+ * @param table - LocalStorage table key.
+ * @param options - Delete configuration.
+ * @returns void
+ */
 const baseDelete = (table, options) => {
     // 1° - INPUT
     const raw = baseView(table, {

@@ -1,5 +1,11 @@
 import { baseDelete } from "../utils/base-delete";
 import { baseView } from "../utils/base-view.js";
+/**
+ * Handles category form submission.
+ *
+ * @param event - Form submit event.
+ * @returns void
+ */
 const createCategory = (event) => {
     // 1° - ENVIRONMENT
     event.preventDefault();
@@ -24,6 +30,9 @@ const createCategory = (event) => {
     // 4° - OUTPUT
     localStorage.setItem("category", JSON.stringify([...current, payload]));
 };
+/* ======================================================
+ * EVENT LISTENERS
+ * ====================================================== */
 document.querySelector("form")?.addEventListener("submit", createCategory);
 const buttons = document.querySelectorAll(".action-delete");
 buttons.forEach((el) => {
@@ -31,4 +40,7 @@ buttons.forEach((el) => {
         baseDelete("category", { id: "123" });
     });
 });
+/* ======================================================
+ * EXPORTS
+ * ====================================================== */
 export { createCategory, baseView };
