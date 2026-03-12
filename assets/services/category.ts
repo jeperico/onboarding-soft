@@ -1,11 +1,11 @@
 import { ICategory } from "../interfaces/category";
 
 const createCategory = (event: SubmitEvent) => {
-  // ENVIRONMENT
+  // 1° - ENVIRONMENT
   event.preventDefault();
   console.log("event:", event);
 
-  // INPUT
+  // 2° - INPUT
   const id = crypto.randomUUID();
   const form = event.target as HTMLFormElement;
   const category = (form.elements.namedItem("category") as HTMLInputElement)
@@ -14,7 +14,7 @@ const createCategory = (event: SubmitEvent) => {
     (form.elements.namedItem("tax") as HTMLInputElement).value,
   );
 
-  // PROCESS
+  // 3° - PROCESS
   if (!category || !tax) return;
 
   const payload: ICategory = {
@@ -24,7 +24,7 @@ const createCategory = (event: SubmitEvent) => {
     is_active: true,
   };
 
-  // OUTPUT
+  // 4° - OUTPUT
   localStorage.setItem("category", JSON.stringify(payload));
 };
 

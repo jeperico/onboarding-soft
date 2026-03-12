@@ -1,14 +1,14 @@
 const createCategory = (event) => {
-    // ENVIRONMENT
+    // 1° - ENVIRONMENT
     event.preventDefault();
     console.log("event:", event);
-    // INPUT
+    // 2° - INPUT
     const id = crypto.randomUUID();
     const form = event.target;
     const category = form.elements.namedItem("category")
         .value;
     const tax = parseInt(form.elements.namedItem("tax").value);
-    // PROCESS
+    // 3° - PROCESS
     if (!category || !tax)
         return;
     const payload = {
@@ -17,7 +17,7 @@ const createCategory = (event) => {
         tax: tax,
         is_active: true,
     };
-    // OUTPUT
+    // 4° - OUTPUT
     localStorage.setItem("category", JSON.stringify(payload));
 };
 document.querySelector("form")?.addEventListener("submit", createCategory);
