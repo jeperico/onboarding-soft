@@ -1,4 +1,5 @@
 import { ICategory } from "../interfaces/category";
+import { baseDelete } from "../utils/base-delete";
 import { baseView } from "../utils/base-view.js";
 
 const createCategory = (event: SubmitEvent) => {
@@ -33,5 +34,12 @@ const createCategory = (event: SubmitEvent) => {
 };
 
 document.querySelector("form")?.addEventListener("submit", createCategory);
+
+const buttons = document.querySelectorAll<HTMLButtonElement>(".action-delete");
+buttons.forEach((el) => {
+  el.addEventListener("click", () => {
+    baseDelete("category", { id: "123" });
+  });
+});
 
 export { createCategory, baseView };

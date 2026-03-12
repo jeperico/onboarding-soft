@@ -1,3 +1,4 @@
+import { baseDelete } from "../utils/base-delete";
 import { baseView } from "../utils/base-view.js";
 const createCategory = (event) => {
     // 1° - ENVIRONMENT
@@ -24,4 +25,10 @@ const createCategory = (event) => {
     localStorage.setItem("category", JSON.stringify([...current, payload]));
 };
 document.querySelector("form")?.addEventListener("submit", createCategory);
+const buttons = document.querySelectorAll(".action-delete");
+buttons.forEach((el) => {
+    el.addEventListener("click", () => {
+        baseDelete("category", { id: "123" });
+    });
+});
 export { createCategory, baseView };
