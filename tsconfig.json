@@ -12,13 +12,11 @@
   },
   "include": [
     "assets/**/*",
-    "src/utils",
-    "src/services",
     "src/interfaces",
-    "src/events",
-    "src/spa/proxy.ts",
-    "src/spa/initialize-page.ts",
-    "src/spa/initialize-app.ts"
+    "src/services",
+    "src/spa",
+    "src/types",
+    "src/utils"
   ],
   "exclude": ["node_modules"]
 }
