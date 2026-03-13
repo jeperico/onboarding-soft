@@ -1,7 +1,6 @@
 import { autoIncrement } from "../utils/auto-increment.js";
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
-import { renderSelect } from "./select.js";
 /**
  * Handles product form submission.
  *
@@ -83,5 +82,4 @@ const renderProducts = () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
-renderSelect("categories", "#category", "name");
 export { createProduct, renderProducts };

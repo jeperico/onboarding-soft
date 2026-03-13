@@ -2,7 +2,6 @@ import { ITransaction } from "../interfaces/transaction.js";
 import { autoIncrement } from "../utils/auto-increment.js";
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
-import { renderSelect } from "./select.js";
 
 /**
  * Handles transaction form submission.
@@ -107,7 +106,5 @@ const renderTransaction = () => {
   for (let i = 0; i < 6; i++) row.appendChild(document.createElement("td"));
   table.appendChild(row);
 };
-
-renderSelect("products", "#product", "name");
 
 export { createTransaction, renderTransaction };
