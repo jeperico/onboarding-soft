@@ -9,7 +9,7 @@ interface EventListenerOptions {
   handler?: (event: SubmitEvent) => void;
 }
 
-const baseEvent = (
+const baseEvent = async (
   table: EventListenerOptions["table"],
   render: EventListenerOptions["render"],
   variant: EventListenerOptions["variant"],
@@ -18,7 +18,7 @@ const baseEvent = (
   if (handler)
     document.querySelector("form")?.addEventListener("submit", handler);
 
-  render();
+  await render();
 
   const buttons = document.querySelectorAll<HTMLButtonElement>(
     variant === "delete" ? ".action-delete" : ".action-view",

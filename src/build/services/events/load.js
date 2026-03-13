@@ -8,24 +8,24 @@ import { renderSelect } from "../select.js";
 import { createTransaction, renderTransaction } from "../transaction.js";
 const loadTransactions = async () => {
     await renderContent("/");
-    baseEvent("transactions", renderTransaction, "delete", createTransaction);
+    await baseEvent("transactions", renderTransaction, "delete", createTransaction);
     await renderSelect("products", "#product", "name");
 };
 const loadProducts = async () => {
     await renderContent("/products");
-    baseEvent("products", renderProducts, "delete", createProduct);
-    renderSelect("categories", "#category", "name");
+    await baseEvent("products", renderProducts, "delete", createProduct);
+    await renderSelect("categories", "#category", "name");
 };
 const loadCategory = async () => {
     await renderContent("/categories");
-    baseEvent("categories", renderCategory, "delete", createCategory);
+    await baseEvent("categories", renderCategory, "delete", createCategory);
 };
 const loadHistory = async () => {
     await renderContent("/history");
-    baseEvent("transactions", renderHistory, "view");
+    await baseEvent("transactions", renderHistory, "view");
 };
 const loadDetails = async () => {
     await renderContent("/details");
-    baseEvent("transactions", renderDetails, "none");
+    await baseEvent("transactions", renderDetails, "none");
 };
 export { loadTransactions, loadProducts, loadCategory, loadHistory, loadDetails, };

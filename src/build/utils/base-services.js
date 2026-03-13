@@ -34,5 +34,6 @@ const baseServiceDelete = async (endpoint, id) => {
     });
     // 3° - OUTPUT
     localStorage.setItem(endpoint, JSON.stringify(response));
+    window.location.reload();
 };
 export { baseServiceView, baseServiceDelete };

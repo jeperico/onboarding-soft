@@ -11,29 +11,34 @@ import { createTransaction, renderTransaction } from "../transaction.js";
 
 const loadTransactions = async () => {
   await renderContent("/");
-  baseEvent("transactions", renderTransaction, "delete", createTransaction);
+  await baseEvent(
+    "transactions",
+    renderTransaction,
+    "delete",
+    createTransaction,
+  );
   await renderSelect<IProduct>("products", "#product", "name");
 };
 
 const loadProducts = async () => {
   await renderContent("/products");
-  baseEvent("products", renderProducts, "delete", createProduct);
-  renderSelect<ICategory>("categories", "#category", "name");
+  await baseEvent("products", renderProducts, "delete", createProduct);
+  await renderSelect<ICategory>("categories", "#category", "name");
 };
 
 const loadCategory = async () => {
   await renderContent("/categories");
-  baseEvent("categories", renderCategory, "delete", createCategory);
+  await baseEvent("categories", renderCategory, "delete", createCategory);
 };
 
 const loadHistory = async () => {
   await renderContent("/history");
-  baseEvent("transactions", renderHistory, "view");
+  await baseEvent("transactions", renderHistory, "view");
 };
 
 const loadDetails = async () => {
   await renderContent("/details");
-  baseEvent("transactions", renderDetails, "none");
+  await baseEvent("transactions", renderDetails, "none");
 };
 
 export {
