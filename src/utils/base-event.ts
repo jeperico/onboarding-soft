@@ -25,7 +25,7 @@ const baseEvent = (
 
     buttons.forEach((el) => {
       el.addEventListener("click", () => {
-        const id = el.id;
+        const id = Number(el.id);
 
         switch (variant) {
           case "delete":

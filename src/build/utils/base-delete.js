@@ -15,7 +15,7 @@ const baseDelete = (table, options) => {
     if (!raw)
         return;
     raw.map((el) => {
-        if (el.id !== options.id)
+        if (el.id != Number(options.id))
             return;
         el.is_active = false;
     });

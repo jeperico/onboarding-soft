@@ -32,7 +32,7 @@ const renderHistory = () => {
         const button = document.createElement("button");
         button.textContent = "VIEW";
         button.className = "action-view button-secondary";
-        button.id = el.id;
+        button.id = el.id.toString();
         const link = document.createElement("a");
         link.href = "./details.html";
         link.appendChild(button);

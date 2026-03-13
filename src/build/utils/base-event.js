@@ -7,7 +7,7 @@ const baseEvent = (table, render, variant, handler) => {
         const buttons = document.querySelectorAll(variant === "delete" ? ".action-delete" : ".action-view");
         buttons.forEach((el) => {
             el.addEventListener("click", () => {
-                const id = el.id;
+                const id = Number(el.id);
                 switch (variant) {
                     case "delete":
                         baseDelete(table, { id: id });

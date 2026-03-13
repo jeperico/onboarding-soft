@@ -6,8 +6,6 @@
 
 - refactor: validate soft delete permision
 
-* refactor: ids | uuid > int
-
 > Forms
 
 - feat: render select
@@ -17,9 +15,10 @@
 
 > Tables
 
-- fix: delete with field id not working;
 - feat: unmock values
 - feat: agregate objects
+
+* fix: delete with field id not working;
 
 > Others:
 

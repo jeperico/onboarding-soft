@@ -5,7 +5,7 @@ import { baseView } from "./base-view.js";
  */
 export interface DeleteOptions {
   /** Unique record identifier */
-  id: string;
+  id: number;
 }
 
 /**
@@ -17,14 +17,14 @@ export interface DeleteOptions {
  */
 const baseDelete = (table: string, options: DeleteOptions) => {
   // 1° - INPUT
-  const raw: Array<{ id: string; is_active: boolean }> | [] = baseView(table, {
+  const raw: Array<{ id: number; is_active: boolean }> | [] = baseView(table, {
     variant: "list",
   });
 
   // 2° - PROCESS
   if (!raw) return;
   raw.map((el) => {
-    if (el.id !== options.id) return;
+    if (el.id != Number(options.id)) return;
     el.is_active = false;
   });
 
