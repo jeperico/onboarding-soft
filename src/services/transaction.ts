@@ -1,4 +1,5 @@
 import { ITransaction } from "../interfaces/transaction.js";
+import { autoIncrement } from "../utils/auto-increment.js";
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
 
@@ -13,7 +14,7 @@ const createTransaction = (event: SubmitEvent) => {
   event.preventDefault();
 
   // 2° - INPUT
-  const id = crypto.randomUUID();
+  const id = autoIncrement("transactions");
   const form = event.target as HTMLFormElement;
   const product = (form.elements.namedItem("product") as HTMLSelectElement)
     .value;
@@ -29,7 +30,7 @@ const createTransaction = (event: SubmitEvent) => {
 
   // 3° - PROCESS
   if (!product || !amount || !tax || !price) return;
-  const current: Array<ITransaction> = baseView("transaction", {
+  const current: Array<ITransaction> = baseView("transactions", {
     variant: "list",
   });
 
@@ -93,7 +94,7 @@ const renderTransaction = () => {
     const button = document.createElement("button");
     button.textContent = "DELETE";
     button.className = "action-delete button-secondary";
-    button.id = el.id;
+    button.id = el.id.toString();
     const action = td.cloneNode();
     action.appendChild(button);
     row.appendChild(action);

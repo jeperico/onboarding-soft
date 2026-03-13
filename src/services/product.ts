@@ -1,4 +1,5 @@
 import { IProduct } from "../interfaces/product.js";
+import { autoIncrement } from "../utils/auto-increment.js";
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
 
@@ -13,7 +14,7 @@ const createProduct = (event: SubmitEvent) => {
   event.preventDefault();
 
   // 2° - INPUT
-  const id = crypto.randomUUID();
+  const id = autoIncrement("products");
   const form = event.target as HTMLFormElement;
   const product = (form.elements.namedItem("product") as HTMLInputElement)
     .value;
@@ -87,7 +88,7 @@ const renderProducts = () => {
     const button = document.createElement("button");
     button.textContent = "DELETE";
     button.className = "action-delete button-secondary";
-    button.id = el.id;
+    button.id = el.id.toString();
     const action = td.cloneNode();
     action.appendChild(button);
     row.appendChild(action);

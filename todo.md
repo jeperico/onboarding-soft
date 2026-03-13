@@ -17,6 +17,7 @@
 
 > Tables
 
+- fix: delete with field id not working;
 - feat: unmock values
 - feat: agregate objects
 

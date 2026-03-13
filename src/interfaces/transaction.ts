@@ -1,5 +1,5 @@
 interface ITransaction {
-  id: string;
+  id: number;
   state: "active" | "bought";
   amount: number;
   price: number;
