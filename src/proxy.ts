@@ -41,12 +41,29 @@ const renderContent = async (path: RouteKey) => {
 
   app.innerHTML = html;
   document.title = route.title;
-  console.log(html);
 };
 
-renderContent("/");
-renderContent("/products");
-renderContent("/history");
-renderContent("/details");
-
 renderContent("/categories");
+
+const links = document.querySelectorAll(".proxy-route");
+links.forEach((item, index) => {
+  item.addEventListener("click", () => {
+    switch (index) {
+      case 0:
+        renderContent("/");
+        break;
+      case 1:
+        renderContent("/products");
+        break;
+      case 2:
+        renderContent("/categories");
+        break;
+      case 3:
+        renderContent("/history");
+        break;
+      default:
+        renderContent("/");
+        break;
+    }
+  });
+});
