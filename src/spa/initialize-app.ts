@@ -1,6 +1,6 @@
-import initializePage from "../../utils/initialize-page.js";
+import initializePage from "./initialize-page.js";
 
-const loadSPA = () => {
+const initializeApp = () => {
   const links = document.querySelectorAll(".proxy-route");
 
   links.forEach((item, index) => {
@@ -28,4 +28,4 @@ const loadSPA = () => {
   initializePage("/");
 };
 
-export default loadSPA;
+export default initializeApp;

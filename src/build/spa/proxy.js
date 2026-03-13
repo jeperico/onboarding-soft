@@ -1,5 +1,5 @@
-import loadSPA from "./services/events/spa.js";
-import routes from "./types/route.js";
+import initializeApp from "./initialize-app.js";
+import routes from "./routes.js";
 const renderContent = async (path) => {
     const app = document.querySelector("main");
     if (!app)
@@ -15,5 +15,5 @@ const renderContent = async (path) => {
     document.title = route.title;
 };
 // RENDER HEADER
-loadSPA();
+initializeApp();
 export { renderContent };

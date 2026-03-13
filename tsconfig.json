@@ -16,7 +16,9 @@
     "src/services",
     "src/interfaces",
     "src/events",
-    "src/proxy.ts"
+    "src/spa/proxy.ts",
+    "src/spa/initialize-page.ts",
+    "src/spa/initialize-app.ts"
   ],
   "exclude": ["node_modules"]
 }

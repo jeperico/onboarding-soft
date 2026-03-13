@@ -1,4 +1,4 @@
-import { renderContent } from "../../proxy.js";
+import { renderContent } from "../../spa/proxy.js";
 import { baseEvent } from "../../utils/base-event.js";
 import { createCategory, renderCategory } from "../category.js";
 import { renderDetails } from "../details.js";

@@ -5,7 +5,7 @@ import {
   loadProducts,
   loadTransactions,
 } from "../services/events/load.js";
-import { RouteKey } from "../types/route.js";
+import { RouteKey } from "./routes.js";
 
 const initializePage = (path: RouteKey) => {
   switch (path) {

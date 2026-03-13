@@ -1,5 +1,5 @@
-import initializePage from "../../utils/initialize-page.js";
-const loadSPA = () => {
+import initializePage from "./initialize-page.js";
+const initializeApp = () => {
     const links = document.querySelectorAll(".proxy-route");
     links.forEach((item, index) => {
         item.addEventListener("click", () => {
@@ -24,4 +24,4 @@ const loadSPA = () => {
     });
     initializePage("/");
 };
-export default loadSPA;
+export default initializeApp;
