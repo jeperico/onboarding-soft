@@ -37,7 +37,7 @@ const renderContent = async (path) => {
     document.title = route.title;
     initializePage(path);
 };
-renderContent("/categories");
+renderContent("/details");
 const links = document.querySelectorAll(".proxy-route");
 links.forEach((item, index) => {
     item.addEventListener("click", () => {
@@ -61,12 +61,24 @@ links.forEach((item, index) => {
     });
 });
 // INITIALIZER
-import { loadCategory } from "./services/events/load.js";
+import { loadTransactions, loadProducts, loadCategory, loadHistory, loadDetails, } from "./services/events/load.js";
 const initializePage = (path) => {
     console.log(path, "- initializing... ");
     switch (path) {
+        case "/":
+            loadTransactions();
+            break;
+        case "/products":
+            loadProducts();
+            break;
         case "/categories":
             loadCategory();
+            break;
+        case "/history":
+            loadHistory();
+            break;
+        case "/details":
+            loadDetails();
             break;
     }
 };

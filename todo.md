@@ -8,7 +8,7 @@
 
 > Forms
 
-- feat: render select
+- fix: spa cant reload after save
 - feat: render disables
 - feat: validate inputs
 - feat: lazy validate
