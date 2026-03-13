@@ -1,6 +1,6 @@
 import { IProduct } from "../interfaces/product.js";
 import { autoIncrement } from "../utils/auto-increment.js";
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 
 /**
@@ -9,12 +9,12 @@ import { formatCode } from "../utils/format-code.js";
  * @param event - Form submit event.
  * @returns void
  */
-const createProduct = (event: SubmitEvent) => {
+const createProduct = async (event: SubmitEvent) => {
   // 1° - ENVIRONMENT
   event.preventDefault();
 
   // 2° - INPUT
-  const id = autoIncrement("products");
+  const id = await autoIncrement("products");
   const form = event.target as HTMLFormElement;
   const product = (form.elements.namedItem("product") as HTMLInputElement)
     .value;
@@ -28,8 +28,8 @@ const createProduct = (event: SubmitEvent) => {
   );
 
   // 3° - PROCESS
-  if (!product || !category || !price || !amount) return;
-  const current: Array<IProduct> = baseView("products", { variant: "list" });
+  const current = await baseServiceView<IProduct>("products");
+  if (!product || !category || !price || !amount || !current) return;
 
   const payload: IProduct = {
     id: id,
@@ -50,10 +50,10 @@ const createProduct = (event: SubmitEvent) => {
  *
  * @returns void
  */
-const renderProducts = () => {
+const renderProducts = async () => {
   // 1° - INPUT
   const table = document.querySelector("#tbody-products");
-  const data: Array<IProduct> | [] = baseView("products", { variant: "list" });
+  const data = await baseServiceView<IProduct>("products");
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;

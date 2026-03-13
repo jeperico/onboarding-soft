@@ -1,5 +1,5 @@
 import renderPage from "../spa/render-page.js";
-import { baseDelete } from "./base-delete.js";
+import { baseServiceDelete } from "./base-services.js";
 const baseEvent = (table, render, variant, handler) => {
     if (handler)
         document.querySelector("form")?.addEventListener("submit", handler);
@@ -10,7 +10,7 @@ const baseEvent = (table, render, variant, handler) => {
             const id = Number(el.id);
             switch (variant) {
                 case "delete":
-                    baseDelete(table, { id: id });
+                    baseServiceDelete(table, id);
                     break;
                 case "view":
                     renderPage("/details");

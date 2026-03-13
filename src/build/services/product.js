@@ -1,5 +1,5 @@
 import { autoIncrement } from "../utils/auto-increment.js";
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 /**
  * Handles product form submission.
@@ -7,11 +7,11 @@ import { formatCode } from "../utils/format-code.js";
  * @param event - Form submit event.
  * @returns void
  */
-const createProduct = (event) => {
+const createProduct = async (event) => {
     // 1° - ENVIRONMENT
     event.preventDefault();
     // 2° - INPUT
-    const id = autoIncrement("products");
+    const id = await autoIncrement("products");
     const form = event.target;
     const product = form.elements.namedItem("product")
         .value;
@@ -20,9 +20,9 @@ const createProduct = (event) => {
     const price = parseInt(form.elements.namedItem("price").value);
     const amount = parseInt(form.elements.namedItem("amount").value);
     // 3° - PROCESS
-    if (!product || !category || !price || !amount)
+    const current = await baseServiceView("products");
+    if (!product || !category || !price || !amount || !current)
         return;
-    const current = baseView("products", { variant: "list" });
     const payload = {
         id: id,
         name: product,
@@ -40,10 +40,10 @@ const createProduct = (event) => {
  *
  * @returns void
  */
-const renderProducts = () => {
+const renderProducts = async () => {
     // 1° - INPUT
     const table = document.querySelector("#tbody-products");
-    const data = baseView("products", { variant: "list" });
+    const data = await baseServiceView("products");
     // 2° - PROCESS /  OUTPUT
     if (!data || !table)
         return;

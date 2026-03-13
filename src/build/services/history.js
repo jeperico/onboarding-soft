@@ -1,16 +1,14 @@
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 /**
  * Renders category rows inside `<tbody>`.
  *
  * @returns void
  */
-const renderHistory = () => {
+const renderHistory = async () => {
     // 1° - INPUT
     const table = document.querySelector("#tbody-history");
-    const data = baseView("transactions", {
-        variant: "list",
-    });
+    const data = await baseServiceView("transactions");
     // 2° - PROCESS /  OUTPUT
     if (!data || !table)
         return;

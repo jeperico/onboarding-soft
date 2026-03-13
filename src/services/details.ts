@@ -1,5 +1,5 @@
 import { ITransaction } from "../interfaces/transaction.js";
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 
 /**
@@ -7,12 +7,10 @@ import { formatCode } from "../utils/format-code.js";
  *
  * @returns void
  */
-const renderDetails = () => {
+const renderDetails = async () => {
   // 1° - INPUT
   const table = document.querySelector("#tbody-details");
-  const data: Array<ITransaction> | [] = baseView("transactions", {
-    variant: "list",
-  });
+  const data = await baseServiceView<ITransaction>("transactions");
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;

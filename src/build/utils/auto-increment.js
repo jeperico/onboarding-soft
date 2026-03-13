@@ -1,6 +1,8 @@
-import { baseView } from "./base-view.js";
-const autoIncrement = (table) => {
-    const data = baseView(table, { variant: "list" });
+import { baseServiceView } from "./base-services.js";
+const autoIncrement = async (table) => {
+    const data = await baseServiceView(table);
+    if (!data)
+        return 1;
     const last = data.length - 1;
     if (last === -1)
         return 1;

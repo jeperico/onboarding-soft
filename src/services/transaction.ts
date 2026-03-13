@@ -1,6 +1,6 @@
 import { ITransaction } from "../interfaces/transaction.js";
 import { autoIncrement } from "../utils/auto-increment.js";
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 
 /**
@@ -9,12 +9,12 @@ import { formatCode } from "../utils/format-code.js";
  * @param event - Form submit event.
  * @returns void
  */
-const createTransaction = (event: SubmitEvent) => {
+const createTransaction = async (event: SubmitEvent) => {
   // 1° - ENVIRONMENT
   event.preventDefault();
 
   // 2° - INPUT
-  const id = autoIncrement("transactions");
+  const id = await autoIncrement("transactions");
   const form = event.target as HTMLFormElement;
   const product = (form.elements.namedItem("product") as HTMLSelectElement)
     .value;
@@ -30,9 +30,8 @@ const createTransaction = (event: SubmitEvent) => {
 
   // 3° - PROCESS
   if (!product || !amount || !tax || !price) return;
-  const current: Array<ITransaction> = baseView("transactions", {
-    variant: "list",
-  });
+  const current = await baseServiceView<ITransaction>("transactions");
+  if (!current) return;
 
   const payload: ITransaction = {
     id: id,
@@ -54,12 +53,10 @@ const createTransaction = (event: SubmitEvent) => {
  *
  * @returns void
  */
-const renderTransaction = () => {
+const renderTransaction = async () => {
   // 1° - INPUT
   const table = document.querySelector("#tbody-transactions");
-  const data: Array<ITransaction> | [] = baseView("transactions", {
-    variant: "list",
-  });
+  const data = await baseServiceView<ITransaction>("transactions");
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;

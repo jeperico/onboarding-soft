@@ -1,13 +1,12 @@
-import { baseView } from "./base-view.js";
 import { Table } from "./../types/table.js";
+import { baseServiceView } from "./base-services.js";
 
-const autoIncrement = (table: Table) => {
-  const data:
-    | Array<{
-        id: number;
-      }>
-    | [] = baseView(table, { variant: "list" });
+const autoIncrement = async (table: Table) => {
+  const data = await baseServiceView<{
+    id: number;
+  }>(table);
 
+  if (!data) return 1;
   const last = data.length - 1;
 
   if (last === -1) return 1;

@@ -1,6 +1,6 @@
 import renderPage from "../spa/render-page.js";
 import { Table } from "../types/table.js";
-import { baseDelete } from "./base-delete.js";
+import { baseServiceDelete } from "./base-services.js";
 
 interface EventListenerOptions {
   table: Table;
@@ -30,7 +30,7 @@ const baseEvent = (
 
       switch (variant) {
         case "delete":
-          baseDelete(table, { id: id });
+          baseServiceDelete(table, id);
           break;
         case "view":
           renderPage("/details");

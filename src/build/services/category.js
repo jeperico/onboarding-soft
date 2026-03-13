@@ -1,5 +1,5 @@
 import { autoIncrement } from "../utils/auto-increment.js";
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 /**
  * Handles category form submission.
@@ -7,19 +7,19 @@ import { formatCode } from "../utils/format-code.js";
  * @param event - Form submit event.
  * @returns void
  */
-const createCategory = (event) => {
+const createCategory = async (event) => {
     // 1° - ENVIRONMENT
     event.preventDefault();
     // 2° - INPUT
-    const id = autoIncrement("categories");
+    const id = await autoIncrement("categories");
     const form = event.target;
     const category = form.elements.namedItem("category")
         .value;
     const tax = parseInt(form.elements.namedItem("tax").value);
     // 3° - PROCESS
-    if (!category || !tax)
+    const current = await baseServiceView("categories");
+    if (!category || !tax || !current)
         return;
-    const current = baseView("categories", { variant: "list" });
     const payload = {
         id: id,
         name: category,
@@ -35,12 +35,10 @@ const createCategory = (event) => {
  *
  * @returns void
  */
-const renderCategory = () => {
+const renderCategory = async () => {
     // 1° - INPUT
     const table = document.querySelector("#tbody-category");
-    const data = baseView("categories", {
-        variant: "list",
-    });
+    const data = await baseServiceView("categories");
     // 2° - PROCESS /  OUTPUT
     if (!data || !table)
         return;

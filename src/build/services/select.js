@@ -1,8 +1,8 @@
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 const renderSelect = (table, select, field) => {
     // 1° - INPUT
     const parent = document.querySelector(select);
-    const data = baseView(table, { variant: "list" });
+    const data = baseServiceView(table);
     // 2° - PROCESS
     if (!parent || !data)
         return;

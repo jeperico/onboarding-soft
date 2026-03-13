@@ -1,5 +1,5 @@
 import { autoIncrement } from "../utils/auto-increment.js";
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 /**
  * Handles transaction form submission.
@@ -7,11 +7,11 @@ import { formatCode } from "../utils/format-code.js";
  * @param event - Form submit event.
  * @returns void
  */
-const createTransaction = (event) => {
+const createTransaction = async (event) => {
     // 1° - ENVIRONMENT
     event.preventDefault();
     // 2° - INPUT
-    const id = autoIncrement("transactions");
+    const id = await autoIncrement("transactions");
     const form = event.target;
     const product = form.elements.namedItem("product")
         .value;
@@ -21,9 +21,9 @@ const createTransaction = (event) => {
     // 3° - PROCESS
     if (!product || !amount || !tax || !price)
         return;
-    const current = baseView("transactions", {
-        variant: "list",
-    });
+    const current = await baseServiceView("transactions");
+    if (!current)
+        return;
     const payload = {
         id: id,
         state: "active",
@@ -42,12 +42,10 @@ const createTransaction = (event) => {
  *
  * @returns void
  */
-const renderTransaction = () => {
+const renderTransaction = async () => {
     // 1° - INPUT
     const table = document.querySelector("#tbody-transactions");
-    const data = baseView("transactions", {
-        variant: "list",
-    });
+    const data = await baseServiceView("transactions");
     // 2° - PROCESS /  OUTPUT
     if (!data || !table)
         return;

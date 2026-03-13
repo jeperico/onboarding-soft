@@ -1,6 +1,6 @@
 import { ICategory } from "../interfaces/category.js";
 import { autoIncrement } from "../utils/auto-increment.js";
-import { baseView } from "../utils/base-view.js";
+import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 
 /**
@@ -9,12 +9,12 @@ import { formatCode } from "../utils/format-code.js";
  * @param event - Form submit event.
  * @returns void
  */
-const createCategory = (event: SubmitEvent) => {
+const createCategory = async (event: SubmitEvent) => {
   // 1° - ENVIRONMENT
   event.preventDefault();
 
   // 2° - INPUT
-  const id = autoIncrement("categories");
+  const id = await autoIncrement("categories");
   const form = event.target as HTMLFormElement;
   const category = (form.elements.namedItem("category") as HTMLInputElement)
     .value;
@@ -23,8 +23,8 @@ const createCategory = (event: SubmitEvent) => {
   );
 
   // 3° - PROCESS
-  if (!category || !tax) return;
-  const current: Array<ICategory> = baseView("categories", { variant: "list" });
+  const current = await baseServiceView<ICategory>("categories");
+  if (!category || !tax || !current) return;
 
   const payload: ICategory = {
     id: id,
@@ -43,12 +43,10 @@ const createCategory = (event: SubmitEvent) => {
  *
  * @returns void
  */
-const renderCategory = () => {
+const renderCategory = async () => {
   // 1° - INPUT
   const table = document.querySelector("#tbody-category");
-  const data: Array<ICategory> | [] = baseView("categories", {
-    variant: "list",
-  });
+  const data = await baseServiceView<ICategory>("categories");
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;
