@@ -1,5 +1,5 @@
 import { loadCategory, loadDetails, loadHistory, loadProducts, loadTransactions, } from "../services/events/load.js";
-const initializePage = (path) => {
+const renderPage = (path) => {
     switch (path) {
         case "/":
             loadTransactions();
@@ -18,4 +18,4 @@ const initializePage = (path) => {
             break;
     }
 };
-export default initializePage;
+export default renderPage;

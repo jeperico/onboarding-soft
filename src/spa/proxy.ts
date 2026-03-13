@@ -1,4 +1,4 @@
-import initializeApp from "./initialize-app.js";
+import renderApp from "./render-app.js";
 import routes, { RouteKey } from "./routes.js";
 
 const renderContent = async (path: RouteKey) => {
@@ -19,6 +19,6 @@ const renderContent = async (path: RouteKey) => {
 };
 
 // RENDER HEADER
-initializeApp();
+renderApp();
 
 export { renderContent };

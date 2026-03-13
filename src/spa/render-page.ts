@@ -7,7 +7,7 @@ import {
 } from "../services/events/load.js";
 import { RouteKey } from "./routes.js";
 
-const initializePage = (path: RouteKey) => {
+const renderPage = (path: RouteKey) => {
   switch (path) {
     case "/":
       loadTransactions();
@@ -27,4 +27,4 @@ const initializePage = (path: RouteKey) => {
   }
 };
 
-export default initializePage;
+export default renderPage;

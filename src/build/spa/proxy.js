@@ -1,4 +1,4 @@
-import initializeApp from "./initialize-app.js";
+import renderApp from "./render-app.js";
 import routes from "./routes.js";
 const renderContent = async (path) => {
     const app = document.querySelector("main");
@@ -15,5 +15,5 @@ const renderContent = async (path) => {
     document.title = route.title;
 };
 // RENDER HEADER
-initializeApp();
+renderApp();
 export { renderContent };

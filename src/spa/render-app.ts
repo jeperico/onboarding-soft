@@ -1,31 +1,31 @@
-import initializePage from "./initialize-page.js";
+import renderPage from "./render-page.js";
 
-const initializeApp = () => {
+const renderApp = () => {
   const links = document.querySelectorAll(".proxy-route");
 
   links.forEach((item, index) => {
     item.addEventListener("click", () => {
       switch (index) {
         case 0:
-          initializePage("/");
+          renderPage("/");
           break;
         case 1:
-          initializePage("/products");
+          renderPage("/products");
           break;
         case 2:
-          initializePage("/categories");
+          renderPage("/categories");
           break;
         case 3:
-          initializePage("/history");
+          renderPage("/history");
           break;
         default:
-          initializePage("/");
+          renderPage("/");
           break;
       }
     });
   });
 
-  initializePage("/");
+  renderPage("/");
 };
 
-export default initializeApp;
+export default renderApp;
