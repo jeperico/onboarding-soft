@@ -1,29 +1,8 @@
-// ROUTES
-const routes = {
-    "/": {
-        title: "Home",
-        href: "/src/app/home.html",
-    },
-    "/products": {
-        title: "Products",
-        href: "/src/app/products.html",
-    },
-    "/categories": {
-        title: "Categories",
-        href: "/src/app/categories.html",
-    },
-    "/history": {
-        title: "History",
-        href: "/src/app/history.html",
-    },
-    "/details": {
-        title: "Details",
-        href: "/src/app/details.html",
-    },
-};
-// BASE
-const app = document.querySelector("main");
+import loadSPA from "./services/events/spa.js";
+import { loadTransactions, loadProducts, loadCategory, loadHistory, loadDetails, } from "./services/events/load.js";
+import routes from "./types/route.js";
 const renderContent = async (path) => {
+    const app = document.querySelector("main");
     if (!app)
         return;
     const route = routes[path];
@@ -37,31 +16,6 @@ const renderContent = async (path) => {
     document.title = route.title;
     initializePage(path);
 };
-renderContent("/details");
-const links = document.querySelectorAll(".proxy-route");
-links.forEach((item, index) => {
-    item.addEventListener("click", () => {
-        switch (index) {
-            case 0:
-                renderContent("/");
-                break;
-            case 1:
-                renderContent("/products");
-                break;
-            case 2:
-                renderContent("/categories");
-                break;
-            case 3:
-                renderContent("/history");
-                break;
-            default:
-                renderContent("/");
-                break;
-        }
-    });
-});
-// INITIALIZER
-import { loadTransactions, loadProducts, loadCategory, loadHistory, loadDetails, } from "./services/events/load.js";
 const initializePage = (path) => {
     console.log(path, "- initializing... ");
     switch (path) {
@@ -82,3 +36,5 @@ const initializePage = (path) => {
             break;
     }
 };
+loadSPA();
+export { renderContent };
