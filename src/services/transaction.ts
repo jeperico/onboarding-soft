@@ -60,6 +60,7 @@ const renderTransaction = () => {
   const data: Array<ITransaction> | [] = baseView("transactions", {
     variant: "list",
   });
+  console.log("table", table);
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;

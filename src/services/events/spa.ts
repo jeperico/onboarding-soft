@@ -1,4 +1,4 @@
-import { renderContent } from "../../proxy.js";
+import initializePage from "../../utils/initialize-page.js";
 
 const loadSPA = () => {
   const links = document.querySelectorAll(".proxy-route");
@@ -7,25 +7,25 @@ const loadSPA = () => {
     item.addEventListener("click", () => {
       switch (index) {
         case 0:
-          renderContent("/");
+          initializePage("/");
           break;
         case 1:
-          renderContent("/products");
+          initializePage("/products");
           break;
         case 2:
-          renderContent("/categories");
+          initializePage("/categories");
           break;
         case 3:
-          renderContent("/history");
+          initializePage("/history");
           break;
         default:
-          renderContent("/");
+          initializePage("/");
           break;
       }
     });
   });
 
-  renderContent("/");
+  initializePage("/");
 };
 
 export default loadSPA;

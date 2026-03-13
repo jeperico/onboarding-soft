@@ -1,11 +1,4 @@
 import loadSPA from "./services/events/spa.js";
-import {
-  loadTransactions,
-  loadProducts,
-  loadCategory,
-  loadHistory,
-  loadDetails,
-} from "./services/events/load.js";
 import routes, { RouteKey } from "./types/route.js";
 
 const renderContent = async (path: RouteKey) => {
@@ -23,30 +16,9 @@ const renderContent = async (path: RouteKey) => {
 
   app.innerHTML = html;
   document.title = route.title;
-  initializePage(path);
 };
 
-const initializePage = (path: RouteKey) => {
-  console.log(path, "- initializing... ");
-  switch (path) {
-    case "/":
-      loadTransactions();
-      break;
-    case "/products":
-      loadProducts();
-      break;
-    case "/categories":
-      loadCategory();
-      break;
-    case "/history":
-      loadHistory();
-      break;
-    case "/details":
-      loadDetails();
-      break;
-  }
-};
-
+// RENDER HEADER
 loadSPA();
 
 export { renderContent };

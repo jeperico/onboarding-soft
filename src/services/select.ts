@@ -12,11 +12,8 @@ const renderSelect = (table: Table, select: string, field: string) => {
     const option = document.createElement("option");
     option.innerText = el[field];
     option.value = el[field].toLowerCase();
-    console.log(option.value);
-    console.log(el);
     parent.appendChild(option);
   });
-  console.log(parent, data);
 };
 
 export { renderSelect };
