@@ -1,17 +1,23 @@
 import { Table } from "../types/table.js";
 import { baseServiceView } from "../utils/base-services.js";
 
-const renderSelect = (table: Table, select: string, field: string) => {
-  // 1° - INPUT
-  const parent = document.querySelector(select);
-  const data = baseServiceView(table);
+const renderSelect = async <IResponseData extends object>(
+  table: Table,
+  select: string,
+  field: keyof IResponseData,
+) => {
+  const parent = document.querySelector<HTMLSelectElement>(select);
+  const data = await baseServiceView<IResponseData>(table);
 
-  // 2° - PROCESS
   if (!parent || !data) return;
-  data.forEach((el: Object) => {
+  data.forEach((el: IResponseData) => {
     const option = document.createElement("option");
-    option.innerText = el[field];
-    option.value = el[field].toLowerCase();
+
+    const value = el[field];
+
+    option.innerText = String(value);
+    option.value = String(value).toLowerCase();
+
     parent.appendChild(option);
   });
 };

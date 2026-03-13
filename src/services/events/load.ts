@@ -1,3 +1,5 @@
+import { ICategory } from "../../interfaces/category.js";
+import { IProduct } from "../../interfaces/product.js";
 import { renderContent } from "../../spa/proxy.js";
 import { baseEvent } from "../../utils/base-event.js";
 import { createCategory, renderCategory } from "../category.js";
@@ -10,13 +12,13 @@ import { createTransaction, renderTransaction } from "../transaction.js";
 const loadTransactions = async () => {
   await renderContent("/");
   baseEvent("transactions", renderTransaction, "delete", createTransaction);
-  renderSelect("products", "#product", "name");
+  await renderSelect<IProduct>("products", "#product", "name");
 };
 
 const loadProducts = async () => {
   await renderContent("/products");
   baseEvent("products", renderProducts, "delete", createProduct);
-  renderSelect("categories", "#category", "name");
+  renderSelect<ICategory>("categories", "#category", "name");
 };
 
 const loadCategory = async () => {

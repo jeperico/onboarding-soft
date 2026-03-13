@@ -9,7 +9,7 @@ import { createTransaction, renderTransaction } from "../transaction.js";
 const loadTransactions = async () => {
     await renderContent("/");
     baseEvent("transactions", renderTransaction, "delete", createTransaction);
-    renderSelect("products", "#product", "name");
+    await renderSelect("products", "#product", "name");
 };
 const loadProducts = async () => {
     await renderContent("/products");

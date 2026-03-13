@@ -1,15 +1,14 @@
 import { baseServiceView } from "../utils/base-services.js";
-const renderSelect = (table, select, field) => {
-    // 1° - INPUT
+const renderSelect = async (table, select, field) => {
     const parent = document.querySelector(select);
-    const data = baseServiceView(table);
-    // 2° - PROCESS
+    const data = await baseServiceView(table);
     if (!parent || !data)
         return;
     data.forEach((el) => {
         const option = document.createElement("option");
-        option.innerText = el[field];
-        option.value = el[field].toLowerCase();
+        const value = el[field];
+        option.innerText = String(value);
+        option.value = String(value).toLowerCase();
         parent.appendChild(option);
     });
 };
