@@ -1,3 +1,5 @@
+import { Table } from "../types/table";
+
 /**
  * Configuration for retrieving records from storage.
  */
@@ -15,7 +17,7 @@ export interface ViewOptions {
  * @param options - View configuration.
  * @returns Stored data or empty array if not found.
  */
-const baseView = (table: string, options: ViewOptions) => {
+const baseView = (table: Table, options: ViewOptions) => {
   // 1° - INPUT
   const raw = localStorage.getItem(table);
 

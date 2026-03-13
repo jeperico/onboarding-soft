@@ -1,3 +1,4 @@
+import { Table } from "../types/table.js";
 import { baseView } from "./base-view.js";
 
 /**
@@ -15,7 +16,7 @@ export interface DeleteOptions {
  * @param options - Delete configuration.
  * @returns void
  */
-const baseDelete = (table: string, options: DeleteOptions) => {
+const baseDelete = (table: Table, options: DeleteOptions) => {
   // 1° - INPUT
   const raw: Array<{ id: number; is_active: boolean }> | [] = baseView(table, {
     variant: "list",

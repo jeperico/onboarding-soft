@@ -1,7 +1,8 @@
+import { Table } from "../types/table.js";
 import { baseDelete } from "./base-delete.js";
 
 interface EventListenerOptions {
-  table: string;
+  table: Table;
   render: () => void;
   variant: "delete" | "view" | "none";
   handler?: (event: SubmitEvent) => void;

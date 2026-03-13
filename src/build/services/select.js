@@ -1,0 +1,2 @@
+const renderSelect = (table) => { };
+export {};

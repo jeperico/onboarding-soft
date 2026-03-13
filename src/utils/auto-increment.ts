@@ -1,6 +1,7 @@
 import { baseView } from "./base-view.js";
+import { Table } from "./../types/table.js";
 
-const autoIncrement = (table: string) => {
+const autoIncrement = (table: Table) => {
   const data:
     | Array<{
         id: number;

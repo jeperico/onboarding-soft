@@ -43,7 +43,7 @@ const renderContent = async (path: RouteKey) => {
   document.title = route.title;
 };
 
-renderContent("/");
+renderContent("/products");
 
 const links = document.querySelectorAll(".proxy-route");
 links.forEach((item, index) => {

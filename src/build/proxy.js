@@ -37,7 +37,7 @@ const renderContent = async (path) => {
     app.innerHTML = html;
     document.title = route.title;
 };
-renderContent("/");
+renderContent("/products");
 const links = document.querySelectorAll(".proxy-route");
 links.forEach((item, index) => {
     item.addEventListener("click", () => {
