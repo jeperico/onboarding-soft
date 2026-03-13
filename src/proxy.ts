@@ -45,8 +45,8 @@ const renderContent = async (path: RouteKey) => {
 };
 
 renderContent("/");
-renderContent("/categories");
+renderContent("/products");
 renderContent("/history");
 renderContent("/details");
 
-renderContent("/products");
+renderContent("/categories");

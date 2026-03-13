@@ -23,7 +23,7 @@ const createCategory = (event: SubmitEvent) => {
 
   // 3° - PROCESS
   if (!category || !tax) return;
-  const current: Array<ICategory> = baseView("category", { variant: "list" });
+  const current: Array<ICategory> = baseView("categories", { variant: "list" });
 
   const payload: ICategory = {
     id: id,
@@ -33,7 +33,7 @@ const createCategory = (event: SubmitEvent) => {
   };
 
   // 4° - OUTPUT
-  localStorage.setItem("category", JSON.stringify([...current, payload]));
+  localStorage.setItem("categories", JSON.stringify([...current, payload]));
   window.location.reload();
 };
 
@@ -45,7 +45,9 @@ const createCategory = (event: SubmitEvent) => {
 const renderCategory = () => {
   // 1° - INPUT
   const table = document.querySelector("#tbody-category");
-  const data: Array<ICategory> | [] = baseView("category", { variant: "list" });
+  const data: Array<ICategory> | [] = baseView("categories", {
+    variant: "list",
+  });
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;
