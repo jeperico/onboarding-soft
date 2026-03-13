@@ -36,7 +36,7 @@ const createCategory = (event) => {
  */
 const renderCategory = () => {
     // 1° - INPUT
-    const table = document.querySelector("tbody");
+    const table = document.querySelector("#tbody-category");
     const data = baseView("category", { variant: "list" });
     // 2° - PROCESS /  OUTPUT
     if (!data || !table)

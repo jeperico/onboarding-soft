@@ -44,7 +44,7 @@ const createCategory = (event: SubmitEvent) => {
  */
 const renderCategory = () => {
   // 1° - INPUT
-  const table = document.querySelector("tbody");
+  const table = document.querySelector("#tbody-category");
   const data: Array<ICategory> | [] = baseView("category", { variant: "list" });
 
   // 2° - PROCESS /  OUTPUT

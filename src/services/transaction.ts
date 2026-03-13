@@ -55,7 +55,7 @@ const createTransaction = (event: SubmitEvent) => {
  */
 const renderTransaction = () => {
   // 1° - INPUT
-  const table = document.querySelector("tbody");
+  const table = document.querySelector("#tbody-transactions");
   const data: Array<ITransaction> | [] = baseView("transactions", {
     variant: "list",
   });

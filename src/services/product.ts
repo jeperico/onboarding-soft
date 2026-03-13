@@ -51,7 +51,7 @@ const createProduct = (event: SubmitEvent) => {
  */
 const renderProducts = () => {
   // 1° - INPUT
-  const table = document.querySelector("tbody");
+  const table = document.querySelector("#tbody-products");
   const data: Array<IProduct> | [] = baseView("products", { variant: "list" });
 
   // 2° - PROCESS /  OUTPUT

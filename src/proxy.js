@@ -41,4 +41,8 @@ const renderContent = async (path) => {
   console.log(html);
 };
 
+renderContent("/");
+renderContent("/products");
 renderContent("/categories");
+renderContent("/history");
+renderContent("/details");

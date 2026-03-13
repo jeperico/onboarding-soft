@@ -9,7 +9,7 @@ import { formatCode } from "../utils/format-code.js";
  */
 const renderHistory = () => {
   // 1° - INPUT
-  const table = document.querySelector("tbody");
+  const table = document.querySelector("#tbody-history");
   const data: Array<ITransaction> | [] = baseView("transactions", {
     variant: "list",
   });

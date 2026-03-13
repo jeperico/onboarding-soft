@@ -41,7 +41,7 @@ const createProduct = (event) => {
  */
 const renderProducts = () => {
     // 1° - INPUT
-    const table = document.querySelector("tbody");
+    const table = document.querySelector("#tbody-products");
     const data = baseView("products", { variant: "list" });
     // 2° - PROCESS /  OUTPUT
     if (!data || !table)

@@ -7,7 +7,7 @@ import { formatCode } from "../utils/format-code.js";
  */
 const renderDetails = () => {
     // 1° - INPUT
-    const table = document.querySelector("tbody");
+    const table = document.querySelector("#tbody-details");
     const data = baseView("transactions", {
         variant: "list",
     });
