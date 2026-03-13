@@ -15,7 +15,8 @@
     "src/utils",
     "src/services",
     "src/interfaces",
-    "src/events"
+    "src/events",
+    "src/proxy.ts"
   ],
   "exclude": ["node_modules"]
 }

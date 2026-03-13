@@ -22,12 +22,15 @@ const routes = {
   },
 };
 
+type RouteKey = keyof typeof routes;
+
 // BASE
 const app = document.querySelector("main");
 
-const renderContent = async (path) => {
-  const route = routes[path];
+const renderContent = async (path: RouteKey) => {
+  if (!app) return;
 
+  const route = routes[path];
   if (!route) {
     app.innerHTML = "<h1>404</h1>";
     return;
@@ -42,7 +45,8 @@ const renderContent = async (path) => {
 };
 
 renderContent("/");
-renderContent("/products");
 renderContent("/categories");
 renderContent("/history");
 renderContent("/details");
+
+renderContent("/products");
