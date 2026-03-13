@@ -1,6 +1,5 @@
 import { loadCategory, loadDetails, loadHistory, loadProducts, loadTransactions, } from "../services/events/load.js";
 const initializePage = (path) => {
-    console.log("PAGE CHANGED TO", path);
     switch (path) {
         case "/":
             loadTransactions();

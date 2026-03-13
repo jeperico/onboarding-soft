@@ -8,7 +8,6 @@ import {
 import { RouteKey } from "../types/route.js";
 
 const initializePage = (path: RouteKey) => {
-  console.log("PAGE CHANGED TO", path);
   switch (path) {
     case "/":
       loadTransactions();
