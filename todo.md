@@ -4,12 +4,9 @@
 
 > Modeling
 
-- refactor: ids | uuid > int
 - refactor: validate soft delete permision
 
-> Local Storage
-
-- refactor: category > categories;
+* refactor: ids | uuid > int
 
 > Forms
 

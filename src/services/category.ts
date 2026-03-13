@@ -1,4 +1,5 @@
 import { ICategory } from "../interfaces/category.js";
+import { autoIncrement } from "../utils/auto-increment.js";
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
 
@@ -13,7 +14,7 @@ const createCategory = (event: SubmitEvent) => {
   event.preventDefault();
 
   // 2° - INPUT
-  const id = crypto.randomUUID();
+  const id = autoIncrement("categories");
   const form = event.target as HTMLFormElement;
   const category = (form.elements.namedItem("category") as HTMLInputElement)
     .value;
@@ -74,7 +75,7 @@ const renderCategory = () => {
     const button = document.createElement("button");
     button.textContent = "DELETE";
     button.className = "action-delete button-secondary";
-    button.id = el.id;
+    button.id = el.id.toString();
     const action = td.cloneNode();
     action.appendChild(button);
     row.appendChild(action);
