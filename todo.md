@@ -2,13 +2,8 @@
 
 ## JS Chalenge Module
 
-> Modeling
-
-- refactor: validate soft delete permision
-
 > Forms
 
-- fix: spa cant reload after save
 - feat: render disables
 - feat: validate inputs
 - feat: lazy validate
@@ -16,12 +11,10 @@
 > Tables
 
 - feat: unmock values
-- feat: agregate objects
+- feat: see about last child tr and multiples values
 
-* fix: delete with field id not working;
+> SPA:
 
-> Others:
-
+- fix: spa cant reload after create
+- fix: spa cant reload after delete
 - feat: implement modern pathnames
-- refactor: modularize js
-- docs: read instrutions
