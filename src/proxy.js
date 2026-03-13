@@ -23,7 +23,7 @@ const routes = {
 };
 
 // BASE
-const app = document.querySelector("#app");
+const app = document.querySelector("main");
 
 const renderContent = async (path) => {
   const route = routes[path];
