@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./src/styles/base.css" />
+    <link rel="stylesheet" href="./src/styles/components.css" />
+    <link rel="stylesheet" href="./src/styles/main.css" />
+    <script type="module" src="./src/build/services/transaction.js"></script>
+    <script type="module" src="./src/build/events/transaction.js"></script>
+    <script type="module" src="./src/build/services/product.js"></script>
+    <script type="module" src="./src/build/events/product.js"></script>
+    <script type="module" src="./src/build/services/details.js"></script>
+    <script type="module" src="./src/build/events/details.js"></script>
+    <script type="module" src="./src/build/services/history.js"></script>
+    <script type="module" src="./src/build/events/history.js"></script>
+    <script type="module" src="./src/build/services/category.js"></script>
+    <script type="module" src="./src/build/events/category.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="./home.html" class="route"><h1>Suite Store</h1></a>
+      <nav>
+        <ul>
+          <li>
+            <a href="./products.html" class="route">Products</a>
+          </li>
+          <li>
+            <a href="./categories.html" class="route">Categories</a>
+          </li>
+          <li>
+            <a href="./history.html" class="route">History</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div id="app"></div>
+
+    <script src="./src/proxy.js"></script>
+  </body>
+</html>

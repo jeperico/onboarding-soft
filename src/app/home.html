@@ -1,98 +1,67 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Suite Store PDV</title>
-    <link rel="stylesheet" href="./../styles/base.css" />
-    <link rel="stylesheet" href="./../styles/components.css" />
-    <link rel="stylesheet" href="./../styles/main.css" />
-    <script type="module" src="./../build/services/transaction.js"></script>
-    <script type="module" src="./../build/events/transaction.js"></script>
-  </head>
-  <body>
-    <header>
-      <a href="./home.html"><h1>Suite Store</h1></a>
-      <nav>
-        <ul>
-          <li><a href="./products.html">Products</a></li>
-          <li><a href="./categories.html">Categories</a></li>
-          <li><a href="./history.html">History</a></li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <section>
-        <!-- Base form -->
-        <form id="home-form">
-          <select name="product" id="product" name="product">
-            <option value="" disabled selected hidden>Product</option>
-            <option value="coffee">Coffee</option>
-            <option value="beans">Beans</option>
-            <option value="rice">Rice</option>
-          </select>
-          <div>
-            <input
-              type="number"
-              name="amount"
-              id="amount"
-              placeholder="Amount"
-              min="1"
-              step="1"
-            />
-            <input
-              type="number"
-              min="1"
-              name="tax"
-              id="tax"
-              placeholder="Tax"
-            />
-            <input
-              type="number"
-              min="0"
-              name="price"
-              id="price"
-              step="1"
-              placeholder="Price"
-            />
-          </div>
-          <button type="submit" class="button-primary">Add Product</button>
-        </form>
-      </section>
-      <!-- Horizontal Line -->
-      <span class="horizontal-line"></span>
-      <!-- Cart Division -->
-      <section id="chart-section">
-        <!-- Base Table -->
-        <table>
-          <thead>
-            <th class="font-bold">Product</th>
-            <th class="font-bold">Tax</th>
-            <th class="font-bold">Price</th>
-            <th class="font-bold">Amount</th>
-            <th class="font-bold">Total</th>
-            <th class="font-bold">Action</th>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <!-- Finish buy form -->
-        <form id="chart-details">
-          <div>
-            <div>
-              <p class="font-bold">Tax</p>
-              <p class="font-bold">Total:</p>
-            </div>
-            <div>
-              <p>$6.50</p>
-              <p>$32.50</p>
-            </div>
-          </div>
-          <div>
-            <button class="button-secondary">Cancel</button>
-            <button type="submit" class="button-primary">Finish</button>
-          </div>
-        </form>
-      </section>
-    </main>
-  </body>
-</html>
+<main>
+  <section>
+    <!-- Base form -->
+    <form id="home-form">
+      <select name="product" id="product" name="product">
+        <option value="" disabled selected hidden>Product</option>
+        <option value="coffee">Coffee</option>
+        <option value="beans">Beans</option>
+        <option value="rice">Rice</option>
+      </select>
+      <div>
+        <input
+          type="number"
+          name="amount"
+          id="amount"
+          placeholder="Amount"
+          min="1"
+          step="1"
+        />
+        <input type="number" min="1" name="tax" id="tax" placeholder="Tax" />
+        <input
+          type="number"
+          min="0"
+          name="price"
+          id="price"
+          step="1"
+          placeholder="Price"
+        />
+      </div>
+      <button type="submit" class="button-primary">Add Product</button>
+    </form>
+  </section>
+  <!-- Horizontal Line -->
+  <span class="horizontal-line"></span>
+  <!-- Cart Division -->
+  <section id="chart-section">
+    <!-- Base Table -->
+    <table>
+      <thead>
+        <th class="font-bold">Product</th>
+        <th class="font-bold">Tax</th>
+        <th class="font-bold">Price</th>
+        <th class="font-bold">Amount</th>
+        <th class="font-bold">Total</th>
+        <th class="font-bold">Action</th>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <!-- Finish buy form -->
+    <form id="chart-details">
+      <div>
+        <div>
+          <p class="font-bold">Tax</p>
+          <p class="font-bold">Total:</p>
+        </div>
+        <div>
+          <p>$6.50</p>
+          <p>$32.50</p>
+        </div>
+      </div>
+      <div>
+        <button class="button-secondary">Cancel</button>
+        <button type="submit" class="button-primary">Finish</button>
+      </div>
+    </form>
+  </section>
+</main>
