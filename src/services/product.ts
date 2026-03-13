@@ -2,6 +2,7 @@ import { IProduct } from "../interfaces/product.js";
 import { autoIncrement } from "../utils/auto-increment.js";
 import { baseView } from "../utils/base-view.js";
 import { formatCode } from "../utils/format-code.js";
+import { renderSelect } from "./select.js";
 
 /**
  * Handles product form submission.
@@ -100,5 +101,7 @@ const renderProducts = () => {
   for (let i = 0; i < 6; i++) row.appendChild(document.createElement("td"));
   table.appendChild(row);
 };
+
+renderSelect("categories", "#category", "name");
 
 export { createProduct, renderProducts };
