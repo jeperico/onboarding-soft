@@ -17,26 +17,24 @@ const baseEvent = (
   if (handler)
     document.querySelector("form")?.addEventListener("submit", handler);
 
-  document.addEventListener("DOMContentLoaded", () => {
-    render();
+  render();
 
-    const buttons = document.querySelectorAll<HTMLButtonElement>(
-      variant === "delete" ? ".action-delete" : ".action-view",
-    );
+  const buttons = document.querySelectorAll<HTMLButtonElement>(
+    variant === "delete" ? ".action-delete" : ".action-view",
+  );
 
-    buttons.forEach((el) => {
-      el.addEventListener("click", () => {
-        const id = Number(el.id);
+  buttons.forEach((el) => {
+    el.addEventListener("click", () => {
+      const id = Number(el.id);
 
-        switch (variant) {
-          case "delete":
-            baseDelete(table, { id: id });
-            break;
-          case "view":
-            // baseView()
-            break;
-        }
-      });
+      switch (variant) {
+        case "delete":
+          baseDelete(table, { id: id });
+          break;
+        case "view":
+          // baseView()
+          break;
+      }
     });
   });
 };

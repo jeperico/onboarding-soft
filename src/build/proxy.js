@@ -1,4 +1,3 @@
-"use strict";
 // ROUTES
 const routes = {
     "/": {
@@ -36,8 +35,9 @@ const renderContent = async (path) => {
     const html = await res.text();
     app.innerHTML = html;
     document.title = route.title;
+    initializePage(path);
 };
-renderContent("/products");
+renderContent("/categories");
 const links = document.querySelectorAll(".proxy-route");
 links.forEach((item, index) => {
     item.addEventListener("click", () => {
@@ -60,3 +60,13 @@ links.forEach((item, index) => {
         }
     });
 });
+// INITIALIZER
+import { loadCategory } from "./services/events/load.js";
+const initializePage = (path) => {
+    console.log(path, "- initializing... ");
+    switch (path) {
+        case "/categories":
+            loadCategory();
+            break;
+    }
+};

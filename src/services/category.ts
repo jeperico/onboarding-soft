@@ -49,6 +49,7 @@ const renderCategory = () => {
   const data: Array<ICategory> | [] = baseView("categories", {
     variant: "list",
   });
+  console.log(table, data);
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;

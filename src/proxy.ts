@@ -41,9 +41,10 @@ const renderContent = async (path: RouteKey) => {
 
   app.innerHTML = html;
   document.title = route.title;
+  initializePage(path);
 };
 
-renderContent("/products");
+renderContent("/categories");
 
 const links = document.querySelectorAll(".proxy-route");
 links.forEach((item, index) => {
@@ -67,3 +68,15 @@ links.forEach((item, index) => {
     }
   });
 });
+
+// INITIALIZER
+import { loadCategory } from "./services/events/load.js";
+
+const initializePage = (path: RouteKey) => {
+  console.log(path, "- initializing... ");
+  switch (path) {
+    case "/categories":
+      loadCategory();
+      break;
+  }
+};
