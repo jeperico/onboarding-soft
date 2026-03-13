@@ -1,3 +1,4 @@
+import initializePage from "../spa/initialize-page.js";
 import { Table } from "../types/table.js";
 import { baseDelete } from "./base-delete.js";
 
@@ -32,7 +33,7 @@ const baseEvent = (
           baseDelete(table, { id: id });
           break;
         case "view":
-          // baseView()
+          initializePage("/details");
           break;
       }
     });

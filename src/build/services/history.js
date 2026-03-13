@@ -33,11 +33,8 @@ const renderHistory = () => {
         button.textContent = "VIEW";
         button.className = "action-view button-secondary";
         button.id = el.id.toString();
-        const link = document.createElement("a");
-        link.href = "./details.html";
-        link.appendChild(button);
         const action = td.cloneNode();
-        action.appendChild(link);
+        action.appendChild(button);
         row.appendChild(action);
         table.appendChild(row);
     });

@@ -1,3 +1,4 @@
+import initializePage from "../spa/initialize-page.js";
 import { baseDelete } from "./base-delete.js";
 const baseEvent = (table, render, variant, handler) => {
     if (handler)
@@ -12,7 +13,7 @@ const baseEvent = (table, render, variant, handler) => {
                     baseDelete(table, { id: id });
                     break;
                 case "view":
-                    // baseView()
+                    initializePage("/details");
                     break;
             }
         });
