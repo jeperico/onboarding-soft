@@ -25,7 +25,7 @@ const createCategory = async (event: SubmitEvent) => {
 
   // 3° - PROCESS
   const current = await baseServiceView<ICategory>("categories");
-  if (!category || !tax || !current) return;
+  if (!category || !tax) return;
 
   const payload: ICategory = {
     id: id,
@@ -35,7 +35,10 @@ const createCategory = async (event: SubmitEvent) => {
   };
 
   // 4° - OUTPUT
-  localStorage.setItem("categories", JSON.stringify([...current, payload]));
+  localStorage.setItem(
+    "categories",
+    JSON.stringify(current ? [...current, payload] : [payload]),
+  );
   window.location.reload();
 };
 

@@ -20,10 +20,8 @@ const createTransaction = async (event) => {
     const tax = parseInt(form.elements.namedItem("tax").value);
     const price = parseInt(form.elements.namedItem("price").value);
     // 3° - PROCESS
-    if (!product || !amount || !tax || !price)
-        return;
     const current = await baseServiceView("transactions");
-    if (!current)
+    if (!product || !amount || !tax || !price)
         return;
     const payload = {
         id: id,
@@ -35,7 +33,7 @@ const createTransaction = async (event) => {
         is_active: true,
     };
     // 4° - OUTPUT
-    localStorage.setItem("transactions", JSON.stringify([...current, payload]));
+    localStorage.setItem("transactions", JSON.stringify(current ? [...current, payload] : [payload]));
     window.location.reload();
 };
 /**

@@ -30,9 +30,8 @@ const createTransaction = async (event: SubmitEvent) => {
   );
 
   // 3° - PROCESS
-  if (!product || !amount || !tax || !price) return;
   const current = await baseServiceView<ITransaction>("transactions");
-  if (!current) return;
+  if (!product || !amount || !tax || !price) return;
 
   const payload: ITransaction = {
     id: id,
@@ -45,7 +44,10 @@ const createTransaction = async (event: SubmitEvent) => {
   };
 
   // 4° - OUTPUT
-  localStorage.setItem("transactions", JSON.stringify([...current, payload]));
+  localStorage.setItem(
+    "transactions",
+    JSON.stringify(current ? [...current, payload] : [payload]),
+  );
   window.location.reload();
 };
 

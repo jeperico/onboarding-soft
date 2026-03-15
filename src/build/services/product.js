@@ -22,7 +22,7 @@ const createProduct = async (event) => {
     const amount = parseInt(form.elements.namedItem("amount").value);
     // 3° - PROCESS
     const current = await baseServiceView("products");
-    if (!product || !category || !price || !amount || !current)
+    if (!product || !category || !price || !amount)
         return;
     const payload = {
         id: id,
@@ -33,7 +33,7 @@ const createProduct = async (event) => {
         is_active: true,
     };
     // 4° - OUTPUT
-    localStorage.setItem("products", JSON.stringify([...current, payload]));
+    localStorage.setItem("products", JSON.stringify(current ? [...current, payload] : [payload]));
     window.location.reload();
 };
 /**

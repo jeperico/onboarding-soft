@@ -30,7 +30,7 @@ const createProduct = async (event: SubmitEvent) => {
 
   // 3° - PROCESS
   const current = await baseServiceView<IProduct>("products");
-  if (!product || !category || !price || !amount || !current) return;
+  if (!product || !category || !price || !amount) return;
 
   const payload: IProduct = {
     id: id,
@@ -42,7 +42,10 @@ const createProduct = async (event: SubmitEvent) => {
   };
 
   // 4° - OUTPUT
-  localStorage.setItem("products", JSON.stringify([...current, payload]));
+  localStorage.setItem(
+    "products",
+    JSON.stringify(current ? [...current, payload] : [payload]),
+  );
   window.location.reload();
 };
 

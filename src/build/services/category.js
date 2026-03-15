@@ -19,7 +19,7 @@ const createCategory = async (event) => {
     const tax = parseInt(form.elements.namedItem("tax").value);
     // 3° - PROCESS
     const current = await baseServiceView("categories");
-    if (!category || !tax || !current)
+    if (!category || !tax)
         return;
     const payload = {
         id: id,
@@ -28,7 +28,7 @@ const createCategory = async (event) => {
         is_active: true,
     };
     // 4° - OUTPUT
-    localStorage.setItem("categories", JSON.stringify([...current, payload]));
+    localStorage.setItem("categories", JSON.stringify(current ? [...current, payload] : [payload]));
     window.location.reload();
 };
 /**
