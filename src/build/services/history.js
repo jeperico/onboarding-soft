@@ -1,3 +1,4 @@
+import { renderVoidTable } from "../spa/render-void-table.js";
 import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 /**
@@ -7,8 +8,14 @@ import { formatCode } from "../utils/format-code.js";
  */
 const renderHistory = async () => {
     // 1° - INPUT
-    const table = document.querySelector("#tbody-history");
     const data = await baseServiceView("transactions");
+    if (!data) {
+        renderVoidTable("#tbody-history", 4);
+        return;
+    }
+    const table = document.querySelector("#tbody-history");
+    if (!table)
+        return;
     // 2° - PROCESS /  OUTPUT
     if (!data || !table)
         return;

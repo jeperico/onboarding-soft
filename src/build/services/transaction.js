@@ -1,3 +1,4 @@
+import { renderVoidTable } from "../spa/render-void-table.js";
 import { autoIncrement } from "../utils/auto-increment.js";
 import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
@@ -44,10 +45,13 @@ const createTransaction = async (event) => {
  */
 const renderTransaction = async () => {
     // 1° - INPUT
-    const table = document.querySelector("#tbody-transactions");
     const data = await baseServiceView("transactions");
-    // 2° - PROCESS /  OUTPUT
-    if (!data || !table)
+    if (!data) {
+        renderVoidTable("#tbody-transactions", 6);
+        return;
+    }
+    const table = document.querySelector("#tbody-transactions");
+    if (!table)
         return;
     const payload = data.filter((el) => {
         return el.is_active;

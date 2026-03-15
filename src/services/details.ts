@@ -1,4 +1,5 @@
 import { ITransaction } from "../interfaces/transaction.js";
+import { renderVoidTable } from "../spa/render-void-table.js";
 import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
 
@@ -9,8 +10,14 @@ import { formatCode } from "../utils/format-code.js";
  */
 const renderDetails = async () => {
   // 1° - INPUT
-  const table = document.querySelector("#tbody-details");
   const data = await baseServiceView<ITransaction>("transactions");
+  if (!data) {
+    renderVoidTable("#tbody-details", 4);
+    return;
+  }
+
+  const table = document.querySelector("#tbody-details");
+  if (!table) return;
 
   // 2° - PROCESS /  OUTPUT
   if (!data || !table) return;

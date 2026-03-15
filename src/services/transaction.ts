@@ -1,4 +1,5 @@
 import { ITransaction } from "../interfaces/transaction.js";
+import { renderVoidTable } from "../spa/render-void-table.js";
 import { autoIncrement } from "../utils/auto-increment.js";
 import { baseServiceView } from "../utils/base-services.js";
 import { formatCode } from "../utils/format-code.js";
@@ -55,11 +56,14 @@ const createTransaction = async (event: SubmitEvent) => {
  */
 const renderTransaction = async () => {
   // 1° - INPUT
-  const table = document.querySelector("#tbody-transactions");
   const data = await baseServiceView<ITransaction>("transactions");
+  if (!data) {
+    renderVoidTable("#tbody-transactions", 6);
+    return;
+  }
 
-  // 2° - PROCESS /  OUTPUT
-  if (!data || !table) return;
+  const table = document.querySelector("#tbody-transactions");
+  if (!table) return;
 
   const payload = data.filter((el: { is_active: boolean }) => {
     return el.is_active;
