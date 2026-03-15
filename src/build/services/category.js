@@ -1,3 +1,4 @@
+import renderPage from "../spa/render-page.js";
 import { renderVoidTable } from "../spa/render-void-table.js";
 import { autoIncrement } from "../utils/auto-increment.js";
 import { baseServiceView } from "../utils/base-services.js";
@@ -29,7 +30,7 @@ const createCategory = async (event) => {
     };
     // 4° - OUTPUT
     localStorage.setItem("categories", JSON.stringify(current ? [...current, payload] : [payload]));
-    window.location.reload();
+    renderPage("/categories");
 };
 /**
  * Renders category rows inside `<tbody>`.

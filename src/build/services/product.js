@@ -1,3 +1,4 @@
+import renderPage from "../spa/render-page.js";
 import { renderVoidTable } from "../spa/render-void-table.js";
 import { autoIncrement } from "../utils/auto-increment.js";
 import { baseServiceView } from "../utils/base-services.js";
@@ -34,7 +35,7 @@ const createProduct = async (event) => {
     };
     // 4° - OUTPUT
     localStorage.setItem("products", JSON.stringify(current ? [...current, payload] : [payload]));
-    window.location.reload();
+    renderPage("/products");
 };
 /**
  * Renders products rows inside `<tbody>`.

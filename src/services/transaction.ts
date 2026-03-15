@@ -1,4 +1,5 @@
 import { ITransaction } from "../interfaces/transaction.js";
+import renderPage from "../spa/render-page.js";
 import { renderVoidTable } from "../spa/render-void-table.js";
 import { autoIncrement } from "../utils/auto-increment.js";
 import { baseServiceView } from "../utils/base-services.js";
@@ -48,7 +49,7 @@ const createTransaction = async (event: SubmitEvent) => {
     "transactions",
     JSON.stringify(current ? [...current, payload] : [payload]),
   );
-  window.location.reload();
+  renderPage("/");
 };
 
 /**
