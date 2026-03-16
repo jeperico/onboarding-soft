@@ -1,4 +1,4 @@
-import { loadCategory, loadDetails, loadHistory, loadProducts, loadTransactions, } from "./loads.js";
+import { loadCategory, loadDetails, loadHistory, loadProducts, loadTransactions, } from "../services/loads.js";
 const renderPage = (path) => {
     switch (path) {
         case "/":

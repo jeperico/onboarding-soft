@@ -14,9 +14,9 @@ import {
 import { renderDetails } from "../modules/details/services.js";
 import { renderHistory } from "../modules/history/services.js";
 
-import { renderContent } from "./proxy.js";
+import { renderContent } from "../spa/proxy.js";
 import { baseEvent } from "../utils/base-event.js";
-import { renderSelect } from "../services/select.js";
+import { renderSelect } from "./select.js";
 
 const loadTransactions = async () => {
   await renderContent("/");

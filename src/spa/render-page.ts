@@ -4,7 +4,7 @@ import {
   loadHistory,
   loadProducts,
   loadTransactions,
-} from "./loads.js";
+} from "../services/loads.js";
 import { RouteKey } from "./routes.js";
 
 const renderPage = (path: RouteKey) => {
