@@ -26,8 +26,10 @@ const createCategory = async (event: SubmitEvent) => {
   );
 
   // 3° - PROCESS
-  const validate = categoryFormHandler();
-  console.log("validate: ", validate);
+  const validate = await categoryFormHandler();
+  if (!validate.success) {
+    return;
+  }
   const current = await baseServiceView<ICategory>("categories");
   if (!category || !tax) return;
 

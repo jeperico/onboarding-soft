@@ -20,8 +20,10 @@ const createCategory = async (event) => {
         .value;
     const tax = parseInt(form.elements.namedItem("tax").value);
     // 3° - PROCESS
-    const validate = categoryFormHandler();
-    console.log("validate: ", validate);
+    const validate = await categoryFormHandler();
+    if (!validate.success) {
+        return;
+    }
     const current = await baseServiceView("categories");
     if (!category || !tax)
         return;

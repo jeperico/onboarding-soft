@@ -1,13 +1,17 @@
-const categoryFormHandler = () => {
+import { validateCategoryName } from "./validators.js";
+const categoryFormHandler = async () => {
     const errors = [];
     const name = document.querySelector("#category").value;
     const tax = document.querySelector("#tax").value;
-    // TODO: VALIDATE FIELDS
-    console.log(name, tax);
+    const validateName = await validateCategoryName(name);
+    if (validateName)
+        errors.push({ field: "#category", message: validateName });
     return {
-        success: true,
-        message: "Category created successfully",
-        errors: null,
+        success: !errors.length,
+        message: !errors.length
+            ? "Category created successfully"
+            : "Unexpected error while creating new category",
+        errors: errors.length ? null : errors,
     };
 };
 export { categoryFormHandler };

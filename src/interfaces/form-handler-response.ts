@@ -1,12 +1,12 @@
 interface FormHandlerResponse {
   success: boolean;
   message: string;
-  errors:
-    | {
-        field: string;
-        message: string;
-      }[]
-    | null;
+  errors: ErrorResponse | null;
 }
 
-export { FormHandlerResponse };
+type ErrorResponse = {
+  field: string;
+  message: string;
+}[];
+
+export { FormHandlerResponse, ErrorResponse };
