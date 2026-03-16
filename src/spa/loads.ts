@@ -1,8 +1,12 @@
 import { ICategory } from "../interfaces/category.js";
+import {
+  createCategory,
+  renderCategory,
+} from "../modules/category/category.services.js";
+
 import { IProduct } from "../interfaces/product.js";
 import { renderContent } from "./proxy.js";
 import { baseEvent } from "../utils/base-event.js";
-import { createCategory, renderCategory } from "../services/category.js";
 import { renderDetails } from "../services/details.js";
 import { renderHistory } from "../services/history.js";
 import { createProduct, renderProducts } from "../services/product.js";

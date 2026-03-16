@@ -1,9 +1,9 @@
-import { ICategory } from "../interfaces/category.js";
-import renderPage from "../spa/render-page.js";
-import { renderVoidTable } from "../spa/render-void-table.js";
-import { autoIncrement } from "../utils/auto-increment.js";
-import { baseServiceView } from "../utils/base-services.js";
-import { formatCode } from "../utils/format-code.js";
+import { ICategory } from "../../interfaces/category.js";
+import renderPage from "../../spa/render-page.js";
+import { renderVoidTable } from "../../spa/render-void-table.js";
+import { autoIncrement } from "../../utils/auto-increment.js";
+import { baseServiceView } from "../../utils/base-services.js";
+import { formatCode } from "../../utils/format-code.js";
 
 /**
  * Handles category form submission.
