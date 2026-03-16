@@ -1,5 +1,6 @@
 import renderApp from "./render-app.js";
 import routes from "./routes.js";
+import { FEATURE_FLAG_ENABLE_ROUTES } from "../feature-flags.js";
 const renderContent = async (path) => {
     const app = document.querySelector("main");
     if (!app)
@@ -13,7 +14,8 @@ const renderContent = async (path) => {
     const html = await res.text();
     app.innerHTML = html;
     document.title = route.title;
-    history.pushState({}, "", path);
+    if (FEATURE_FLAG_ENABLE_ROUTES)
+        history.pushState({}, "", path);
 };
 // RENDER HEADER
 renderApp();

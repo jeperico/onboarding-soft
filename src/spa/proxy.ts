@@ -1,6 +1,6 @@
 import renderApp from "./render-app.js";
-import renderPage from "./render-page.js";
 import routes, { RouteKey } from "./routes.js";
+import { FEATURE_FLAG_ENABLE_ROUTES } from "../feature-flags.js";
 
 const renderContent = async (path: RouteKey) => {
   const app = document.querySelector("main");
@@ -17,7 +17,7 @@ const renderContent = async (path: RouteKey) => {
 
   app.innerHTML = html;
   document.title = route.title;
-  history.pushState({}, "", path);
+  if (FEATURE_FLAG_ENABLE_ROUTES) history.pushState({}, "", path);
 };
 
 // RENDER HEADER

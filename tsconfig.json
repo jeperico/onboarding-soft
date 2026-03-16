@@ -16,7 +16,8 @@
     "src/services",
     "src/spa",
     "src/types",
-    "src/utils"
+    "src/utils",
+    "src/feature-flags.ts"
   ],
   "exclude": ["node_modules"]
 }
