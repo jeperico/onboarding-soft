@@ -1,0 +1,2 @@
+const renderStorage = () => { };
+export { renderStorage };

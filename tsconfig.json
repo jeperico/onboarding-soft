@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "./src/build", // Where .js files will go
+    "rootDir": "./src", // Where your .ts files are
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "assets/**/*",
+    "src/interfaces",
+    "src/services",
+    "src/spa",
+    "src/types",
+    "src/utils",
+    "src/feature-flags.ts"
+  ],
+  "exclude": ["node_modules"]
+}

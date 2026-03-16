@@ -2,14 +2,16 @@
 header {
   & h1 {
     color: var(--foreground-navbar);
+    cursor: pointer;
   }
   & ul {
     list-style-type: none;
     display: flex;
     gap: 1rem;
 
-    & a {
+    & li {
       color: var(--foreground-navbar);
+      cursor: pointer;
       font-weight: 600;
       font-size: 1.25rem;
     }

@@ -1,0 +1,3 @@
+const FEATURE_FLAG_ENABLE_ROUTES = false;
+
+export { FEATURE_FLAG_ENABLE_ROUTES };
