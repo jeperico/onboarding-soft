@@ -1,4 +1,4 @@
-import { ErrorResponse } from "../interfaces/form-handler-response";
+import { ErrorResponse } from "../interfaces/error-response";
 
 const renderErrorMessage = (errors: ErrorResponse) => {
   const container = document.querySelector(".errors-form-container");

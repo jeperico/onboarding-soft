@@ -1,55 +1,32 @@
 import { ICategory } from "../../interfaces/category.js";
-import { renderContent } from "../../spa/proxy.js";
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { categoryHandler } from "./handlers.js";
+import { categorySerializer } from "./serializer.js";
 
-/**
- * Handles category form submission.
- *
- * @param event - Form submit event.
- * @returns void
- */
 const createCategory = async (event: SubmitEvent) => {
-  // 1° - ENVIRONMENT
+  // I - Environment
   event.preventDefault();
 
-  // 2° - INPUT
-  const id = await autoIncrement("categories");
-  const form = event.target as HTMLFormElement;
-  const category = (form.elements.namedItem("category") as HTMLInputElement)
-    .value;
-  // TODO: Resolve padronized inputs DATA INPUT to be clean
-  const tax = parseInt(
-    (form.elements.namedItem("tax") as HTMLInputElement).value,
-  );
+  // II - Inputs
+  const payload = await categorySerializer(event.target as HTMLFormElement);
+  if (!payload.name || !payload.tax) return;
 
-  // 3° - PROCESS
-  if (!category || !tax) return;
-
-  const validate = await categoryHandler();
-  if (!validate.success && validate.errors) {
-    renderErrorMessage(validate.errors);
+  // III - Errors handling
+  const errors = await categoryHandler(payload.name, payload.tax);
+  if (errors) {
+    renderErrorMessage(errors);
     return;
   }
 
-  const payload: ICategory = {
-    id: id,
-    name: category,
-    tax: tax,
-    is_active: true,
-  };
-
-  const current = await baseServiceView<ICategory>("categories");
-
-  // 4° - OUTPUT
+  // IV - Output
+  const currentData = await baseServiceView<ICategory>("categories");
   localStorage.setItem(
     "categories",
-    JSON.stringify(current ? [...current, payload] : [payload]),
+    JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
   renderPage("/categories");
 };

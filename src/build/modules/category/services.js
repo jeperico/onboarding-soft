@@ -1,43 +1,26 @@
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { categoryHandler } from "./handlers.js";
-/**
- * Handles category form submission.
- *
- * @param event - Form submit event.
- * @returns void
- */
+import { categorySerializer } from "./serializer.js";
 const createCategory = async (event) => {
-    // 1° - ENVIRONMENT
+    // I - Environment
     event.preventDefault();
-    // 2° - INPUT
-    const id = await autoIncrement("categories");
-    const form = event.target;
-    const category = form.elements.namedItem("category")
-        .value;
-    // TODO: Resolve padronized inputs DATA INPUT to be clean
-    const tax = parseInt(form.elements.namedItem("tax").value);
-    // 3° - PROCESS
-    if (!category || !tax)
+    // II - Inputs
+    const payload = await categorySerializer(event.target);
+    if (!payload.name || !payload.tax)
         return;
-    const validate = await categoryHandler();
-    if (!validate.success && validate.errors) {
-        renderErrorMessage(validate.errors);
+    // III - Errors handling
+    const errors = await categoryHandler(payload.name, payload.tax);
+    if (errors) {
+        renderErrorMessage(errors);
         return;
     }
-    const payload = {
-        id: id,
-        name: category,
-        tax: tax,
-        is_active: true,
-    };
-    const current = await baseServiceView("categories");
-    // 4° - OUTPUT
-    localStorage.setItem("categories", JSON.stringify(current ? [...current, payload] : [payload]));
+    // IV - Output
+    const currentData = await baseServiceView("categories");
+    localStorage.setItem("categories", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
     renderPage("/categories");
 };
 /**

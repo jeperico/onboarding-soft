@@ -1,10 +1,7 @@
 import { ICategory } from "../../interfaces/category.js";
 import { baseServiceView } from "../../utils/base-services.js";
-import { normalizeToCompare, normalizeToSave } from "../../utils/normalize.js";
 
-const validateCategoryName = async (raw: string): Promise<string | null> => {
-  const value = normalizeToSave(raw);
-
+const validateName = async (value: string): Promise<string | null> => {
   // must accept letters, and numbers only pre followed by a letter
   // mustn't aceppt white spaces, special carachters or HTML tags
   const regex = /^[A-Za-z][A-Za-z0-9]*(?: [A-Za-z0-9]+)*$/;
@@ -22,7 +19,7 @@ const validateCategoryName = async (raw: string): Promise<string | null> => {
   );
   if (data) {
     const exists = data.find(
-      (el) => normalizeToCompare(el.name) === normalizeToCompare(value),
+      (el) => el.name.toLowerCase() === value.toLowerCase(),
     );
     if (exists) return "A category with this name already exists.";
   }
@@ -30,9 +27,7 @@ const validateCategoryName = async (raw: string): Promise<string | null> => {
   return null;
 };
 
-const validateTax = (raw: number): string | null => {
-  const value = raw;
-
+const validateTax = (value: number): string | null => {
   // must accept integers or decimal with 2 decimal plates
   // mustn't aceppt white spaces, special carachters or HTML tags
   if (typeof value !== "number" || Number.isNaN(value))
@@ -45,4 +40,4 @@ const validateTax = (raw: number): string | null => {
   return null;
 };
 
-export { validateCategoryName, validateTax };
+export { validateName, validateTax };

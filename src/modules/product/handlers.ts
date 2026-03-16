@@ -1,4 +1,4 @@
-import { FormHandlerResponse } from "../../interfaces/form-handler-response";
+import { FormHandlerResponse } from "../../interfaces/error-response";
 
 const productFormHandler = (): FormHandlerResponse => {
   const errors = [];

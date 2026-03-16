@@ -1,20 +1,12 @@
-import { validateCategoryName, validateTax } from "./validators.js";
-const categoryHandler = async () => {
+import { validateName, validateTax } from "./validators.js";
+const categoryHandler = async (name, tax) => {
     const errors = [];
-    const name = document.querySelector("#category").value;
-    const tax = Number(Number(document.querySelector("#tax").value).toFixed(2));
-    const nameError = await validateCategoryName(name);
+    const nameError = await validateName(name);
     if (nameError)
-        errors.push({ field: "#category", message: nameError });
+        errors.push({ field: "#name", message: nameError });
     const taxError = validateTax(tax);
     if (taxError)
         errors.push({ field: "#tax", message: taxError });
-    return {
-        success: !errors.length,
-        message: !errors.length
-            ? "Category created successfully"
-            : "Unexpected error while creating new category",
-        errors: errors,
-    };
+    return errors;
 };
 export { categoryHandler };

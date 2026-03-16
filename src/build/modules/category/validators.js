@@ -1,7 +1,5 @@
 import { baseServiceView } from "../../utils/base-services.js";
-import { normalizeToCompare, normalizeToSave } from "../../utils/normalize.js";
-const validateCategoryName = async (raw) => {
-    const value = normalizeToSave(raw);
+const validateName = async (value) => {
     // must accept letters, and numbers only pre followed by a letter
     // mustn't aceppt white spaces, special carachters or HTML tags
     const regex = /^[A-Za-z][A-Za-z0-9]*(?: [A-Za-z0-9]+)*$/;
@@ -15,14 +13,13 @@ const validateCategoryName = async (raw) => {
     // must be a unique field (validate white spaces and letters case)
     const data = (await baseServiceView("categories"))?.filter((e) => e.is_active);
     if (data) {
-        const exists = data.find((el) => normalizeToCompare(el.name) === normalizeToCompare(value));
+        const exists = data.find((el) => el.name.toLowerCase() === value.toLowerCase());
         if (exists)
             return "A category with this name already exists.";
     }
     return null;
 };
-const validateTax = (raw) => {
-    const value = raw;
+const validateTax = (value) => {
     // must accept integers or decimal with 2 decimal plates
     // mustn't aceppt white spaces, special carachters or HTML tags
     if (typeof value !== "number" || Number.isNaN(value))
@@ -34,4 +31,4 @@ const validateTax = (raw) => {
         return "Tax cannot exceed 100%.";
     return null;
 };
-export { validateCategoryName, validateTax };
+export { validateName, validateTax };
