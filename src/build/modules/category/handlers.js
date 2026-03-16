@@ -6,7 +6,7 @@ const categoryFormHandler = () => {
     console.log(name, tax);
     return {
         success: true,
-        message: "Category create successfully",
+        message: "Category created successfully",
         errors: null,
     };
 };

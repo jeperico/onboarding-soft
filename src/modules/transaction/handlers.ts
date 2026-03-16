@@ -1,22 +1,21 @@
 import { FormHandlerResponse } from "../../interfaces/form-handler-response";
 
-const productFormHandler = (): FormHandlerResponse => {
+const transactionFormHandler = (): FormHandlerResponse => {
   const errors = [];
   const product = (document.querySelector("#product") as HTMLSelectElement)
     .value;
-  const category = (document.querySelector("#category") as HTMLSelectElement)
-    .value;
-  const price = (document.querySelector("#price") as HTMLInputElement).value;
   const amount = (document.querySelector("#amount") as HTMLInputElement).value;
+  const tax = (document.querySelector("#tax") as HTMLInputElement).value;
+  const price = (document.querySelector("#price") as HTMLInputElement).value;
 
   // TODO: VALIDATE FIELDS
-  console.log(product, category, price, amount);
+  console.log(product, amount, tax, price);
 
   return {
     success: true,
-    message: "Product created successfully",
+    message: "Product added successfully",
     errors: null,
   };
 };
 
-export { productFormHandler };
+export { transactionFormHandler };

@@ -10,7 +10,7 @@ const categoryFormHandler = (): FormHandlerResponse => {
 
   return {
     success: true,
-    message: "Category create successfully",
+    message: "Category created successfully",
     errors: null,
   };
 };

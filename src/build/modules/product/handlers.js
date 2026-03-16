@@ -10,7 +10,7 @@ const productFormHandler = () => {
     console.log(product, category, price, amount);
     return {
         success: true,
-        message: "Category create successfully",
+        message: "Product created successfully",
         errors: null,
     };
 };
