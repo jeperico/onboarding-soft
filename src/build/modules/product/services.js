@@ -1,42 +1,29 @@
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
-import { productFormHandler } from "./handlers.js";
-/**
- * Handles product form submission.
- *
- * @param event - Form submit event.
- * @returns void
- */
+import { renderErrorMessage } from "../../utils/render-error-message.js";
+import { productSerializer } from "./serializer.js";
+import { productHandler } from "./handlers.js";
 const createProduct = async (event) => {
-    // 1° - ENVIRONMENT
+    // I - Environment
     event.preventDefault();
-    // 2° - INPUT
-    const id = await autoIncrement("products");
-    const form = event.target;
-    const product = form.elements.namedItem("product")
-        .value;
-    const category = form.elements.namedItem("category")
-        .value;
-    const price = parseInt(form.elements.namedItem("price").value);
-    const amount = parseInt(form.elements.namedItem("amount").value);
-    // 3° - PROCESS
-    const validate = productFormHandler();
-    const current = await baseServiceView("products");
-    if (!product || !category || !price || !amount)
+    // II - Inputs
+    const payload = await productSerializer(event.target);
+    if (!payload.name ||
+        !payload.amount ||
+        !payload.price ||
+        !payload.category_id)
         return;
-    const payload = {
-        id: id,
-        name: product,
-        stock: amount,
-        price: price,
-        category_id: "1",
-        is_active: true,
-    };
-    // 4° - OUTPUT
-    localStorage.setItem("products", JSON.stringify(current ? [...current, payload] : [payload]));
+    // III - Errors handling
+    const errors = await productHandler(payload.name, payload.amount, payload.price, payload.category_id);
+    if (errors.length > 0) {
+        renderErrorMessage(errors);
+        return;
+    }
+    // IV - Output
+    const currentData = await baseServiceView("products");
+    localStorage.setItem("products", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
     renderPage("/products");
 };
 /**
@@ -70,13 +57,13 @@ const renderProducts = async () => {
         product.textContent = el.name;
         row.appendChild(product);
         const amount = td.cloneNode();
-        amount.textContent = el.stock.toString();
+        amount.textContent = el.amount.toString();
         row.appendChild(amount);
         const price = td.cloneNode();
         price.textContent = el.price.toString();
         row.appendChild(price);
         const category = td.cloneNode();
-        category.textContent = el.category_id;
+        category.textContent = el.category_id.toString();
         row.appendChild(category);
         const button = document.createElement("button");
         button.textContent = "DELETE";

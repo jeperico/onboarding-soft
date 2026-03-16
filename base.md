@@ -21,7 +21,7 @@
 
 - id: uuid
 - name: string
-- stock: int
+- amount: int
 - price: int
 - category_id: uuid fk(categories)
 - is_active: boolean

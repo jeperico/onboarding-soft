@@ -1,22 +1,33 @@
-import { FormHandlerResponse } from "../../interfaces/error-response";
+import { ErrorResponse } from "../../interfaces/error-response.js";
+import {
+  validateName,
+  validateAmount,
+  validatePrice,
+  validateCategory,
+} from "./validators.js";
 
-const productFormHandler = (): FormHandlerResponse => {
+const productHandler = async (
+  name: string,
+  amount: number,
+  price: number,
+  category: number,
+): Promise<ErrorResponse> => {
   const errors = [];
-  const product = (document.querySelector("#product") as HTMLSelectElement)
-    .value;
-  const category = (document.querySelector("#category") as HTMLSelectElement)
-    .value;
-  const price = (document.querySelector("#price") as HTMLInputElement).value;
-  const amount = (document.querySelector("#amount") as HTMLInputElement).value;
 
-  // TODO: VALIDATE FIELDS
-  console.log(product, category, price, amount);
+  const nameError = await validateName(name);
+  if (nameError) errors.push({ field: "#name", message: nameError });
 
-  return {
-    success: true,
-    message: "Product created successfully",
-    errors: null,
-  };
+  const amountError = validateAmount(amount);
+  if (amountError) errors.push({ field: "#amount", message: amountError });
+
+  const priceError = validatePrice(price);
+  if (priceError) errors.push({ field: "#price", message: priceError });
+
+  const categoryError = await validateCategory(category);
+  if (categoryError)
+    errors.push({ field: "#category", message: categoryError });
+
+  return errors;
 };
 
-export { productFormHandler };
+export { productHandler };
