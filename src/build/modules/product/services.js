@@ -3,6 +3,7 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
+import { productFormHandler } from "./handlers.js";
 /**
  * Handles product form submission.
  *
@@ -22,6 +23,7 @@ const createProduct = async (event) => {
     const price = parseInt(form.elements.namedItem("price").value);
     const amount = parseInt(form.elements.namedItem("amount").value);
     // 3° - PROCESS
+    const validate = productFormHandler();
     const current = await baseServiceView("products");
     if (!product || !category || !price || !amount)
         return;

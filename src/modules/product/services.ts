@@ -4,6 +4,7 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
+import { productFormHandler } from "./handlers.js";
 
 /**
  * Handles product form submission.
@@ -30,6 +31,7 @@ const createProduct = async (event: SubmitEvent) => {
   );
 
   // 3° - PROCESS
+  const validate = productFormHandler();
   const current = await baseServiceView<IProduct>("products");
   if (!product || !category || !price || !amount) return;
 
