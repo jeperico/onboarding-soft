@@ -1,4 +1,5 @@
 import renderPage from "./render-page.js";
+import routes, { RouteKey } from "./routes.js";
 
 const renderApp = () => {
   const links = document.querySelectorAll(".proxy-route");
@@ -25,7 +26,15 @@ const renderApp = () => {
     });
   });
 
-  renderPage("/");
+  window.addEventListener("popstate", () => {
+    const path = location.pathname;
+
+    if (path in routes) {
+      renderPage(path as RouteKey);
+    } else {
+      renderPage("/");
+    }
+  });
 };
 
 export default renderApp;

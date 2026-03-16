@@ -1,4 +1,5 @@
 import renderPage from "./render-page.js";
+import routes from "./routes.js";
 const renderApp = () => {
     const links = document.querySelectorAll(".proxy-route");
     links.forEach((item, index) => {
@@ -22,6 +23,14 @@ const renderApp = () => {
             }
         });
     });
-    renderPage("/");
+    window.addEventListener("popstate", () => {
+        const path = location.pathname;
+        if (path in routes) {
+            renderPage(path);
+        }
+        else {
+            renderPage("/");
+        }
+    });
 };
 export default renderApp;

@@ -13,6 +13,7 @@ const renderContent = async (path) => {
     const html = await res.text();
     app.innerHTML = html;
     document.title = route.title;
+    history.pushState({}, "", path);
 };
 // RENDER HEADER
 renderApp();

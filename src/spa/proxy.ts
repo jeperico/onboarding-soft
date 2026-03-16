@@ -1,4 +1,5 @@
 import renderApp from "./render-app.js";
+import renderPage from "./render-page.js";
 import routes, { RouteKey } from "./routes.js";
 
 const renderContent = async (path: RouteKey) => {
@@ -16,6 +17,7 @@ const renderContent = async (path: RouteKey) => {
 
   app.innerHTML = html;
   document.title = route.title;
+  history.pushState({}, "", path);
 };
 
 // RENDER HEADER
