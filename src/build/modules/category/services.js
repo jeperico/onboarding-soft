@@ -3,6 +3,7 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
+import { categoryFormHandler } from "./handlers.js";
 /**
  * Handles category form submission.
  *
@@ -19,6 +20,8 @@ const createCategory = async (event) => {
         .value;
     const tax = parseInt(form.elements.namedItem("tax").value);
     // 3° - PROCESS
+    const validate = categoryFormHandler();
+    console.log("validate: ", validate);
     const current = await baseServiceView("categories");
     if (!category || !tax)
         return;
