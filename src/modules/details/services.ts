@@ -1,7 +1,7 @@
-import { ITransaction } from "../interfaces/transaction.js";
-import { renderVoidTable } from "../spa/render-void-table.js";
-import { baseServiceView } from "../utils/base-services.js";
-import { formatCode } from "../utils/format-code.js";
+import { ITransaction } from "../../interfaces/transaction.js";
+import { renderVoidTable } from "../../spa/render-void-table.js";
+import { baseServiceView } from "../../utils/base-services.js";
+import { formatCode } from "../../utils/format-code.js";
 
 /**
  * Renders category rows inside `<tbody>`.

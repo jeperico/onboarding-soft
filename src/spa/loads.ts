@@ -1,20 +1,22 @@
+import { IProduct } from "../interfaces/product.js";
+import { createProduct, renderProducts } from "../modules/product/services.js";
+import {
+  createTransaction,
+  renderTransaction,
+} from "../modules/transaction/services.js";
+
 import { ICategory } from "../interfaces/category.js";
 import {
   createCategory,
   renderCategory,
-} from "../modules/category/category.services.js";
+} from "../modules/category/services.js";
 
-import { IProduct } from "../interfaces/product.js";
+import { renderDetails } from "../modules/details/services.js";
+import { renderHistory } from "../modules/history/services.js";
+
 import { renderContent } from "./proxy.js";
 import { baseEvent } from "../utils/base-event.js";
-import { renderDetails } from "../services/details.js";
-import { renderHistory } from "../services/history.js";
-import { createProduct, renderProducts } from "../services/product.js";
 import { renderSelect } from "../services/select.js";
-import {
-  createTransaction,
-  renderTransaction,
-} from "../services/transaction.js";
 
 const loadTransactions = async () => {
   await renderContent("/");
