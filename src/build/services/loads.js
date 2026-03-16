@@ -9,12 +9,12 @@ import { renderSelect } from "./select.js";
 const loadTransactions = async () => {
     await renderContent("/");
     await baseEvent("transactions", renderTransaction, "delete", createTransaction);
-    await renderSelect("products", "#product", "name");
+    await renderSelect("products", "#product", "name", "id");
 };
 const loadProducts = async () => {
     await renderContent("/products");
     await baseEvent("products", renderProducts, "delete", createProduct);
-    await renderSelect("categories", "#category", "name");
+    await renderSelect("categories", "#category", "name", "id");
 };
 const loadCategory = async () => {
     await renderContent("/categories");

@@ -26,13 +26,13 @@ const loadTransactions = async () => {
     "delete",
     createTransaction,
   );
-  await renderSelect<IProduct>("products", "#product", "name");
+  await renderSelect<IProduct>("products", "#product", "name", "id");
 };
 
 const loadProducts = async () => {
   await renderContent("/products");
   await baseEvent("products", renderProducts, "delete", createProduct);
-  await renderSelect<ICategory>("categories", "#category", "name");
+  await renderSelect<ICategory>("categories", "#category", "name", "id");
 };
 
 const loadCategory = async () => {
