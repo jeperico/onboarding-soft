@@ -73,7 +73,7 @@ header {
 }
 
 /* CATEGORIES */
-#category-form > div {
+#category-form > div:not(:last-child) {
   display: grid;
   grid-template-columns: 6fr 4fr;
   gap: 0.5rem;

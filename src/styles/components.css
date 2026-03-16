@@ -39,6 +39,18 @@ input {
   }
 }
 
+/* FORM ERROR MESSAGES */
+.errors-form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.error-form-message {
+  color: red;
+}
+
 /* BUTTONS */
 button {
   padding: 0.5rem;

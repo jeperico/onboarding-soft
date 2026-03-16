@@ -23,6 +23,16 @@ const createCategory = async (event) => {
     const validate = await categoryHandler();
     console.log(validate);
     if (!validate.success) {
+        const container = document.querySelector(".errors-form-container");
+        if (!container)
+            return;
+        container.innerHTML = "";
+        validate.errors?.map((error) => {
+            const errorMessage = document.createElement("p");
+            errorMessage.innerText = error.message;
+            errorMessage.classList = "error-form-message";
+            container?.appendChild(errorMessage);
+        });
         return;
     }
     const current = await baseServiceView("categories");
