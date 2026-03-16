@@ -1,9 +1,11 @@
 import { ICategory } from "../../interfaces/category.js";
+import { renderContent } from "../../spa/proxy.js";
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
+import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { categoryHandler } from "./handlers.js";
 
 /**
@@ -21,28 +23,19 @@ const createCategory = async (event: SubmitEvent) => {
   const form = event.target as HTMLFormElement;
   const category = (form.elements.namedItem("category") as HTMLInputElement)
     .value;
+  // TODO: Resolve padronized inputs DATA INPUT to be clean
   const tax = parseInt(
     (form.elements.namedItem("tax") as HTMLInputElement).value,
   );
 
   // 3° - PROCESS
-  const validate = await categoryHandler();
-  console.log(validate);
-  if (!validate.success) {
-    const container = document.querySelector(".errors-form-container");
-    if (!container) return;
-    container.innerHTML = "";
-    validate.errors?.map((error) => {
-      const errorMessage = document.createElement("p");
-      errorMessage.innerText = error.message;
-      errorMessage.classList = "error-form-message";
+  if (!category || !tax) return;
 
-      container?.appendChild(errorMessage);
-    });
+  const validate = await categoryHandler();
+  if (!validate.success && validate.errors) {
+    renderErrorMessage(validate.errors);
     return;
   }
-  const current = await baseServiceView<ICategory>("categories");
-  if (!category || !tax) return;
 
   const payload: ICategory = {
     id: id,
@@ -50,6 +43,8 @@ const createCategory = async (event: SubmitEvent) => {
     tax: tax,
     is_active: true,
   };
+
+  const current = await baseServiceView<ICategory>("categories");
 
   // 4° - OUTPUT
   localStorage.setItem(

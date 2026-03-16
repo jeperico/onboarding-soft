@@ -3,6 +3,7 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
+import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { categoryHandler } from "./handlers.js";
 /**
  * Handles category form submission.
@@ -18,32 +19,23 @@ const createCategory = async (event) => {
     const form = event.target;
     const category = form.elements.namedItem("category")
         .value;
+    // TODO: Resolve padronized inputs DATA INPUT to be clean
     const tax = parseInt(form.elements.namedItem("tax").value);
     // 3° - PROCESS
-    const validate = await categoryHandler();
-    console.log(validate);
-    if (!validate.success) {
-        const container = document.querySelector(".errors-form-container");
-        if (!container)
-            return;
-        container.innerHTML = "";
-        validate.errors?.map((error) => {
-            const errorMessage = document.createElement("p");
-            errorMessage.innerText = error.message;
-            errorMessage.classList = "error-form-message";
-            container?.appendChild(errorMessage);
-        });
-        return;
-    }
-    const current = await baseServiceView("categories");
     if (!category || !tax)
         return;
+    const validate = await categoryHandler();
+    if (!validate.success && validate.errors) {
+        renderErrorMessage(validate.errors);
+        return;
+    }
     const payload = {
         id: id,
         name: category,
         tax: tax,
         is_active: true,
     };
+    const current = await baseServiceView("categories");
     // 4° - OUTPUT
     localStorage.setItem("categories", JSON.stringify(current ? [...current, payload] : [payload]));
     renderPage("/categories");
