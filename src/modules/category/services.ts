@@ -17,7 +17,7 @@ const createCategory = async (event: SubmitEvent) => {
 
   // III - Errors handling
   const errors = await categoryHandler(payload.name, payload.tax);
-  if (errors) {
+  if (errors.length > 0) {
     renderErrorMessage(errors);
     return;
   }

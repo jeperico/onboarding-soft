@@ -11,6 +11,9 @@ const renderErrorMessage = (errors: ErrorResponse) => {
     message.classList = "error-form-message";
 
     container.appendChild(message);
+
+    const clean = document.querySelector(error.field) as HTMLInputElement;
+    clean.value = "";
   });
 };
 
