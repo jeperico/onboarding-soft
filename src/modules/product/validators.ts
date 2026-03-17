@@ -1,35 +1,43 @@
-// - [TYPE]: text string
-// - [SIZE]: max | min
-// * must accept letters, and numbers only pre followed by a letter
-// * mustn't aceppt white spaces, special carachters or HTML tags
-// * must be a unique field (validate white spaces and letters case)
+import { ICategory } from "../../interfaces/category.js";
+import { IProduct } from "../../interfaces/product.js";
+import {
+  baseValidateString,
+  baseValidateNumber,
+  baseValidateRelation,
+} from "../base/validators.js";
+
 const validateName = async (value: string): Promise<string | null> => {
-  return null;
+  return baseValidateString<IProduct>(value, "products", "Product");
 };
 
-// - [TYPE]: numbers int
-// - [SIZE]: max | min
-// * must accept integers numbers
-// * mustn't accept white spaces, special carachters or HTML tags
-const validateStock = (value: number): string | null => {
-  return null;
-};
-
-// - [TYPE]: int presented by cents
-// - [SIZE]: max | min 001
-// - [RegEx]: R$ x,xx
-// * must accept integers (decimal with 2 decimal plates)
-// * mustn't accept white spaces, special carachters or HTML tags
-const validatePrice = (value: number): string | null => {
-  return null;
-};
-
-// - [TYPE]: text string
-// - [SIZE]: max | min
-// * must accept letters, and numbers only pre followed by a letter
-// * mustn't aceppt white spaces, special carachters or HTML tags
 const validateCategory = async (value: number): Promise<string | null> => {
-  return null;
+  return baseValidateRelation<ICategory>(value, "categories", "category");
+};
+
+const validateStock = (value: number): string | null => {
+  return baseValidateNumber(value, "Stock", {
+    min: {
+      value: 1,
+      label: "1",
+    },
+    max: {
+      value: 999999,
+      label: "999.999",
+    },
+  });
+};
+
+const validatePrice = (value: number): string | null => {
+  return baseValidateNumber(value, "Price", {
+    min: {
+      value: 1,
+      label: "R$ 0.01",
+    },
+    max: {
+      value: 99999999,
+      label: "R$ 999.999,99",
+    },
+  });
 };
 
 export { validateName, validateStock, validatePrice, validateCategory };
