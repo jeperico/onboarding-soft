@@ -4,10 +4,10 @@ const transactionHandler = async (product, quantity, price) => {
     const productError = await validateProduct(product);
     if (productError)
         errors.push({ field: "#product", message: productError });
-    const quantityError = await validateQuantity(quantity);
+    const quantityError = await validateQuantity(quantity, product);
     if (quantityError)
         errors.push({ field: "#quantity", message: quantityError });
-    const priceError = await validatePrice(price);
+    const priceError = await validatePrice(price, quantity, product);
     if (priceError)
         errors.push({ field: "#price", message: priceError });
     return errors;
