@@ -7,4 +7,12 @@ interface IProduct {
   is_active: boolean;
 }
 
-export { IProduct };
+interface IProductRender {
+  id: string;
+  name: string;
+  stock: string;
+  price: string;
+  category: string;
+}
+
+export { IProduct, IProductRender };

@@ -3,8 +3,9 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
-import { productSerializer } from "./serializer.js";
+import { productSerializer, productTableSerializer } from "./serializer.js";
 import { productHandler } from "./handlers.js";
+import { renderDeleteButton, renderElement } from "../base/services.js";
 const createProduct = async (event) => {
     // I - Environment
     event.preventDefault();
@@ -23,57 +24,30 @@ const createProduct = async (event) => {
     localStorage.setItem("products", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
     renderPage("/products");
 };
-/**
- * Renders products rows inside `<tbody>`.
- *
- * @returns void
- */
 const renderProducts = async () => {
-    // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
-    // 1° - INPUT
-    const data = await baseServiceView("products");
-    if (!data) {
-        renderVoidTable("#tbody-products", 6);
+    // I - Environment
+    const COLUMNS_COUNT = 6;
+    // II - Inputs
+    const data = await productTableSerializer();
+    const table = document.querySelector("#tbody-products");
+    if (!data || !table) {
+        renderVoidTable("#tbody-products", COLUMNS_COUNT);
         return;
     }
-    const table = document.querySelector("#tbody-products");
-    if (!table)
-        return;
-    // 2° - PROCESS /  OUTPUT
-    if (!data || !table)
-        return;
-    const payload = data.filter((el) => {
-        return el.is_active;
-    });
-    payload.forEach((el, index) => {
+    // III - Rendering
+    data.map((el) => {
         const row = document.createElement("tr");
-        const td = document.createElement("td");
-        const code = td.cloneNode();
-        code.textContent = formatCode(index);
-        row.appendChild(code);
-        const product = td.cloneNode();
-        product.textContent = el.name;
-        row.appendChild(product);
-        const stock = td.cloneNode();
-        stock.textContent = el.stock.toString();
-        row.appendChild(stock);
-        const price = td.cloneNode();
-        price.textContent = el.price.toString();
-        row.appendChild(price);
-        const category = td.cloneNode();
-        category.textContent = el.category_id.toString();
-        row.appendChild(category);
-        const button = document.createElement("button");
-        button.textContent = "DELETE";
-        button.className = "action-delete button-secondary";
-        button.id = el.id.toString();
-        const action = td.cloneNode();
-        action.appendChild(button);
-        row.appendChild(action);
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.name);
+        renderElement(row, el.stock);
+        renderElement(row, el.price);
+        renderElement(row, el.category);
+        renderDeleteButton(row, el.id);
         table.appendChild(row);
     });
+    // IV - Output
     const row = document.createElement("tr");
-    for (let i = 0; i < 6; i++)
+    for (let i = 0; i < COLUMNS_COUNT; i++)
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };

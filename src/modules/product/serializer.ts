@@ -1,5 +1,8 @@
-import { IProduct } from "../../interfaces/product.js";
+import { ICategory } from "../../interfaces/category.js";
+import { IProduct, IProductRender } from "../../interfaces/product.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
+import { baseServiceView } from "../../utils/base-services.js";
+import { formatCurrency } from "../../utils/format-currency.js";
 
 const productSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
   const id = await autoIncrement("products");
@@ -21,4 +24,26 @@ const productSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
   return payload;
 };
 
-export { productSerializer };
+const productTableSerializer = async (): Promise<IProductRender[] | null> => {
+  const data = await baseServiceView<IProduct>("products");
+  if (!data) return null;
+
+  const payload: IProductRender[] = [];
+  data.map(async (el) => {
+    const category = (await baseServiceView<ICategory>("categories"))?.find(
+      (e) => e.id === el.category_id,
+    )?.name;
+
+    payload.push({
+      id: el.id.toString(),
+      name: el.name.toString(),
+      stock: el.stock.toString(),
+      price: formatCurrency(el.price),
+      category: category || "No data!",
+    });
+  });
+
+  return payload;
+};
+
+export { productSerializer, productTableSerializer };

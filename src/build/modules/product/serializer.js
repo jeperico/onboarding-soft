@@ -1,4 +1,6 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
+import { baseServiceView } from "../../utils/base-services.js";
+import { formatCurrency } from "../../utils/format-currency.js";
 const productSerializer = async (form) => {
     const id = await autoIncrement("products");
     const name = form.elements.namedItem("name");
@@ -16,4 +18,21 @@ const productSerializer = async (form) => {
     };
     return payload;
 };
-export { productSerializer };
+const productTableSerializer = async () => {
+    const data = await baseServiceView("products");
+    if (!data)
+        return null;
+    const payload = [];
+    data.map(async (el) => {
+        const category = (await baseServiceView("categories"))?.find((e) => e.id === el.category_id)?.name;
+        payload.push({
+            id: el.id.toString(),
+            name: el.name.toString(),
+            stock: el.stock.toString(),
+            price: formatCurrency(el.price),
+            category: category || "No data!",
+        });
+    });
+    return payload;
+};
+export { productSerializer, productTableSerializer };
