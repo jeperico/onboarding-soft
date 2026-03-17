@@ -88,7 +88,6 @@
 
 - [TYPE]: text string
 - [SIZE]: max | min
-- [RegEx]:
 
 * must accept letters, and numbers only pre followed by a letter
 * mustn't aceppt white spaces, special carachters or HTML tags
@@ -98,7 +97,6 @@
 
 - [TYPE]: text string
 - [SIZE]: max | min
-- [RegEx]:
 
 * must accept letters, and numbers only pre followed by a letter
 * mustn't aceppt white spaces, special carachters or HTML tags
@@ -116,7 +114,6 @@
 
 - [TYPE]: numbers int
 - [SIZE]: max | min
-- [RegEx]:
 
 * must accept integers numbers
 * mustn't accept white spaces, special carachters or HTML tags

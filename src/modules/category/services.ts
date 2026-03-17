@@ -37,6 +37,8 @@ const createCategory = async (event: SubmitEvent) => {
  * @returns void
  */
 const renderCategory = async () => {
+  // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
+
   // 1° - INPUT
   const data = await baseServiceView<ICategory>("categories");
   if (!data) {

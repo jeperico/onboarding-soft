@@ -29,6 +29,7 @@ const createProduct = async (event) => {
  * @returns void
  */
 const renderProducts = async () => {
+    // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
     // 1° - INPUT
     const data = await baseServiceView("products");
     if (!data) {

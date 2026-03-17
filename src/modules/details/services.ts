@@ -9,6 +9,8 @@ import { formatCode } from "../../utils/format-code.js";
  * @returns void
  */
 const renderDetails = async () => {
+  // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
+
   // 1° - INPUT
   const data = await baseServiceView<ITransaction>("transactions");
   if (!data) {

@@ -43,6 +43,8 @@ const createProduct = async (event: SubmitEvent) => {
  * @returns void
  */
 const renderProducts = async () => {
+  // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
+
   // 1° - INPUT
   const data = await baseServiceView<IProduct>("products");
   if (!data) {

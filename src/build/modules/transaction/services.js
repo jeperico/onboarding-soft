@@ -43,6 +43,7 @@ const createTransaction = async (event) => {
  * @returns void
  */
 const renderTransaction = async () => {
+    // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
     // 1° - INPUT
     const data = await baseServiceView("transactions");
     if (!data) {
