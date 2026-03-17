@@ -47,7 +47,7 @@ const validatePrice = async (
   // +--------------------------------------+
   // |   BUSINESS RULE TO CALCULATE PRICE   |
   // +--------------------------------------+
-  const tax = product.price * category.tax * quantity;
+  const tax = (product.price * category.tax * quantity) / 100;
   const price = quantity * product.price + tax;
 
   if (value !== price) return "The price is incorrect";
