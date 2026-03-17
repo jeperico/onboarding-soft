@@ -31,9 +31,9 @@ const renderDetails = async () => {
         const product = td.cloneNode();
         product.textContent = "product";
         row.appendChild(product);
-        const amount = td.cloneNode();
-        amount.textContent = "amount";
-        row.appendChild(amount);
+        const quantity = td.cloneNode();
+        quantity.textContent = "quantity";
+        row.appendChild(quantity);
         const category = td.cloneNode();
         category.textContent = "category";
         row.appendChild(category);

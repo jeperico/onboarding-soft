@@ -3,7 +3,7 @@
 ## Business Rules:
 
 1. As seller: register categories with: tax;
-2. As seller: register products with: categories | amount | price
+2. As seller: register products with: categories | stock | price
 3. As manager: view sales history by date
 4. As client: add products on cart
 5. As client: finish purchase with products
@@ -21,7 +21,7 @@
 
 - id: uuid
 - name: string
-- amount: int
+- stock: int
 - price: int
 - category_id: uuid fk(categories)
 - is_active: boolean
@@ -30,7 +30,7 @@
 
 - id: uuid
 - state: 'active' | 'bought'
-- amount: int
+- quantity: int
 - price: int
 - product_id: uuid fk(products)
 - created_at: date
@@ -50,7 +50,7 @@
 * mustn't aceppt white spaces, special carachters or HTML tags
 * must be a unique field (validate white spaces and letters case)
 
-> Amount:
+> Quantity:
 
 - [TYPE]: numbers int
 - [SIZE]: max | min

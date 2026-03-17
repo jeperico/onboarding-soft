@@ -17,17 +17,17 @@ const createTransaction = async (event) => {
     const form = event.target;
     const product = form.elements.namedItem("product")
         .value;
-    const amount = parseInt(form.elements.namedItem("amount").value);
+    const quantity = parseInt(form.elements.namedItem("quantity").value);
     const tax = parseInt(form.elements.namedItem("tax").value);
     const price = parseInt(form.elements.namedItem("price").value);
     // 3° - PROCESS
     const current = await baseServiceView("transactions");
-    if (!product || !amount || !tax || !price)
+    if (!product || !quantity || !tax || !price)
         return;
     const payload = {
         id: id,
         state: "active",
-        amount: amount,
+        quantity: quantity,
         price: price,
         product_id: product,
         created_at: new Date(),
@@ -67,9 +67,9 @@ const renderTransaction = async () => {
         const tax = td.cloneNode();
         tax.textContent = el.product_id.toString();
         row.appendChild(tax);
-        const amount = td.cloneNode();
-        amount.textContent = el.amount.toString();
-        row.appendChild(amount);
+        const quantity = td.cloneNode();
+        quantity.textContent = el.quantity.toString();
+        row.appendChild(quantity);
         const total = td.cloneNode();
         total.textContent = el.price.toString();
         row.appendChild(total);

@@ -1,7 +1,7 @@
 interface ITransaction {
   id: number;
   state: "active" | "bought";
-  amount: number;
+  quantity: number;
   price: number;
   product_id: string;
   created_at: Date;

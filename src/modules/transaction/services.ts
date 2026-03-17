@@ -20,8 +20,8 @@ const createTransaction = async (event: SubmitEvent) => {
   const form = event.target as HTMLFormElement;
   const product = (form.elements.namedItem("product") as HTMLSelectElement)
     .value;
-  const amount = parseInt(
-    (form.elements.namedItem("amount") as HTMLInputElement).value,
+  const quantity = parseInt(
+    (form.elements.namedItem("quantity") as HTMLInputElement).value,
   );
   const tax = parseInt(
     (form.elements.namedItem("tax") as HTMLInputElement).value,
@@ -32,12 +32,12 @@ const createTransaction = async (event: SubmitEvent) => {
 
   // 3° - PROCESS
   const current = await baseServiceView<ITransaction>("transactions");
-  if (!product || !amount || !tax || !price) return;
+  if (!product || !quantity || !tax || !price) return;
 
   const payload: ITransaction = {
     id: id,
     state: "active",
-    amount: amount,
+    quantity: quantity,
     price: price,
     product_id: product,
     created_at: new Date(),
@@ -87,9 +87,9 @@ const renderTransaction = async () => {
     tax.textContent = el.product_id.toString();
     row.appendChild(tax);
 
-    const amount = td.cloneNode();
-    amount.textContent = el.amount.toString();
-    row.appendChild(amount);
+    const quantity = td.cloneNode();
+    quantity.textContent = el.quantity.toString();
+    row.appendChild(quantity);
 
     const total = td.cloneNode();
     total.textContent = el.price.toString();
