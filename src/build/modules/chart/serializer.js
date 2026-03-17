@@ -1,6 +1,6 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
-import { calculateTotal } from "../../utils/calculate-total.js";
+import { formatCurrency } from "../../utils/format-currency.js";
 const chartSerializer = async (form) => {
     const id = await autoIncrement("chart");
     const quantity = form.elements.namedItem("quantity");
@@ -23,13 +23,13 @@ const chartTableSerializer = async () => {
     const payload = [];
     data.map(async (el) => {
         const product = (await baseServiceView("products"))?.find((e) => e.id === el.product_id)?.name;
-        const total = calculateTotal(el.price, el.tax, el.quantity);
+        const total = el.price * el.quantity;
         payload.push({
             id: el.id.toString(),
             quantity: el.quantity.toString(),
-            price: el.price.toString(),
-            tax: el.tax.toString(),
-            total: total.toString(),
+            price: formatCurrency(el.price),
+            tax: el.tax.toString().concat("%"),
+            total: formatCurrency(total),
             product: product || "No data!",
         });
     });
