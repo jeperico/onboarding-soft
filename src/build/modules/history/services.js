@@ -1,51 +1,29 @@
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
-/**
- * Renders category rows inside `<tbody>`.
- *
- * @returns void
- */
+import { renderDeleteButton, renderElement } from "../base/services.js";
+import { historyTableSerializer } from "./serializer.js";
 const renderHistory = async () => {
-    // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
-    // 1° - INPUT
-    const data = await baseServiceView("transactions");
-    if (!data) {
+    // I - Environment
+    const COLUMNS_COUNT = 4;
+    // II - Inputs
+    const data = await historyTableSerializer();
+    const table = document.querySelector("#tbody-history");
+    if (!data || !table) {
         renderVoidTable("#tbody-history", 4);
         return;
     }
-    const table = document.querySelector("#tbody-history");
-    if (!table)
-        return;
-    // 2° - PROCESS /  OUTPUT
-    if (!data || !table)
-        return;
-    const payload = data.filter((el) => {
-        return el.is_active;
-    });
-    payload.forEach((el, index) => {
+    // III - Rendering
+    data.map((el) => {
         const row = document.createElement("tr");
-        const td = document.createElement("td");
-        const code = td.cloneNode();
-        code.textContent = formatCode(index);
-        row.appendChild(code);
-        const tax = td.cloneNode();
-        tax.textContent = el.product_id.toString();
-        row.appendChild(tax);
-        const total = td.cloneNode();
-        total.textContent = el.price.toString();
-        row.appendChild(total);
-        const button = document.createElement("button");
-        button.textContent = "VIEW";
-        button.className = "action-view button-secondary";
-        button.id = el.id.toString();
-        const action = td.cloneNode();
-        action.appendChild(button);
-        row.appendChild(action);
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.tax);
+        renderElement(row, el.total);
+        renderDeleteButton(row, el.id);
         table.appendChild(row);
     });
+    // IV - Output
     const row = document.createElement("tr");
-    for (let i = 0; i < 4; i++)
+    for (let i = 0; i < COLUMNS_COUNT; i++)
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };

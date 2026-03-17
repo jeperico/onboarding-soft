@@ -6,4 +6,10 @@ interface ITransaction {
   is_active: boolean;
 }
 
-export { ITransaction };
+interface ITransactionRender {
+  id: string;
+  tax: string;
+  total: string;
+}
+
+export { ITransaction, ITransactionRender };
