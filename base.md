@@ -112,7 +112,7 @@
 * must accept integers (decimal with 2 decimal plates)
 * mustn't accept white spaces, special carachters or HTML tags
 
-> Amount:
+> Stock:
 
 - [TYPE]: numbers int
 - [SIZE]: max | min

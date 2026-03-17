@@ -1,7 +1,7 @@
 const validateName = async (value) => {
     return null;
 };
-const validateAmount = (value) => {
+const validateStock = (value) => {
     return null;
 };
 const validatePrice = (value) => {
@@ -10,4 +10,4 @@ const validatePrice = (value) => {
 const validateCategory = async (value) => {
     return null;
 };
-export { validateName, validateAmount, validatePrice, validateCategory };
+export { validateName, validateStock, validatePrice, validateCategory };

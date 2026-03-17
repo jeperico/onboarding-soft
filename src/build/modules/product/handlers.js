@@ -1,12 +1,12 @@
-import { validateName, validateAmount, validatePrice, validateCategory, } from "./validators.js";
-const productHandler = async (name, amount, price, category) => {
+import { validateName, validateStock, validatePrice, validateCategory, } from "./validators.js";
+const productHandler = async (name, stock, price, category) => {
     const errors = [];
     const nameError = await validateName(name);
     if (nameError)
         errors.push({ field: "#name", message: nameError });
-    const amountError = validateAmount(amount);
-    if (amountError)
-        errors.push({ field: "#amount", message: amountError });
+    const stockError = validateStock(stock);
+    if (stockError)
+        errors.push({ field: "#stock", message: stockError });
     const priceError = validatePrice(price);
     if (priceError)
         errors.push({ field: "#price", message: priceError });

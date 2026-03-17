@@ -10,13 +10,10 @@ const createProduct = async (event) => {
     event.preventDefault();
     // II - Inputs
     const payload = await productSerializer(event.target);
-    if (!payload.name ||
-        !payload.amount ||
-        !payload.price ||
-        !payload.category_id)
+    if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
         return;
     // III - Errors handling
-    const errors = await productHandler(payload.name, payload.amount, payload.price, payload.category_id);
+    const errors = await productHandler(payload.name, payload.stock, payload.price, payload.category_id);
     if (errors.length > 0) {
         renderErrorMessage(errors);
         return;
@@ -56,9 +53,9 @@ const renderProducts = async () => {
         const product = td.cloneNode();
         product.textContent = el.name;
         row.appendChild(product);
-        const amount = td.cloneNode();
-        amount.textContent = el.amount.toString();
-        row.appendChild(amount);
+        const stock = td.cloneNode();
+        stock.textContent = el.stock.toString();
+        row.appendChild(stock);
         const price = td.cloneNode();
         price.textContent = el.price.toString();
         row.appendChild(price);

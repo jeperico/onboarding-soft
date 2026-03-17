@@ -1,7 +1,6 @@
 import { IProduct } from "../../interfaces/product.js";
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
@@ -14,18 +13,13 @@ const createProduct = async (event: SubmitEvent) => {
 
   // II - Inputs
   const payload = await productSerializer(event.target as HTMLFormElement);
-  if (
-    !payload.name ||
-    !payload.amount ||
-    !payload.price ||
-    !payload.category_id
-  )
+  if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
     return;
 
   // III - Errors handling
   const errors = await productHandler(
     payload.name,
-    payload.amount,
+    payload.stock,
     payload.price,
     payload.category_id,
   );
@@ -77,9 +71,9 @@ const renderProducts = async () => {
     product.textContent = el.name;
     row.appendChild(product);
 
-    const amount = td.cloneNode();
-    amount.textContent = el.amount.toString();
-    row.appendChild(amount);
+    const stock = td.cloneNode();
+    stock.textContent = el.stock.toString();
+    row.appendChild(stock);
 
     const price = td.cloneNode();
     price.textContent = el.price.toString();

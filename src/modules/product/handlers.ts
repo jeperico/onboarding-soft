@@ -1,14 +1,14 @@
 import { ErrorResponse } from "../../interfaces/error-response.js";
 import {
   validateName,
-  validateAmount,
+  validateStock,
   validatePrice,
   validateCategory,
 } from "./validators.js";
 
 const productHandler = async (
   name: string,
-  amount: number,
+  stock: number,
   price: number,
   category: number,
 ): Promise<ErrorResponse> => {
@@ -17,8 +17,8 @@ const productHandler = async (
   const nameError = await validateName(name);
   if (nameError) errors.push({ field: "#name", message: nameError });
 
-  const amountError = validateAmount(amount);
-  if (amountError) errors.push({ field: "#amount", message: amountError });
+  const stockError = validateStock(stock);
+  if (stockError) errors.push({ field: "#stock", message: stockError });
 
   const priceError = validatePrice(price);
   if (priceError) errors.push({ field: "#price", message: priceError });
