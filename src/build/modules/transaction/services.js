@@ -1,40 +1,26 @@
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
-/**
- * Handles transaction form submission.
- *
- * @param event - Form submit event.
- * @returns void
- */
+import { renderErrorMessage } from "../../utils/render-error-message.js";
+import { transactionSerializer } from "./serializer.js";
+import { transactionHandler } from "./handlers.js";
 const createTransaction = async (event) => {
-    // 1° - ENVIRONMENT
+    // I - Environment
     event.preventDefault();
-    // 2° - INPUT
-    const id = await autoIncrement("transactions");
-    const form = event.target;
-    const product = form.elements.namedItem("product")
-        .value;
-    const quantity = parseInt(form.elements.namedItem("quantity").value);
-    const tax = parseInt(form.elements.namedItem("tax").value);
-    const price = parseInt(form.elements.namedItem("price").value);
-    // 3° - PROCESS
-    const current = await baseServiceView("transactions");
-    if (!product || !quantity || !tax || !price)
+    // II - Inputs
+    const payload = await transactionSerializer(event.target);
+    if (!payload.product_id || !payload.quantity || !payload.price)
         return;
-    const payload = {
-        id: id,
-        state: "active",
-        quantity: quantity,
-        price: price,
-        product_id: product,
-        created_at: new Date(),
-        is_active: true,
-    };
-    // 4° - OUTPUT
-    localStorage.setItem("transactions", JSON.stringify(current ? [...current, payload] : [payload]));
+    // III - Errors handling
+    const errors = await transactionHandler(payload.product_id, payload.quantity, payload.price);
+    if (errors.length > 0) {
+        renderErrorMessage(errors);
+        return;
+    }
+    // IV - Output
+    const currentData = await baseServiceView("transactions");
+    localStorage.setItem("transactions", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
     renderPage("/");
 };
 /**
@@ -63,7 +49,7 @@ const renderTransaction = async () => {
         code.textContent = formatCode(index);
         row.appendChild(code);
         const product = td.cloneNode();
-        product.textContent = el.product_id;
+        product.textContent = el.product_id.toString();
         row.appendChild(product);
         const tax = td.cloneNode();
         tax.textContent = el.product_id.toString();

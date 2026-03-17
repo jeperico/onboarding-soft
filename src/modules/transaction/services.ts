@@ -1,53 +1,36 @@
 import { ITransaction } from "../../interfaces/transaction.js";
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
+import { renderErrorMessage } from "../../utils/render-error-message.js";
+import { transactionSerializer } from "./serializer.js";
+import { transactionHandler } from "./handlers.js";
 
-/**
- * Handles transaction form submission.
- *
- * @param event - Form submit event.
- * @returns void
- */
 const createTransaction = async (event: SubmitEvent) => {
-  // 1° - ENVIRONMENT
+  // I - Environment
   event.preventDefault();
 
-  // 2° - INPUT
-  const id = await autoIncrement("transactions");
-  const form = event.target as HTMLFormElement;
-  const product = (form.elements.namedItem("product") as HTMLSelectElement)
-    .value;
-  const quantity = parseInt(
-    (form.elements.namedItem("quantity") as HTMLInputElement).value,
-  );
-  const tax = parseInt(
-    (form.elements.namedItem("tax") as HTMLInputElement).value,
-  );
-  const price = parseInt(
-    (form.elements.namedItem("price") as HTMLInputElement).value,
-  );
+  // II - Inputs
+  const payload = await transactionSerializer(event.target as HTMLFormElement);
+  if (!payload.product_id || !payload.quantity || !payload.price) return;
 
-  // 3° - PROCESS
-  const current = await baseServiceView<ITransaction>("transactions");
-  if (!product || !quantity || !tax || !price) return;
+  // III - Errors handling
+  const errors = await transactionHandler(
+    payload.product_id,
+    payload.quantity,
+    payload.price,
+  );
+  if (errors.length > 0) {
+    renderErrorMessage(errors);
+    return;
+  }
 
-  const payload: ITransaction = {
-    id: id,
-    state: "active",
-    quantity: quantity,
-    price: price,
-    product_id: product,
-    created_at: new Date(),
-    is_active: true,
-  };
-
-  // 4° - OUTPUT
+  // IV - Output
+  const currentData = await baseServiceView<ITransaction>("transactions");
   localStorage.setItem(
     "transactions",
-    JSON.stringify(current ? [...current, payload] : [payload]),
+    JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
   renderPage("/");
 };
@@ -82,7 +65,7 @@ const renderTransaction = async () => {
     row.appendChild(code);
 
     const product = td.cloneNode();
-    product.textContent = el.product_id;
+    product.textContent = el.product_id.toString();
     row.appendChild(product);
 
     const tax = td.cloneNode();
