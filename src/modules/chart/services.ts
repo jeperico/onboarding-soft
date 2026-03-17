@@ -7,6 +7,7 @@ import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { chartSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
 import { IChart } from "../../interfaces/chart.js";
+import { renderDeleteButton, renderElement } from "../base/services.js";
 
 const createChart = async (event: SubmitEvent) => {
   // I - Environment
@@ -43,64 +44,36 @@ const createChart = async (event: SubmitEvent) => {
   renderPage("/");
 };
 
-/**
- * Renders category rows inside `<tbody>`.
- *
- * @returns void
- */
 const renderChart = async () => {
-  // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
+  // I - Environment
+  const COLUMNS_COUNT = 6;
 
-  // 1° - INPUT
-  const data = await baseServiceView<ITransaction>("transactions");
-  if (!data) {
-    renderVoidTable("#tbody-chart", 6);
+  // II - Inputs
+  const data = await baseServiceView<IChart>("chart");
+  const table = document.querySelector("#tbody-chart");
+  if (!data || !table) {
+    renderVoidTable("#tbody-chart", COLUMNS_COUNT);
     return;
   }
 
-  const table = document.querySelector("#tbody-chart");
-  if (!table) return;
-
-  const payload = data.filter((el: { is_active: boolean }) => {
-    return el.is_active;
-  });
-  payload.forEach((el, index) => {
+  // III - Rendering
+  data.forEach((el, index) => {
     const row = document.createElement("tr");
-    const td = document.createElement("td");
 
-    const code = td.cloneNode();
-    code.textContent = formatCode(index);
-    row.appendChild(code);
-
-    const product = td.cloneNode();
-    product.textContent = el.product_id.toString();
-    row.appendChild(product);
-
-    const tax = td.cloneNode();
-    tax.textContent = el.product_id.toString();
-    row.appendChild(tax);
-
-    const quantity = td.cloneNode();
-    quantity.textContent = el.quantity.toString();
-    row.appendChild(quantity);
-
-    const total = td.cloneNode();
-    total.textContent = el.price.toString();
-    row.appendChild(total);
-
-    const button = document.createElement("button");
-    button.textContent = "DELETE";
-    button.className = "action-delete button-secondary";
-    button.id = el.id.toString();
-    const action = td.cloneNode();
-    action.appendChild(button);
-    row.appendChild(action);
+    renderElement(row, formatCode(index));
+    renderElement(row, el.product_id.toString());
+    renderElement(row, el.product_id.toString());
+    renderElement(row, el.quantity.toString());
+    renderElement(row, el.price.toString());
+    renderDeleteButton(row, el.id.toString());
 
     table.appendChild(row);
   });
 
+  // IV - Output
   const row = document.createElement("tr");
-  for (let i = 0; i < 6; i++) row.appendChild(document.createElement("td"));
+  for (let i = 0; i < COLUMNS_COUNT; i++)
+    row.appendChild(document.createElement("td"));
   table.appendChild(row);
 };
 
