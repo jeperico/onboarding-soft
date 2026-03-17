@@ -1,5 +1,4 @@
 import { baseServiceView } from "../../utils/base-services.js";
-import { calculateTotal } from "../../utils/calculate-total.js";
 import { baseValidateNumber, baseValidateRelation, } from "../base/validators.js";
 const validateProduct = async (value) => {
     return baseValidateRelation(value, "products", "Product");
@@ -23,13 +22,7 @@ const validatePrice = async (value, quantity, product_id) => {
     const product = (await baseServiceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!product)
         return `This product doesn't exists`;
-    const category = (await baseServiceView("categories"))?.find((el) => el.id === product.category_id);
-    if (!category)
-        return `The product category doesn't exists`;
-    // +--------------------------------------+
-    // |   BUSINESS RULE TO CALCULATE PRICE   |
-    // +--------------------------------------+
-    const price = calculateTotal(product.price, category.tax, quantity);
+    const price = product.price * quantity;
     if (value !== price)
         return "The price is incorrect";
     return null;
