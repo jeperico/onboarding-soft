@@ -6,6 +6,7 @@ import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { chartSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
+import { IChart } from "../../interfaces/chart.js";
 
 const createChart = async (event: SubmitEvent) => {
   // I - Environment
@@ -13,13 +14,20 @@ const createChart = async (event: SubmitEvent) => {
 
   // II - Inputs
   const payload = await chartSerializer(event.target as HTMLFormElement);
-  if (!payload.product_id || !payload.quantity || !payload.price) return;
+  if (
+    !payload.product_id ||
+    !payload.quantity ||
+    !payload.price ||
+    !payload.tax
+  )
+    return;
 
   // III - Errors handling
   const errors = await chartHandler(
     payload.product_id,
     payload.quantity,
     payload.price,
+    payload.tax,
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
@@ -27,9 +35,9 @@ const createChart = async (event: SubmitEvent) => {
   }
 
   // IV - Output
-  const currentData = await baseServiceView<ITransaction>("transactions");
+  const currentData = await baseServiceView<IChart>("chart");
   localStorage.setItem(
-    "transactions",
+    "chart",
     JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
   renderPage("/");

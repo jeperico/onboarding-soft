@@ -1,0 +1,17 @@
+import { autoIncrement } from "../../utils/auto-increment.js";
+const chartSerializer = async (form) => {
+    const id = await autoIncrement("chart");
+    const quantity = form.elements.namedItem("quantity");
+    const price = form.elements.namedItem("price");
+    const tax = form.elements.namedItem("tax");
+    const product = form.elements.namedItem("product");
+    const payload = {
+        id: id,
+        quantity: parseInt(quantity.value),
+        price: parseInt(price.value),
+        tax: parseFloat(tax.value),
+        product_id: parseInt(product.value),
+    };
+    return payload;
+};
+export { chartSerializer };

@@ -54,4 +54,22 @@ const validatePrice = async (
   return null;
 };
 
-export { validateProduct, validateQuantity, validatePrice };
+const validateTax = async (
+  value: number,
+  product_id: number,
+): Promise<string | null> => {
+  const product = (await baseServiceView<IProduct>("products"))?.find(
+    (el) => el.id === product_id && el.is_active,
+  );
+  if (!product) return `This product doesn't exists`;
+  const category = (await baseServiceView<ICategory>("categories"))?.find(
+    (el) => el.id === product.category_id,
+  );
+  if (!category) return `The product category doesn't exists`;
+
+  if (value !== category.tax) return "The tax is incorrect";
+
+  return null;
+};
+
+export { validateProduct, validateQuantity, validatePrice, validateTax };

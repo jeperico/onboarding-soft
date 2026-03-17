@@ -1,5 +1,5 @@
 import { createProduct, renderProducts } from "../modules/product/services.js";
-import { createChart, renderChart } from "../modules/transaction/services.js";
+import { createChart, renderChart } from "../modules/chart/services.js";
 import { createCategory, renderCategory, } from "../modules/category/services.js";
 import { renderDetails } from "../modules/details/services.js";
 import { renderHistory } from "../modules/history/services.js";

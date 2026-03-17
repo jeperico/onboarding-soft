@@ -3,12 +3,14 @@ import {
   validateProduct,
   validateQuantity,
   validatePrice,
+  validateTax,
 } from "./validators.js";
 
 const chartHandler = async (
   product: number,
   quantity: number,
   price: number,
+  tax: number,
 ): Promise<ErrorResponse> => {
   const errors = [];
 
@@ -21,6 +23,9 @@ const chartHandler = async (
 
   const priceError = await validatePrice(price, quantity, product);
   if (priceError) errors.push({ field: "#price", message: priceError });
+
+  const taxError = await validateTax(tax, product);
+  if (taxError) errors.push({ field: "#tax", message: taxError });
 
   return errors;
 };

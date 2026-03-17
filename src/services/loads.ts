@@ -1,6 +1,6 @@
 import { IProduct } from "../interfaces/product.js";
 import { createProduct, renderProducts } from "../modules/product/services.js";
-import { createChart, renderChart } from "../modules/transaction/services.js";
+import { createChart, renderChart } from "../modules/chart/services.js";
 
 import { ICategory } from "../interfaces/category.js";
 import {
