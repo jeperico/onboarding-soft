@@ -8,7 +8,7 @@ import { baseEvent } from "../utils/base-event.js";
 import { renderSelect } from "./select.js";
 const loadChart = async () => {
     await renderContent("/");
-    await baseEvent("transactions", renderChart, "delete", createChart);
+    await baseEvent("chart", renderChart, "remove", createChart);
     await renderSelect("products", "#product", "name", "id");
 };
 const loadProducts = async () => {

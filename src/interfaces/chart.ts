@@ -6,4 +6,13 @@ interface IChart {
   product_id: number;
 }
 
-export { IChart };
+interface IChartRender {
+  id: string;
+  quantity: string;
+  price: string;
+  tax: string;
+  total: string;
+  product: string;
+}
+
+export { IChart, IChartRender };

@@ -1,11 +1,11 @@
 import renderPage from "../spa/render-page.js";
 import { Table } from "../types/table.js";
-import { baseServiceDelete } from "./base-services.js";
+import { baseServiceDelete, baseServiceRemove } from "./base-services.js";
 
 interface EventListenerOptions {
   table: Table;
   render: () => void;
-  variant: "delete" | "view" | "none";
+  variant: "delete" | "remove" | "view" | "none";
   handler?: (event: SubmitEvent) => void;
 }
 
@@ -21,7 +21,9 @@ const baseEvent = async (
   await render();
 
   const buttons = document.querySelectorAll<HTMLButtonElement>(
-    variant === "delete" ? ".action-delete" : ".action-view",
+    variant === "delete" || variant === "remove"
+      ? ".action-delete"
+      : ".action-view",
   );
 
   buttons.forEach((el) => {
@@ -31,6 +33,9 @@ const baseEvent = async (
       switch (variant) {
         case "delete":
           baseServiceDelete(table, id);
+          break;
+        case "remove":
+          baseServiceRemove(table, id);
           break;
         case "view":
           renderPage("/details");

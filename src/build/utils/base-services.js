@@ -36,4 +36,15 @@ const baseServiceDelete = async (endpoint, id) => {
     localStorage.setItem(endpoint, JSON.stringify(response));
     window.location.reload();
 };
-export { baseServiceView, baseServiceDelete };
+const baseServiceRemove = async (endpoint, id) => {
+    // I - Input
+    const response = await baseServiceView(endpoint);
+    if (!response)
+        return null;
+    // II - Process
+    const payload = response.filter((el) => el.id !== id);
+    // 3° - OUTPUT
+    localStorage.setItem(endpoint, JSON.stringify(payload));
+    window.location.reload();
+};
+export { baseServiceView, baseServiceDelete, baseServiceRemove };

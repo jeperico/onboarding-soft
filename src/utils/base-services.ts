@@ -46,4 +46,17 @@ const baseServiceDelete = async (endpoint: Table, id: number) => {
   window.location.reload();
 };
 
-export { baseServiceView, baseServiceDelete };
+const baseServiceRemove = async (endpoint: Table, id: number) => {
+  // I - Input
+  const response = await baseServiceView<{ id: number }>(endpoint);
+  if (!response) return null;
+
+  // II - Process
+  const payload = response.filter((el) => el.id !== id);
+
+  // 3° - OUTPUT
+  localStorage.setItem(endpoint, JSON.stringify(payload));
+  window.location.reload();
+};
+
+export { baseServiceView, baseServiceDelete, baseServiceRemove };

@@ -1,9 +1,8 @@
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
 import { baseServiceView } from "../../utils/base-services.js";
-import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
-import { chartSerializer } from "./serializer.js";
+import { chartSerializer, chartTableSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
 import { renderDeleteButton, renderElement } from "../base/services.js";
 const createChart = async (event) => {
@@ -31,21 +30,21 @@ const renderChart = async () => {
     // I - Environment
     const COLUMNS_COUNT = 6;
     // II - Inputs
-    const data = await baseServiceView("chart");
+    const data = await chartTableSerializer();
     const table = document.querySelector("#tbody-chart");
     if (!data || !table) {
         renderVoidTable("#tbody-chart", COLUMNS_COUNT);
         return;
     }
     // III - Rendering
-    data.forEach((el, index) => {
+    data.forEach((el) => {
         const row = document.createElement("tr");
-        renderElement(row, formatCode(index));
-        renderElement(row, el.product_id.toString());
-        renderElement(row, el.product_id.toString());
-        renderElement(row, el.quantity.toString());
-        renderElement(row, el.price.toString());
-        renderDeleteButton(row, el.id.toString());
+        renderElement(row, el.product);
+        renderElement(row, el.tax);
+        renderElement(row, el.price);
+        renderElement(row, el.quantity);
+        renderElement(row, el.total);
+        renderDeleteButton(row, el.id);
         table.appendChild(row);
     });
     // IV - Output

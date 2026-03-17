@@ -1,4 +1,5 @@
 import { baseServiceView } from "../../utils/base-services.js";
+import { calculateTotal } from "../../utils/calculate-total.js";
 import { baseValidateNumber, baseValidateRelation, } from "../base/validators.js";
 const validateProduct = async (value) => {
     return baseValidateRelation(value, "products", "Product");
@@ -28,8 +29,7 @@ const validatePrice = async (value, quantity, product_id) => {
     // +--------------------------------------+
     // |   BUSINESS RULE TO CALCULATE PRICE   |
     // +--------------------------------------+
-    const tax = (product.price * category.tax * quantity) / 100;
-    const price = quantity * product.price + tax;
+    const price = calculateTotal(product.price, category.tax, quantity);
     if (value !== price)
         return "The price is incorrect";
     return null;

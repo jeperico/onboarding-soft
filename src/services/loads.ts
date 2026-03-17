@@ -17,7 +17,7 @@ import { renderSelect } from "./select.js";
 
 const loadChart = async () => {
   await renderContent("/");
-  await baseEvent("transactions", renderChart, "delete", createChart);
+  await baseEvent("chart", renderChart, "remove", createChart);
   await renderSelect<IProduct>("products", "#product", "name", "id");
 };
 
