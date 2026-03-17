@@ -8,7 +8,8 @@ const renderErrorMessage = (errors: ErrorResponse) => {
   errors.map((error) => {
     const message = document.createElement("p");
     message.innerText = error.message;
-    message.classList = "error-form-message";
+    // message.classList = "error-form-message";
+    message.classList.add("error-form-message");
 
     container.appendChild(message);
 
