@@ -38,49 +38,49 @@
 
 ## Test Cases:
 
-### Defaults
-
-> Inputs:
-
-- mustn't be changed via F12 (Inspect | Dev Tools)
-
-> Selects:
-
-- mustn't bypass adding options via F12
-
 ### Transactions
 
 > Product:
 
-- [TYPE]:
+- [TYPE]: text string
+- [SIZE]: max | min
 - [RegEx]:
 
-* must be
-* must be
+* must accept letters, and numbers only pre followed by a letter
+* mustn't aceppt white spaces, special carachters or HTML tags
+* must be a unique field (validate white spaces and letters case)
 
 > Amount:
 
-- [TYPE]:
+- [TYPE]: numbers int
+- [SIZE]: max | min
 - [RegEx]:
 
-* must be
-* must be
+* must accept integers numbers
+* must be less than the product current stock
+* mustn't accept white spaces, special carachters or HTML tags
 
 > Tax:
 
-- [TYPE]:
-- [RegEx]:
+- [TYPE]: int or decimal
+- [SIZE]: max 100% | min 0.01
+- [RegEx]: toFixed(2) decimal floats
 
-* must be
-* must be
+* must match to the product category tax
+* must accept integers or decimal with 2 decimal plates
+* mustn't be edited
+* mustn't accept white spaces, special carachters or HTML tags
 
 > Price:
 
-- [TYPE]:
-- [RegEx]:
+- [TYPE]: int presented by cents
+- [SIZE]: max | min 001
+- [RegEx]: R$ x,xx
 
-* must be
-* must be
+* must accept integers (decimal with 2 decimal plates)
+* must match to the product price
+* mustn't be edited
+* mustn't accept white spaces, special carachters or HTML tags
 
 ### Products
 
@@ -105,11 +105,11 @@
 
 > Price:
 
-- [TYPE]: int or decimal
-- [SIZE]: max | min
+- [TYPE]: int presented by cents
+- [SIZE]: max | min 001
 - [RegEx]: R$ x,xx
 
-* must accept integers or decimal with 2 decimal plates
+* must accept integers (decimal with 2 decimal plates)
 * mustn't accept white spaces, special carachters or HTML tags
 
 > Amount:

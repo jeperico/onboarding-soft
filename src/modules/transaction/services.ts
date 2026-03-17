@@ -4,7 +4,6 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
-import { transactionFormHandler } from "./handlers.js";
 
 /**
  * Handles transaction form submission.
@@ -32,7 +31,6 @@ const createTransaction = async (event: SubmitEvent) => {
   );
 
   // 3° - PROCESS
-  const validate = transactionFormHandler();
   const current = await baseServiceView<ITransaction>("transactions");
   if (!product || !amount || !tax || !price) return;
 
