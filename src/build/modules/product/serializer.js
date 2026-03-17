@@ -3,6 +3,7 @@ const productSerializer = async (form) => {
     const id = await autoIncrement("products");
     const name = form.elements.namedItem("name");
     const stock = form.elements.namedItem("stock");
+    // TODO: RegEx on field to R$ x,xx
     const price = form.elements.namedItem("price");
     const category = form.elements.namedItem("category");
     const payload = {

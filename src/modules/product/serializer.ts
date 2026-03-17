@@ -5,6 +5,7 @@ const productSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
   const id = await autoIncrement("products");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const stock = form.elements.namedItem("stock") as HTMLInputElement;
+  // TODO: RegEx on field to R$ x,xx
   const price = form.elements.namedItem("price") as HTMLInputElement;
   const category = form.elements.namedItem("category") as HTMLSelectElement;
 

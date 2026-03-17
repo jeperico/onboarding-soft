@@ -32,6 +32,6 @@ const renderApp = () => {
             renderPage("/");
         }
     });
-    renderPage("/products");
+    renderPage("/");
 };
 export default renderApp;
