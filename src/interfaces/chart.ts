@@ -1,9 +1,9 @@
-interface ITransaction {
+interface IChart {
   id: number;
   quantity: number;
   price: number;
+  tax: number;
   product_id: number;
-  is_active: boolean;
 }
 
-export { ITransaction };
+export { IChart };

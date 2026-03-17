@@ -11,11 +11,9 @@ const transactionSerializer = async (
 
   const payload: ITransaction = {
     id: id,
-    state: "active",
     quantity: parseInt(quantity.value),
     price: parseInt(price.value),
     product_id: parseInt(product.value),
-    created_at: new Date(),
     is_active: true,
   };
 

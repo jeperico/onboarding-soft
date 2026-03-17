@@ -6,11 +6,9 @@ const transactionSerializer = async (form) => {
     const price = form.elements.namedItem("price");
     const payload = {
         id: id,
-        state: "active",
         quantity: parseInt(quantity.value),
         price: parseInt(price.value),
         product_id: parseInt(product.value),
-        created_at: new Date(),
         is_active: true,
     };
     return payload;
