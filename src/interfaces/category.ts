@@ -5,4 +5,10 @@ interface ICategory {
   is_active: boolean;
 }
 
-export { ICategory };
+interface ICategoryRender {
+  id: string;
+  name: string;
+  tax: string;
+}
+
+export { ICategory, ICategoryRender };

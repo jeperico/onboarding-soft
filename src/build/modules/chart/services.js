@@ -37,7 +37,7 @@ const renderChart = async () => {
         return;
     }
     // III - Rendering
-    data.forEach((el) => {
+    data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, el.product);
         renderElement(row, el.tax);

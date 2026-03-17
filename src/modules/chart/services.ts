@@ -1,8 +1,6 @@
-import { ITransaction } from "../../interfaces/transaction.js";
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
 import { baseServiceView } from "../../utils/base-services.js";
-import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { chartSerializer, chartTableSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
@@ -57,7 +55,7 @@ const renderChart = async () => {
   }
 
   // III - Rendering
-  data.forEach((el) => {
+  data.map((el) => {
     const row = document.createElement("tr");
 
     renderElement(row, el.product);
