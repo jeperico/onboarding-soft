@@ -3,14 +3,14 @@ import {
   loadDetails,
   loadHistory,
   loadProducts,
-  loadTransactions,
+  loadChart,
 } from "../services/loads.js";
 import { RouteKey } from "./routes.js";
 
 const renderPage = (path: RouteKey) => {
   switch (path) {
     case "/":
-      loadTransactions();
+      loadChart();
       break;
     case "/products":
       loadProducts();

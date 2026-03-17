@@ -1,7 +1,7 @@
 import { ITransaction } from "../../interfaces/transaction.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
 
-const transactionSerializer = async (
+const chartSerializer = async (
   form: HTMLFormElement,
 ): Promise<ITransaction> => {
   const id = await autoIncrement("transactions");
@@ -20,4 +20,4 @@ const transactionSerializer = async (
   return payload;
 };
 
-export { transactionSerializer };
+export { chartSerializer };

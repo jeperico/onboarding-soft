@@ -1,8 +1,8 @@
-import { loadCategory, loadDetails, loadHistory, loadProducts, loadTransactions, } from "../services/loads.js";
+import { loadCategory, loadDetails, loadHistory, loadProducts, loadChart, } from "../services/loads.js";
 const renderPage = (path) => {
     switch (path) {
         case "/":
-            loadTransactions();
+            loadChart();
             break;
         case "/products":
             loadProducts();

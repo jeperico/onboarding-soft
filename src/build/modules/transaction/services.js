@@ -3,17 +3,17 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { baseServiceView } from "../../utils/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
-import { transactionSerializer } from "./serializer.js";
-import { transactionHandler } from "./handlers.js";
-const createTransaction = async (event) => {
+import { chartSerializer } from "./serializer.js";
+import { chartHandler } from "./handlers.js";
+const createChart = async (event) => {
     // I - Environment
     event.preventDefault();
     // II - Inputs
-    const payload = await transactionSerializer(event.target);
+    const payload = await chartSerializer(event.target);
     if (!payload.product_id || !payload.quantity || !payload.price)
         return;
     // III - Errors handling
-    const errors = await transactionHandler(payload.product_id, payload.quantity, payload.price);
+    const errors = await chartHandler(payload.product_id, payload.quantity, payload.price);
     if (errors.length > 0) {
         renderErrorMessage(errors);
         return;
@@ -28,15 +28,15 @@ const createTransaction = async (event) => {
  *
  * @returns void
  */
-const renderTransaction = async () => {
+const renderChart = async () => {
     // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
     // 1° - INPUT
     const data = await baseServiceView("transactions");
     if (!data) {
-        renderVoidTable("#tbody-transactions", 6);
+        renderVoidTable("#tbody-chart", 6);
         return;
     }
-    const table = document.querySelector("#tbody-transactions");
+    const table = document.querySelector("#tbody-chart");
     if (!table)
         return;
     const payload = data.filter((el) => {
@@ -74,4 +74,4 @@ const renderTransaction = async () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
-export { createTransaction, renderTransaction };
+export { createChart, renderChart };

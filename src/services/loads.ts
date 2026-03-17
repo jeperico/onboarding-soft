@@ -1,9 +1,6 @@
 import { IProduct } from "../interfaces/product.js";
 import { createProduct, renderProducts } from "../modules/product/services.js";
-import {
-  createTransaction,
-  renderTransaction,
-} from "../modules/transaction/services.js";
+import { createChart, renderChart } from "../modules/transaction/services.js";
 
 import { ICategory } from "../interfaces/category.js";
 import {
@@ -18,14 +15,9 @@ import { renderContent } from "../spa/proxy.js";
 import { baseEvent } from "../utils/base-event.js";
 import { renderSelect } from "./select.js";
 
-const loadTransactions = async () => {
+const loadChart = async () => {
   await renderContent("/");
-  await baseEvent(
-    "transactions",
-    renderTransaction,
-    "delete",
-    createTransaction,
-  );
+  await baseEvent("transactions", renderChart, "delete", createChart);
   await renderSelect<IProduct>("products", "#product", "name", "id");
 };
 
@@ -50,10 +42,4 @@ const loadDetails = async () => {
   await baseEvent("transactions", renderDetails, "none");
 };
 
-export {
-  loadTransactions,
-  loadProducts,
-  loadCategory,
-  loadHistory,
-  loadDetails,
-};
+export { loadChart, loadProducts, loadCategory, loadHistory, loadDetails };

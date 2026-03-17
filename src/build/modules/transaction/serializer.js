@@ -1,5 +1,5 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
-const transactionSerializer = async (form) => {
+const chartSerializer = async (form) => {
     const id = await autoIncrement("transactions");
     const product = form.elements.namedItem("product");
     const quantity = form.elements.namedItem("quantity");
@@ -13,4 +13,4 @@ const transactionSerializer = async (form) => {
     };
     return payload;
 };
-export { transactionSerializer };
+export { chartSerializer };

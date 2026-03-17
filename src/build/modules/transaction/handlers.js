@@ -1,5 +1,5 @@
 import { validateProduct, validateQuantity, validatePrice, } from "./validators.js";
-const transactionHandler = async (product, quantity, price) => {
+const chartHandler = async (product, quantity, price) => {
     const errors = [];
     const productError = await validateProduct(product);
     if (productError)
@@ -12,4 +12,4 @@ const transactionHandler = async (product, quantity, price) => {
         errors.push({ field: "#price", message: priceError });
     return errors;
 };
-export { transactionHandler };
+export { chartHandler };

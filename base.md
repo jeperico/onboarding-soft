@@ -44,7 +44,7 @@
 
 ## Test Cases:
 
-### Transactions
+### Chart
 
 > Product:
 

@@ -5,7 +5,7 @@ import {
   validatePrice,
 } from "./validators.js";
 
-const transactionHandler = async (
+const chartHandler = async (
   product: number,
   quantity: number,
   price: number,
@@ -25,4 +25,4 @@ const transactionHandler = async (
   return errors;
 };
 
-export { transactionHandler };
+export { chartHandler };
