@@ -7,15 +7,13 @@ const renderHistory = async () => {
     const COLUMNS_COUNT = 4;
     // II - Inputs
     const data = await historyTableSerializer();
-    const table = document.querySelector("#tbody-history");
+    const table = await document.querySelector("#tbody-history");
     if (!data || !table) {
         renderVoidTable("#tbody-history", 4);
         return;
     }
     // III - Rendering
-    console.log("data: ", data);
     data.map((el) => {
-        console.log(el);
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
         renderElement(row, el.tax);
@@ -23,7 +21,6 @@ const renderHistory = async () => {
         renderDeleteButton(row, el.id);
         table.appendChild(row);
     });
-    console.log("data: ", data);
     // IV - Output
     const row = document.createElement("tr");
     for (let i = 0; i < COLUMNS_COUNT; i++)
