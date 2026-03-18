@@ -1,24 +1,37 @@
-import renderPage from "../spa/render-page.js";
-import { Table } from "../types/table.js";
-import { baseServiceDelete, baseServiceRemove } from "./base-services.js";
+import renderPage from "../../spa/render-page.js";
+import { Table } from "../../types/table.js";
+import {
+  baseServiceDelete,
+  baseServiceRemove,
+} from "../../utils/base-services.js";
 
 interface EventListenerOptions {
   table: Table;
-  render: () => void;
   variant: "delete" | "remove" | "view" | "none";
-  handler?: (event: SubmitEvent) => void;
+  render: () => void;
+  handler: (event: SubmitEvent) => void;
+  form?: string;
 }
 
-const baseEvent = async (
-  table: EventListenerOptions["table"],
-  render: EventListenerOptions["render"],
-  variant: EventListenerOptions["variant"],
-  handler?: EventListenerOptions["handler"],
+const formsEvents = async (
+  handler: EventListenerOptions["handler"],
+  form?: EventListenerOptions["form"],
 ) => {
-  if (handler)
-    document.querySelector("form")?.addEventListener("submit", handler);
+  // setTimeout(() => {
+  const element = document.querySelector<HTMLFormElement>(form || "form");
+  console.log(element);
+  if (!element) return;
 
-  await render();
+  element.addEventListener("submit", handler);
+  // }, 0.2 * 1000);
+};
+
+const tableEvents = async (
+  table: EventListenerOptions["table"],
+  variant: EventListenerOptions["variant"],
+  render: EventListenerOptions["render"],
+) => {
+  if (render) await render();
 
   const buttons = document.querySelectorAll<HTMLButtonElement>(
     variant === "delete" || variant === "remove"
@@ -45,4 +58,4 @@ const baseEvent = async (
   });
 };
 
-export { baseEvent };
+export { formsEvents, tableEvents };

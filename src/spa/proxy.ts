@@ -21,6 +21,6 @@ const renderContent = async (path: RouteKey) => {
 };
 
 // RENDER HEADER
-renderApp();
+await renderApp();
 
 export { renderContent };

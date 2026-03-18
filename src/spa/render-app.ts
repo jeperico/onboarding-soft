@@ -1,7 +1,7 @@
 import renderPage from "./render-page.js";
 import routes, { RouteKey } from "./routes.js";
 
-const renderApp = () => {
+const renderApp = async () => {
   const links = document.querySelectorAll(".proxy-route");
 
   links.forEach((item, index) => {
@@ -26,17 +26,17 @@ const renderApp = () => {
     });
   });
 
-  window.addEventListener("popstate", () => {
+  window.addEventListener("popstate", async () => {
     const path = location.pathname;
 
     if (path in routes) {
       renderPage(path as RouteKey);
     } else {
-      renderPage("/");
+      await renderPage("/");
     }
   });
 
-  renderPage("/");
+  await renderPage("/");
 };
 
 export default renderApp;

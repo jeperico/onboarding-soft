@@ -18,5 +18,5 @@ const renderContent = async (path) => {
         history.pushState({}, "", path);
 };
 // RENDER HEADER
-renderApp();
+await renderApp();
 export { renderContent };

@@ -1,7 +1,13 @@
+import { transactionSerializer } from "./serializer.js";
+
 const createTransaction = async (event: SubmitEvent) => {
+  console.log("aasdas");
   // I - Environment
   event.preventDefault();
 
   // II - Inputs
-  const payload = await transactionSerializer(event.target as HTMLFormElement);
+  const payload = await transactionSerializer();
+  console.log(payload);
 };
+
+export { createTransaction };

@@ -17,7 +17,7 @@ const categoryTableSerializer = async () => {
     if (!data)
         return null;
     const payload = [];
-    data.map(async (el) => {
+    data.map((el) => {
         payload.push({
             id: el.id.toString(),
             name: el.name,

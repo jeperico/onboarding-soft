@@ -1,5 +1,8 @@
-import renderPage from "../spa/render-page.js";
-import { baseServiceDelete, baseServiceRemove } from "./base-services.js";
+import renderPage from "../../spa/render-page.js";
+import {
+  baseServiceDelete,
+  baseServiceRemove,
+} from "../../utils/base-services.js";
 const formsEvents = async (handler) => {
   document.querySelector("form")?.addEventListener("submit", handler);
 };

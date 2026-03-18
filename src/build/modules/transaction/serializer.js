@@ -1,13 +1,20 @@
-import { autoIncrement } from "../../utils/auto-increment";
-const transactionSerializer = async (form) => {
-    const id = await autoIncrement("transactions");
-    const quantity = form.elements.namedItem("quantity");
-    const payload = {
-        id: id,
-        quantity: 2,
-        price: 3,
-        product_id: 4,
-        is_active: true,
-    };
+import { autoIncrement } from "../../utils/auto-increment.js";
+import { baseServiceView } from "../../utils/base-services.js";
+const transactionSerializer = async () => {
+    const data = await baseServiceView("chart");
+    if (!data)
+        return null;
+    const payload = [];
+    data.map(async (el) => {
+        const id = await autoIncrement("transactions");
+        payload.push({
+            id: id,
+            quantity: el.quantity,
+            price: el.price,
+            product_id: el.product_id,
+            is_active: true,
+        });
+    });
     return payload;
 };
+export { transactionSerializer };

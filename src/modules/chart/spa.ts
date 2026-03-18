@@ -1,12 +1,13 @@
 import { IProduct } from "../../interfaces/product.js";
 import { renderSelect } from "../base/services.js";
 import { renderContent } from "../../spa/proxy.js";
-import { baseEvent } from "../../utils/base-event.js";
+import { tableEvents, formsEvents } from "../base/listeners.js";
 import { renderChart, createChart } from "./services.js";
 
 const loadChart = async () => {
   await renderContent("/");
-  await baseEvent("chart", renderChart, "remove", createChart);
+  await tableEvents("chart", "remove", renderChart);
+  await formsEvents(createChart, "#home-form");
   await renderSelect<IProduct>("products", "#product", "name", "id");
 };
 
