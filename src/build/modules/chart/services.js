@@ -53,4 +53,22 @@ const renderChart = async () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
-export { createChart, renderChart };
+const fieldsListener = () => {
+    const listener = document.querySelector("#product");
+    if (!listener)
+        return;
+    listener.addEventListener("change", async (e) => {
+        const id = e.target.value;
+        const product = (await serviceView("products"))?.find((el) => el.id === parseInt(id));
+        const tax = (await serviceView("categories"))?.find((el) => el.id === product?.id)?.tax;
+        const taxField = document.querySelector("#tax");
+        if (!taxField || !tax)
+            return;
+        taxField.value = tax.toString();
+        const priceField = document.querySelector("#price");
+        if (!priceField || !product?.price)
+            return;
+        priceField.value = product.price.toString();
+    });
+};
+export { createChart, renderChart, fieldsListener };

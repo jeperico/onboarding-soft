@@ -6,6 +6,8 @@ import { chartSerializer, chartTableSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
 import { IChart } from "../../interfaces/chart.js";
 import { renderActionButton, renderElement } from "../base/services.js";
+import { IProduct } from "../../interfaces/product.js";
+import { ICategory } from "../../interfaces/category.js";
 
 const createChart = async (event: SubmitEvent) => {
   // I - Environment
@@ -75,4 +77,27 @@ const renderChart = async () => {
   table.appendChild(row);
 };
 
-export { createChart, renderChart };
+const fieldsListener = () => {
+  const listener = document.querySelector<HTMLSelectElement>("#product");
+  if (!listener) return;
+
+  listener.addEventListener("change", async (e) => {
+    const id = (e.target as HTMLSelectElement).value;
+    const product = (await serviceView<IProduct>("products"))?.find(
+      (el) => el.id === parseInt(id),
+    );
+    const tax = (await serviceView<ICategory>("categories"))?.find(
+      (el) => el.id === product?.id,
+    )?.tax;
+
+    const taxField = document.querySelector<HTMLInputElement>("#tax");
+    if (!taxField || !tax) return;
+    taxField.value = tax.toString();
+
+    const priceField = document.querySelector<HTMLInputElement>("#price");
+    if (!priceField || !product?.price) return;
+    priceField.value = product.price.toString();
+  });
+};
+
+export { createChart, renderChart, fieldsListener };
