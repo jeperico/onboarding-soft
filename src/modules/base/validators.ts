@@ -8,7 +8,7 @@ const baseValidateString = async <
   table: Table,
   name: string,
 ): Promise<string | null> => {
-  const regex = /^[A-Za-z][A-Za-z0-9]*(?: [A-Za-z0-9]+)*$/;
+  const regex = /^\p{L}[\p{L}\p{N}]*(?: [\p{L}\p{N}]+)*$/u;
   if (!regex.test(value))
     return `${name} name must start with a letter and contain only letters and numbers.`;
 
