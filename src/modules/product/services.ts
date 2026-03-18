@@ -6,7 +6,7 @@ import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { productSerializer, productTableSerializer } from "./serializer.js";
 import { productHandler } from "./handlers.js";
-import { renderDeleteButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement } from "../base/services.js";
 
 const createProduct = async (event: SubmitEvent) => {
   // I - Environment
@@ -59,7 +59,7 @@ const renderProducts = async () => {
     renderElement(row, el.stock);
     renderElement(row, el.price);
     renderElement(row, el.category);
-    renderDeleteButton(row, el.id);
+    renderActionButton(row, el.id);
 
     table.appendChild(row);
   });

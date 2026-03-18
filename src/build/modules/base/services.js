@@ -9,11 +9,11 @@ const renderElement = (row, text) => {
         renderVoidElement(row);
     }
 };
-const renderDeleteButton = (row, id) => {
+const renderActionButton = (row, id, isView) => {
     try {
         const button = document.createElement("button");
-        button.textContent = "DELETE";
-        button.className = "action-delete button-secondary";
+        button.textContent = isView ? "VIEW" : "DELETE";
+        button.className = `action-${isView ? "view" : "delete"} button-secondary`;
         button.id = id;
         const td = document.createElement("td");
         td.appendChild(button);
@@ -44,4 +44,4 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
         parent.appendChild(option);
     });
 };
-export { renderElement, renderDeleteButton, renderSelect };
+export { renderElement, renderActionButton, renderSelect };

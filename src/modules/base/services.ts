@@ -11,11 +11,15 @@ const renderElement = (row: HTMLTableRowElement, text: string) => {
   }
 };
 
-const renderDeleteButton = (row: HTMLTableRowElement, id: string) => {
+const renderActionButton = (
+  row: HTMLTableRowElement,
+  id: string,
+  isView?: boolean,
+) => {
   try {
     const button = document.createElement("button");
-    button.textContent = "DELETE";
-    button.className = "action-delete button-secondary";
+    button.textContent = isView ? "VIEW" : "DELETE";
+    button.className = `action-${isView ? "view" : "delete"} button-secondary`;
     button.id = id;
     const td = document.createElement("td");
     td.appendChild(button);
@@ -55,4 +59,4 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
   });
 };
 
-export { renderElement, renderDeleteButton, renderSelect };
+export { renderElement, renderActionButton, renderSelect };

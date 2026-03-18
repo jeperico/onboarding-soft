@@ -4,7 +4,7 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
-import { renderDeleteButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement } from "../base/services.js";
 import { categoryHandler } from "./handlers.js";
 import { categorySerializer, categoryTableSerializer } from "./serializer.js";
 
@@ -51,7 +51,7 @@ const renderCategory = async () => {
     renderElement(row, formatCode(parseInt(el.id)));
     renderElement(row, el.name);
     renderElement(row, el.tax);
-    renderDeleteButton(row, el.id);
+    renderActionButton(row, el.id);
 
     table.appendChild(row);
   });

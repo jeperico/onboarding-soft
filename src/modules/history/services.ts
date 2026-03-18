@@ -1,6 +1,6 @@
 import { renderVoidTable } from "../../spa/render-void-table.js";
 import { formatCode } from "../../utils/format-code.js";
-import { renderDeleteButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement } from "../base/services.js";
 import { historyTableSerializer } from "./serializer.js";
 
 const renderHistory = async () => {
@@ -22,7 +22,7 @@ const renderHistory = async () => {
     renderElement(row, formatCode(parseInt(el.id)));
     renderElement(row, el.tax);
     renderElement(row, el.total);
-    renderDeleteButton(row, el.id);
+    renderActionButton(row, el.id, true);
 
     table.appendChild(row);
   });

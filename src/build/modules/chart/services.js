@@ -4,7 +4,7 @@ import { serviceView } from "../base/base-services.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { chartSerializer, chartTableSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
-import { renderDeleteButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement } from "../base/services.js";
 const createChart = async (event) => {
     // I - Environment
     event.preventDefault();
@@ -44,7 +44,7 @@ const renderChart = async () => {
         renderElement(row, el.quantity);
         renderElement(row, el.tax);
         renderElement(row, el.total);
-        renderDeleteButton(row, el.id);
+        renderActionButton(row, el.id);
         table.appendChild(row);
     });
     // IV - Output
