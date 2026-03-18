@@ -1,10 +1,10 @@
 import { IChart } from "../../interfaces/chart.js";
 import { ITransaction } from "../../interfaces/transaction.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 
 const transactionSerializer = async (): Promise<ITransaction[] | null> => {
-  const data = await baseServiceView<IChart>("chart");
+  const data = await serviceView<IChart>("chart");
   if (!data) return null;
 
   const payload: ITransaction[] = [];

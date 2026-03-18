@@ -1,5 +1,5 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 const categorySerializer = async (form) => {
     const id = await autoIncrement("categories");
     const name = form.elements.namedItem("name");
@@ -13,7 +13,7 @@ const categorySerializer = async (form) => {
     return payload;
 };
 const categoryTableSerializer = async () => {
-    const data = await baseServiceView("categories");
+    const data = await serviceView("categories");
     if (!data)
         return null;
     const payload = [];

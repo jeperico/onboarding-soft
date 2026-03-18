@@ -1,7 +1,7 @@
 import { IChart, IChartRender } from "../../interfaces/chart.js";
 import { IProduct } from "../../interfaces/product.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 
 const chartSerializer = async (form: HTMLFormElement): Promise<IChart> => {
@@ -23,12 +23,12 @@ const chartSerializer = async (form: HTMLFormElement): Promise<IChart> => {
 };
 
 const chartTableSerializer = async (): Promise<IChartRender[] | null> => {
-  const data = await baseServiceView<IChart>("chart");
+  const data = await serviceView<IChart>("chart");
   if (!data) return null;
 
   const payload: IChartRender[] = [];
   data.map(async (el) => {
-    const product = (await baseServiceView<IProduct>("products"))?.find(
+    const product = (await serviceView<IProduct>("products"))?.find(
       (e) => e.id === el.product_id,
     )?.name;
     const total = el.price * el.quantity;

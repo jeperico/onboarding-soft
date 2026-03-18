@@ -1,6 +1,6 @@
-import { baseServiceView } from "./base-services.js";
+import { serviceView } from "../modules/base/base-services.js";
 const autoIncrement = async (table) => {
-    const data = await baseServiceView(table);
+    const data = await serviceView(table);
     if (!data)
         return 1;
     const last = data.length - 1;

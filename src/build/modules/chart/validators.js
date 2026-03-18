@@ -1,10 +1,10 @@
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { baseValidateNumber, baseValidateRelation, } from "../base/validators.js";
 const validateProduct = async (value) => {
     return baseValidateRelation(value, "products", "Product");
 };
 const validateQuantity = async (value, product) => {
-    const max = (await baseServiceView("products"))?.find((el) => el.id === product && el.is_active);
+    const max = (await serviceView("products"))?.find((el) => el.id === product && el.is_active);
     if (!max)
         return `This product doesn't exists`;
     return baseValidateNumber(value, "Quantity", {
@@ -19,7 +19,7 @@ const validateQuantity = async (value, product) => {
     });
 };
 const validatePrice = async (value, quantity, product_id) => {
-    const product = (await baseServiceView("products"))?.find((el) => el.id === product_id && el.is_active);
+    const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!product)
         return `This product doesn't exists`;
     const price = product.price * quantity;
@@ -28,10 +28,10 @@ const validatePrice = async (value, quantity, product_id) => {
     return null;
 };
 const validateTax = async (value, product_id) => {
-    const product = (await baseServiceView("products"))?.find((el) => el.id === product_id && el.is_active);
+    const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!product)
         return `This product doesn't exists`;
-    const category = (await baseServiceView("categories"))?.find((el) => el.id === product.category_id);
+    const category = (await serviceView("categories"))?.find((el) => el.id === product.category_id);
     if (!category)
         return `The product category doesn't exists`;
     if (value !== category.tax)

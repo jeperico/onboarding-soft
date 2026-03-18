@@ -1,6 +1,6 @@
 import { ICategory, ICategoryRender } from "../../interfaces/category.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 
 const categorySerializer = async (
   form: HTMLFormElement,
@@ -20,7 +20,7 @@ const categorySerializer = async (
 };
 
 const categoryTableSerializer = async (): Promise<ICategoryRender[] | null> => {
-  const data = await baseServiceView<ICategory>("categories");
+  const data = await serviceView<ICategory>("categories");
   if (!data) return null;
 
   const payload: ICategoryRender[] = [];

@@ -1,5 +1,5 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 const chartSerializer = async (form) => {
     const id = await autoIncrement("chart");
@@ -17,12 +17,12 @@ const chartSerializer = async (form) => {
     return payload;
 };
 const chartTableSerializer = async () => {
-    const data = await baseServiceView("chart");
+    const data = await serviceView("chart");
     if (!data)
         return null;
     const payload = [];
     data.map(async (el) => {
-        const product = (await baseServiceView("products"))?.find((e) => e.id === el.product_id)?.name;
+        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id)?.name;
         const total = el.price * el.quantity;
         payload.push({
             id: el.id.toString(),

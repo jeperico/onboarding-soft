@@ -5,21 +5,21 @@ import {
 import { IProduct } from "../../interfaces/product.js";
 import { ICategory } from "../../interfaces/category.js";
 
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 
 const historyTableSerializer = async (): Promise<
   ITransactionRender[] | null
 > => {
-  const data = await baseServiceView<ITransaction>("transactions");
+  const data = await serviceView<ITransaction>("transactions");
   if (!data) return null;
 
   const payload: ITransactionRender[] = [];
   data.map(async (el) => {
-    const product = (await baseServiceView<IProduct>("products"))?.find(
+    const product = (await serviceView<IProduct>("products"))?.find(
       (e) => e.id === el.product_id,
     )?.category_id;
-    const tax = (await baseServiceView<ICategory>("categories"))?.find(
+    const tax = (await serviceView<ICategory>("categories"))?.find(
       (e) => e.id === product,
     )?.tax;
     const total = el.price * el.quantity;

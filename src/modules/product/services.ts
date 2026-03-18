@@ -1,7 +1,7 @@
 import { IProduct } from "../../interfaces/product.js";
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { productSerializer, productTableSerializer } from "./serializer.js";
@@ -30,7 +30,7 @@ const createProduct = async (event: SubmitEvent) => {
   }
 
   // IV - Output
-  const currentData = await baseServiceView<IProduct>("products");
+  const currentData = await serviceView<IProduct>("products");
   localStorage.setItem(
     "products",
     JSON.stringify(currentData ? [...currentData, payload] : [payload]),

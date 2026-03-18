@@ -1,5 +1,5 @@
 import { Table } from "../../types/table.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "./base-services.js";
 
 const baseValidateString = async <
   IValidate extends { is_active: boolean; name: string },
@@ -16,7 +16,7 @@ const baseValidateString = async <
   if (value.length < 3)
     return `${name} name must contain at least 2 characters.`;
 
-  const data = (await baseServiceView<IValidate>(table))?.filter(
+  const data = (await serviceView<IValidate>(table))?.filter(
     (e) => e.is_active,
   );
   if (data) {
@@ -55,7 +55,7 @@ const baseValidateRelation = async <
   table: Table,
   name: string,
 ): Promise<string | null> => {
-  const data = (await baseServiceView<IValidate>(table))?.filter(
+  const data = (await serviceView<IValidate>(table))?.filter(
     (e) => e.is_active,
   );
   if (data) {

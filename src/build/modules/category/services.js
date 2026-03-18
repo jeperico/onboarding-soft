@@ -1,6 +1,6 @@
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { renderDeleteButton, renderElement } from "../base/services.js";
@@ -20,7 +20,7 @@ const createCategory = async (event) => {
         return;
     }
     // IV - Output
-    const currentData = await baseServiceView("categories");
+    const currentData = await serviceView("categories");
     localStorage.setItem("categories", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
     renderPage("/categories");
 };

@@ -1,8 +1,8 @@
 import { Table } from "./../types/table.js";
-import { baseServiceView } from "./base-services.js";
+import { serviceView } from "../modules/base/base-services.js";
 
 const autoIncrement = async (table: Table) => {
-  const data = await baseServiceView<{
+  const data = await serviceView<{
     id: number;
   }>(table);
 

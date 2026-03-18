@@ -1,5 +1,5 @@
 import renderPage from "../../spa/render-page.js";
-import { baseServiceDelete, baseServiceRemove, } from "../../utils/base-services.js";
+import { serviceDelete, serviceRemove } from "./base-services.js";
 const formsEvents = async (handler, form) => {
     // setTimeout(() => {
     const element = document.querySelector(form || "form");
@@ -20,10 +20,10 @@ const tableEvents = async (table, variant, render) => {
             const id = Number(el.id);
             switch (variant) {
                 case "delete":
-                    baseServiceDelete(table, id);
+                    serviceDelete(table, id);
                     break;
                 case "remove":
-                    baseServiceRemove(table, id);
+                    serviceRemove(table, id);
                     break;
                 case "view":
                     renderPage("/details");

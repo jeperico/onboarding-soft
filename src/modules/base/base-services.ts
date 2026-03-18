@@ -1,6 +1,6 @@
-import { Table } from "../types/table";
+import { Table } from "../../types/table";
 
-const baseServiceView = async <IResponseData>(
+const serviceView = async <IResponseData>(
   endpoint: Table,
 ): Promise<Array<IResponseData> | null> => {
   const response = localStorage.getItem(endpoint);
@@ -8,9 +8,9 @@ const baseServiceView = async <IResponseData>(
   return JSON.parse(response);
 };
 
-const baseServiceDelete = async (endpoint: Table, id: number) => {
+const serviceDelete = async (endpoint: Table, id: number) => {
   const response = (
-    await baseServiceView<{ id: number; is_active: boolean }>(endpoint)
+    await serviceView<{ id: number; is_active: boolean }>(endpoint)
   )?.map((el) => {
     if (el.id === id) el.is_active = false;
   });
@@ -20,8 +20,8 @@ const baseServiceDelete = async (endpoint: Table, id: number) => {
   window.location.reload();
 };
 
-const baseServiceRemove = async (endpoint: Table, id: number) => {
-  const response = (await baseServiceView<{ id: number }>(endpoint))?.filter(
+const serviceRemove = async (endpoint: Table, id: number) => {
+  const response = (await serviceView<{ id: number }>(endpoint))?.filter(
     (el) => {
       el.id !== id;
     },
@@ -32,4 +32,4 @@ const baseServiceRemove = async (endpoint: Table, id: number) => {
   window.location.reload();
 };
 
-export { baseServiceView, baseServiceDelete, baseServiceRemove };
+export { serviceView, serviceDelete, serviceRemove };

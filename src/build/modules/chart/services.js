@@ -1,6 +1,6 @@
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { chartSerializer, chartTableSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
@@ -22,7 +22,7 @@ const createChart = async (event) => {
         return;
     }
     // IV - Output
-    const currentData = await baseServiceView("chart");
+    const currentData = await serviceView("chart");
     localStorage.setItem("chart", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
     renderPage("/");
 };

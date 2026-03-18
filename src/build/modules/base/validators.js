@@ -1,4 +1,4 @@
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "./base-services.js";
 const baseValidateString = async (value, table, name) => {
     const regex = /^[A-Za-z][A-Za-z0-9]*(?: [A-Za-z0-9]+)*$/;
     if (!regex.test(value))
@@ -7,7 +7,7 @@ const baseValidateString = async (value, table, name) => {
         return `${name} name cannot exceed 100 characters.`;
     if (value.length < 3)
         return `${name} name must contain at least 2 characters.`;
-    const data = (await baseServiceView(table))?.filter((e) => e.is_active);
+    const data = (await serviceView(table))?.filter((e) => e.is_active);
     if (data) {
         const exists = data.find((el) => el.name.toLowerCase() === value.toLowerCase());
         if (exists)
@@ -25,7 +25,7 @@ const baseValidateNumber = (value, name, limits) => {
     return null;
 };
 const baseValidateRelation = async (value, table, name) => {
-    const data = (await baseServiceView(table))?.filter((e) => e.is_active);
+    const data = (await serviceView(table))?.filter((e) => e.is_active);
     if (data) {
         const exist = data.find((el) => el.id === value);
         if (!exist)

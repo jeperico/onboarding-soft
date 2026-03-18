@@ -1,5 +1,5 @@
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 /**
  * Renders category rows inside `<tbody>`.
@@ -9,7 +9,7 @@ import { formatCode } from "../../utils/format-code.js";
 const renderDetails = async () => {
     // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
     // 1° - INPUT
-    const data = await baseServiceView("transactions");
+    const data = await serviceView("transactions");
     if (!data) {
         renderVoidTable("#tbody-details", 4);
         return;

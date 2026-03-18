@@ -1,4 +1,4 @@
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "./base-services.js";
 const renderElement = (row, text) => {
     try {
         const td = document.createElement("td");
@@ -30,7 +30,7 @@ const renderVoidElement = (row) => {
 };
 const renderSelect = async (table, select, fieldText, fieldValue) => {
     const parent = document.querySelector(select);
-    const data = await baseServiceView(table);
+    const data = await serviceView(table);
     if (!parent || !data)
         return;
     data.forEach((el) => {

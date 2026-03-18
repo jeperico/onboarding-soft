@@ -1,7 +1,7 @@
 import { ICategory } from "../../interfaces/category.js";
 import { IProduct, IProductRender } from "../../interfaces/product.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 
 const productSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
@@ -25,12 +25,12 @@ const productSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
 };
 
 const productTableSerializer = async (): Promise<IProductRender[] | null> => {
-  const data = await baseServiceView<IProduct>("products");
+  const data = await serviceView<IProduct>("products");
   if (!data) return null;
 
   const payload: IProductRender[] = [];
   data.map(async (el) => {
-    const category = (await baseServiceView<ICategory>("categories"))?.find(
+    const category = (await serviceView<ICategory>("categories"))?.find(
       (e) => e.id === el.category_id,
     )?.name;
 

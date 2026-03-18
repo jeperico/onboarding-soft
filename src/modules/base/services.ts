@@ -1,5 +1,5 @@
 import { Table } from "../../types/table.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "./base-services.js";
 
 const renderElement = (row: HTMLTableRowElement, text: string) => {
   try {
@@ -38,7 +38,7 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
   fieldValue: keyof IResponseData,
 ) => {
   const parent = document.querySelector<HTMLSelectElement>(select);
-  const data = await baseServiceView<IResponseData>(table);
+  const data = await serviceView<IResponseData>(table);
 
   if (!parent || !data) return;
   data.forEach((el: IResponseData) => {
