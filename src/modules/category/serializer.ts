@@ -20,7 +20,9 @@ const categorySerializer = async (
 };
 
 const categoryTableSerializer = async (): Promise<ICategoryRender[] | null> => {
-  const data = await serviceView<ICategory>("categories");
+  const data = (await serviceView<ICategory>("categories"))?.filter(
+    (el) => el.is_active,
+  );
   if (!data) return null;
 
   const payload: ICategoryRender[] = [];

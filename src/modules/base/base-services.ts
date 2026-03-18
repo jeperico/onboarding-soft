@@ -9,12 +9,14 @@ const serviceView = async <IResponseData>(
 };
 
 const serviceDelete = async (endpoint: Table, id: number) => {
-  const response = (
-    await serviceView<{ id: number; is_active: boolean }>(endpoint)
-  )?.map((el) => {
+  const response = await serviceView<{ id: number; is_active: boolean }>(
+    endpoint,
+  );
+  const payload = await response?.map((el) => {
+    console.log(id, el);
     if (el.id === id) el.is_active = false;
   });
-  if (!response) return null;
+  if (!payload) return null;
 
   localStorage.setItem(endpoint, JSON.stringify(response));
   window.location.reload();

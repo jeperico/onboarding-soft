@@ -5,11 +5,13 @@ const serviceView = async (endpoint) => {
     return JSON.parse(response);
 };
 const serviceDelete = async (endpoint, id) => {
-    const response = (await serviceView(endpoint))?.map((el) => {
+    const response = await serviceView(endpoint);
+    const payload = await response?.map((el) => {
+        console.log(id, el);
         if (el.id === id)
             el.is_active = false;
     });
-    if (!response)
+    if (!payload)
         return null;
     localStorage.setItem(endpoint, JSON.stringify(response));
     window.location.reload();

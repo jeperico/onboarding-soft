@@ -13,7 +13,7 @@ const categorySerializer = async (form) => {
     return payload;
 };
 const categoryTableSerializer = async () => {
-    const data = await serviceView("categories");
+    const data = (await serviceView("categories"))?.filter((el) => el.is_active);
     if (!data)
         return null;
     const payload = [];

@@ -11,7 +11,9 @@ import { formatCurrency } from "../../utils/format-currency.js";
 const historyTableSerializer = async (): Promise<
   ITransactionRender[] | null
 > => {
-  const data = await serviceView<ITransaction>("transactions");
+  const data = (await serviceView<ITransaction>("transactions"))?.filter(
+    (el) => el.is_active,
+  );
   if (!data) return null;
 
   const payload: ITransactionRender[] = [];

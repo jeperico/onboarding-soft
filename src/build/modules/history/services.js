@@ -9,7 +9,7 @@ const renderHistory = async () => {
     const data = await historyTableSerializer();
     const table = await document.querySelector("#tbody-history");
     if (!data || !table) {
-        renderVoidTable("#tbody-history", 4);
+        renderVoidTable("#tbody-history", COLUMNS_COUNT);
         return;
     }
     // III - Rendering

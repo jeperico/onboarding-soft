@@ -12,4 +12,13 @@ interface ITransactionRender {
   total: string;
 }
 
-export { ITransaction, ITransactionRender };
+interface IDetailsRender {
+  id: string;
+  product: string;
+  category: string;
+  quantity: string;
+  tax: string;
+  total: string;
+}
+
+export { ITransaction, ITransactionRender, IDetailsRender };

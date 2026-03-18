@@ -1,53 +1,30 @@
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
-/**
- * Renders category rows inside `<tbody>`.
- *
- * @returns void
- */
+import { detailsTableSerializer } from "./serializers.js";
+import { renderElement } from "../base/services.js";
 const renderDetails = async () => {
-    // TODO: VALIDATE IF NOT SOME KEY IS UNDEFINED
-    // 1° - INPUT
-    const data = await serviceView("transactions");
-    if (!data) {
-        renderVoidTable("#tbody-details", 4);
+    // I - Environment
+    const COLUMNS_COUNT = 6;
+    // II - Inputs
+    const data = await detailsTableSerializer();
+    const table = document.querySelector("#tbody-details");
+    if (!data || !table) {
+        renderVoidTable("#tbody-details", COLUMNS_COUNT);
         return;
     }
-    const table = document.querySelector("#tbody-details");
-    if (!table)
-        return;
-    // 2° - PROCESS /  OUTPUT
-    if (!data || !table)
-        return;
-    const payload = data.filter((el) => {
-        return el.is_active;
-    });
-    payload.forEach((el, index) => {
+    // III - Rendering
+    data.forEach((el) => {
         const row = document.createElement("tr");
-        const td = document.createElement("td");
-        const code = td.cloneNode();
-        code.textContent = formatCode(index);
-        row.appendChild(code);
-        const product = td.cloneNode();
-        product.textContent = "product";
-        row.appendChild(product);
-        const quantity = td.cloneNode();
-        quantity.textContent = "quantity";
-        row.appendChild(quantity);
-        const category = td.cloneNode();
-        category.textContent = "category";
-        row.appendChild(category);
-        const tax = td.cloneNode();
-        tax.textContent = el.product_id.toString();
-        row.appendChild(tax);
-        const total = td.cloneNode();
-        total.textContent = el.price.toString();
-        row.appendChild(total);
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.product);
+        renderElement(row, el.category);
+        renderElement(row, el.quantity);
+        renderElement(row, el.tax);
+        renderElement(row, el.total);
         table.appendChild(row);
     });
     const row = document.createElement("tr");
-    for (let i = 0; i < 6; i++)
+    for (let i = 0; i < COLUMNS_COUNT; i++)
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };

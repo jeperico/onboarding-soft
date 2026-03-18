@@ -25,7 +25,9 @@ const productSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
 };
 
 const productTableSerializer = async (): Promise<IProductRender[] | null> => {
-  const data = await serviceView<IProduct>("products");
+  const data = (await serviceView<IProduct>("products"))?.filter(
+    (el) => el.is_active,
+  );
   if (!data) return null;
 
   const payload: IProductRender[] = [];

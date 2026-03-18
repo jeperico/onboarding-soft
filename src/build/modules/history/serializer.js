@@ -1,7 +1,7 @@
 import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 const historyTableSerializer = async () => {
-    const data = await serviceView("transactions");
+    const data = (await serviceView("transactions"))?.filter((el) => el.is_active);
     if (!data)
         return null;
     const payload = [];

@@ -19,7 +19,7 @@ const productSerializer = async (form) => {
     return payload;
 };
 const productTableSerializer = async () => {
-    const data = await serviceView("products");
+    const data = (await serviceView("products"))?.filter((el) => el.is_active);
     if (!data)
         return null;
     const payload = [];
