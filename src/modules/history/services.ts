@@ -16,7 +16,9 @@ const renderHistory = async () => {
   }
 
   // III - Rendering
+  console.log("data: ", data);
   data.map((el) => {
+    console.log(el);
     const row = document.createElement("tr");
 
     renderElement(row, formatCode(parseInt(el.id)));
@@ -26,6 +28,7 @@ const renderHistory = async () => {
 
     table.appendChild(row);
   });
+  console.log("data: ", data);
 
   // IV - Output
   const row = document.createElement("tr");

@@ -17,7 +17,7 @@ const renderPage = async (path) => {
             loadCategory();
             break;
         case "/history":
-            loadHistory();
+            await loadHistory();
             break;
         case "/details":
             loadDetails();

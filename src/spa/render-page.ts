@@ -19,7 +19,7 @@ const renderPage = async (path: RouteKey) => {
       loadCategory();
       break;
     case "/history":
-      loadHistory();
+      await loadHistory();
       break;
     case "/details":
       loadDetails();

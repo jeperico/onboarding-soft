@@ -10,7 +10,6 @@ const createTransaction = async (event: SubmitEvent) => {
   // II - Inputs
   const payload = await transactionSerializer();
   if (!payload) return;
-  console.log(payload);
 
   // III - Output
   const currentData = await serviceView<ITransaction>("transactions");

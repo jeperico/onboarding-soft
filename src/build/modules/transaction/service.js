@@ -8,7 +8,6 @@ const createTransaction = async (event) => {
     const payload = await transactionSerializer();
     if (!payload)
         return;
-    console.log(payload);
     // III - Output
     const currentData = await serviceView("transactions");
     localStorage.setItem("transactions", JSON.stringify(currentData ? [...currentData, ...payload] : payload));

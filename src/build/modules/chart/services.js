@@ -40,9 +40,9 @@ const renderChart = async () => {
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, el.product);
-        renderElement(row, el.tax);
         renderElement(row, el.price);
         renderElement(row, el.quantity);
+        renderElement(row, el.tax);
         renderElement(row, el.total);
         renderDeleteButton(row, el.id);
         table.appendChild(row);
