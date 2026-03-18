@@ -33,7 +33,6 @@ const validateQuantity = async (
 
 const validatePrice = async (
   value: number,
-  quantity: number,
   product_id: number,
 ): Promise<string | null> => {
   const product = (await serviceView<IProduct>("products"))?.find(
@@ -41,8 +40,7 @@ const validatePrice = async (
   );
   if (!product) return `This product doesn't exists`;
 
-  const price = product.price * quantity;
-  if (value !== price) return "The price is incorrect";
+  if (value !== product.price) return "The price is incorrect";
   return null;
 };
 
@@ -57,6 +55,7 @@ const validateTax = async (
   const category = (await serviceView<ICategory>("categories"))?.find(
     (el) => el.id === product.category_id,
   );
+  console.log(category);
   if (!category) return `The product category doesn't exists`;
 
   if (value !== category.tax) return "The tax is incorrect";
