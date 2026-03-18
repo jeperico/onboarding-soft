@@ -7,12 +7,12 @@ const transactionSerializer = async (): Promise<ITransaction[] | null> => {
   const data = await serviceView<IChart>("chart");
   if (!data) return null;
 
+  const id = (await autoIncrement("transactions")) || 1;
   const payload: ITransaction[] = [];
-  data.map(async (el) => {
-    const id = await autoIncrement("transactions");
 
+  data.map(async (el, index) => {
     payload.push({
-      id: id,
+      id: id + index,
       quantity: el.quantity,
       price: el.price,
       product_id: el.product_id,

@@ -14,13 +14,10 @@ const formsEvents = async (
   handler: EventListenerOptions["handler"],
   form?: EventListenerOptions["form"],
 ) => {
-  // setTimeout(() => {
   const element = document.querySelector<HTMLFormElement>(form || "form");
-  console.log(element);
   if (!element) return;
 
   element.addEventListener("submit", handler);
-  // }, 0.2 * 1000);
 };
 
 const tableEvents = async (
