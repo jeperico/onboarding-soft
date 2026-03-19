@@ -1,1 +1,6 @@
-export type Table = "categories" | "products" | "transactions" | "chart";
+export type Table =
+  | "categories"
+  | "products"
+  | "transactions"
+  | "chart"
+  | "orders";

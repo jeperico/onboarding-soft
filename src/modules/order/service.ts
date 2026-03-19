@@ -1,26 +1,41 @@
 import { IChart } from "../../interfaces/chart.js";
+import { IOrder } from "../../interfaces/order.js";
 import { ITransaction } from "../../interfaces/transaction.js";
 import renderPage from "../../spa/render-page.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
-import { transactionSerializer } from "./serializer.js";
+import { OrderSerializer, transactionSerializer } from "./serializer.js";
 
 const finishPurchase = async (event: SubmitEvent) => {
   // I - Environment
   event.preventDefault();
 
+  const order = await OrderSerializer();
+  if (!order) return;
+
+  const currentOrders = await serviceView<IOrder>("orders");
+  localStorage.setItem(
+    "orders",
+    JSON.stringify(currentOrders ? [...currentOrders, order] : [order]),
+  );
+
   // II - Inputs
-  const payload = await transactionSerializer();
-  if (!payload) return;
+  const transactions = await transactionSerializer(order.id);
+  if (!transactions) return;
 
   // III - Output
-  const currentData = await serviceView<ITransaction>("transactions");
+  const currentTransactions = await serviceView<ITransaction>("transactions");
   localStorage.setItem(
     "transactions",
-    JSON.stringify(currentData ? [...currentData, ...payload] : payload),
+    JSON.stringify(
+      currentTransactions
+        ? [...currentTransactions, ...transactions]
+        : transactions,
+    ),
   );
 
   localStorage.setItem("chart", "");
+
   renderPage("/");
 };
 

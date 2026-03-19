@@ -3,6 +3,7 @@ interface ITransaction {
   quantity: number;
   price: number;
   product_id: number;
+  order_id: number;
   is_active: boolean;
 }
 

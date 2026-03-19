@@ -1,6 +1,25 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { serviceView } from "../base/base-services.js";
-const transactionSerializer = async () => {
+const OrderSerializer = async () => {
+    const data = await serviceView("chart");
+    if (!data)
+        return null;
+    const id = await autoIncrement("orders");
+    let total_tax = 0;
+    let total_price = 0;
+    data.map((el) => {
+        total_tax += el.tax * el.quantity;
+        total_price += el.price * el.quantity;
+    });
+    const payload = {
+        id: id,
+        total_tax: total_tax,
+        total_price: total_price,
+        created_at: new Date(),
+    };
+    return payload;
+};
+const transactionSerializer = async (order) => {
     const data = await serviceView("chart");
     if (!data)
         return null;
@@ -12,9 +31,10 @@ const transactionSerializer = async () => {
             quantity: el.quantity,
             price: el.price,
             product_id: el.product_id,
+            order_id: order,
             is_active: true,
         });
     });
     return payload;
 };
-export { transactionSerializer };
+export { OrderSerializer, transactionSerializer };
