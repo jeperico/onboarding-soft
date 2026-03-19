@@ -32,6 +32,6 @@ const renderApp = async () => {
             await renderPage("/");
         }
     });
-    await renderPage("/products");
+    await renderPage("/");
 };
 export default renderApp;
