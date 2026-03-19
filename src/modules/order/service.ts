@@ -5,7 +5,7 @@ import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
 import { transactionSerializer } from "./serializer.js";
 
-const createTransaction = async (event: SubmitEvent) => {
+const finishPurchase = async (event: SubmitEvent) => {
   // I - Environment
   event.preventDefault();
 
@@ -25,7 +25,7 @@ const createTransaction = async (event: SubmitEvent) => {
 };
 
 // TODO: Padronize tax atomic values
-const renderTransaction = async () => {
+const renderOrderDetails = async () => {
   // I - Inputs
   const taxField = document.querySelector<HTMLParagraphElement>("#render-tax");
   const totalField =
@@ -44,4 +44,4 @@ const renderTransaction = async () => {
   totalField.innerText = formatCurrency(total);
 };
 
-export { createTransaction, renderTransaction };
+export { finishPurchase, renderOrderDetails };
