@@ -8,7 +8,6 @@ const productSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
   const id = await autoIncrement("products");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const stock = form.elements.namedItem("stock") as HTMLInputElement;
-  // TODO: RegEx on field to R$ x,xx
   const price = form.elements.namedItem("price") as HTMLInputElement;
   const category = form.elements.namedItem("category") as HTMLSelectElement;
 
@@ -16,7 +15,7 @@ const productSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
     id: id,
     name: name.value.replace(/\s+/g, " ").trim(),
     stock: parseInt(stock.value),
-    price: parseInt(price.value),
+    price: parseInt((parseFloat(price.value) * 100).toFixed(0)),
     category_id: parseInt(category.value),
     is_active: true,
   };

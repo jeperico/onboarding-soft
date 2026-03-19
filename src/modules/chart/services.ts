@@ -138,11 +138,11 @@ const fieldsListener = () => {
 
     const taxField = document.querySelector<HTMLInputElement>("#tax");
     if (!taxField || !tax) return;
-    taxField.value = (tax / 100).toString();
+    taxField.value = (tax / 100).toFixed(2);
 
     const priceField = document.querySelector<HTMLInputElement>("#price");
     if (!priceField || !product?.price) return;
-    priceField.value = (product.price / 100).toString();
+    priceField.value = (product.price / 100).toFixed(2);
 
     const quantityField = document.querySelector<HTMLInputElement>("#quantity");
     if (!quantityField || !chart) return;

@@ -39,6 +39,23 @@ input {
   }
 }
 
+.currency-input,
+.percent-input {
+  position: relative;
+
+  & p {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  & input {
+    text-align: right;
+  }
+}
+
 /* FORM ERROR MESSAGES */
 .errors-form-container {
   width: 100%;
