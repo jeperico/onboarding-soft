@@ -15,6 +15,7 @@ const createTransaction = async (event) => {
     localStorage.setItem("chart", "");
     renderPage("/");
 };
+// TODO: Padronize tax atomic values
 const renderTransaction = async () => {
     // I - Inputs
     const taxField = document.querySelector("#render-tax");

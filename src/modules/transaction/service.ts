@@ -24,6 +24,7 @@ const createTransaction = async (event: SubmitEvent) => {
   renderPage("/");
 };
 
+// TODO: Padronize tax atomic values
 const renderTransaction = async () => {
   // I - Inputs
   const taxField = document.querySelector<HTMLParagraphElement>("#render-tax");
