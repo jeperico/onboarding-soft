@@ -23,24 +23,36 @@
 - name: string
 - stock: int
 - price: int
+- count_transactions: int
 - category_id: int fk(categories)
 - is_active: boolean
+<!-- TODO: Refactor logic to new [COUNT] -->
 
 > chart:
 
 - id: int
 - quantity: int
-- price: int
-- tax: number
+- total_price: int
+- total_tax: int
 - product_id: int fk(products)
+  <!-- TODO: Refactor logic to new [TOTAL] fields -->
 
 > transaction:
 
 - id: int
 - quantity: int
-- price: int
+- total_price: int
+- total_tax: int
 - product_id: int fk(products)
-- is_active: boolean
+  <!-- TODO: Refactor logic to new [TOTAL] fields -->
+  <!-- TODO: Remove is_active from [TRANSACTIONS] -->
+
+> orders:
+
+- id: int
+- total_price: int
+- total_tax: int
+- created_at: date
 
 ## Test Cases:
 
