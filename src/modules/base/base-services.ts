@@ -13,7 +13,6 @@ const serviceDelete = async (endpoint: Table, id: number) => {
     endpoint,
   );
   const payload = await response?.map((el) => {
-    console.log(id, el);
     if (el.id === id) el.is_active = false;
   });
   if (!payload) return null;

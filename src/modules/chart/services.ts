@@ -24,7 +24,7 @@ const createChart = async (event: SubmitEvent) => {
     return;
 
   // III - Errors handling
-  const errors = await chartHandler(
+  const { errors, handled } = await chartHandler(
     payload.product_id,
     payload.quantity,
     payload.price,
@@ -32,6 +32,10 @@ const createChart = async (event: SubmitEvent) => {
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    return;
+  }
+  if (handled) {
+    renderPage("/");
     return;
   }
 
@@ -77,6 +81,44 @@ const renderChart = async () => {
   table.appendChild(row);
 };
 
+const overwriteProduct = async (
+  duplicated: IChart,
+  quantity: number,
+  chart: IChart[],
+): Promise<string | null> => {
+  try {
+    // I - Inputs
+    const maxStock = (await serviceView<IProduct>("products"))?.find(
+      (el) => el.id === duplicated.product_id,
+    );
+    const currentQuantity = chart?.find(
+      (el) => el.id === duplicated.id,
+    )?.quantity;
+    if (!currentQuantity) return null;
+    console.log(maxStock, currentQuantity, quantity);
+
+    // II - Check availability
+    if (currentQuantity + quantity > (maxStock?.stock || 0))
+      return "Doesn't exist that quantity in stock";
+
+    console.log("chart: ", chart);
+    // III - Update
+    const payload = chart.map((el) => {
+      if (el.id === duplicated.id) {
+        el.quantity += quantity;
+      }
+      return el;
+    });
+
+    localStorage.setItem("chart", JSON.stringify(payload));
+    renderPage("/");
+
+    return null;
+  } catch {
+    return "Internal Error";
+  }
+};
+
 const fieldsListener = () => {
   const listener = document.querySelector<HTMLSelectElement>("#product");
   if (!listener) return;
@@ -100,4 +142,4 @@ const fieldsListener = () => {
   });
 };
 
-export { createChart, renderChart, fieldsListener };
+export { createChart, renderChart, fieldsListener, overwriteProduct };

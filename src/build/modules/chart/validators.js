@@ -1,13 +1,14 @@
 import { serviceView } from "../base/base-services.js";
 import { baseValidateNumber, baseValidateRelation, } from "../base/validators.js";
-const validateProduct = async (value) => {
-    return baseValidateRelation(value, "products", "Product");
+import { overwriteProduct } from "./services.js";
+const validateProduct = async (product_id) => {
+    return baseValidateRelation(product_id, "products", "Product");
 };
-const validateQuantity = async (value, product) => {
-    const max = (await serviceView("products"))?.find((el) => el.id === product && el.is_active);
+const validateQuantity = async (quantity, product_id) => {
+    const max = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!max)
         return `This product doesn't exists`;
-    return baseValidateNumber(value, "Quantity", {
+    return baseValidateNumber(quantity, "Quantity", {
         min: {
             value: 1,
             label: "1",
@@ -18,24 +19,33 @@ const validateQuantity = async (value, product) => {
         },
     });
 };
-const validatePrice = async (value, product_id) => {
+const validatePrice = async (price, product_id) => {
     const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!product)
         return `This product doesn't exists`;
-    if (value !== product.price)
+    if (price !== product.price)
         return "The price is incorrect";
     return null;
 };
-const validateTax = async (value, product_id) => {
+const validateTax = async (tax, product_id) => {
     const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!product)
         return `This product doesn't exists`;
     const category = (await serviceView("categories"))?.find((el) => el.id === product.category_id);
-    console.log(category);
     if (!category)
         return `The product category doesn't exists`;
-    if (value !== category.tax)
+    if (tax !== category.tax)
         return "The tax is incorrect";
     return null;
 };
-export { validateProduct, validateQuantity, validatePrice, validateTax };
+const validateDuplicatedProduct = async (product_id, quantity) => {
+    const chart = await serviceView("chart");
+    const duplicated = chart?.find((el) => el.product_id === product_id);
+    if (!chart || !duplicated)
+        return { handled: false };
+    const error = await overwriteProduct(duplicated, quantity, chart);
+    if (error)
+        return { handled: false, error };
+    return { handled: true };
+};
+export { validateProduct, validateQuantity, validatePrice, validateTax, validateDuplicatedProduct, };

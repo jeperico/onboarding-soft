@@ -7,7 +7,6 @@ const serviceView = async (endpoint) => {
 const serviceDelete = async (endpoint, id) => {
     const response = await serviceView(endpoint);
     const payload = await response?.map((el) => {
-        console.log(id, el);
         if (el.id === id)
             el.is_active = false;
     });

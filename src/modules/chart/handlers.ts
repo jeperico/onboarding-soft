@@ -4,6 +4,7 @@ import {
   validateQuantity,
   validatePrice,
   validateTax,
+  validateDuplicatedProduct,
 } from "./validators.js";
 
 const chartHandler = async (
@@ -11,8 +12,9 @@ const chartHandler = async (
   quantity: number,
   price: number,
   tax: number,
-): Promise<ErrorResponse> => {
+): Promise<{ errors: ErrorResponse; handled: boolean }> => {
   const errors = [];
+  let handled = false;
 
   const productError = await validateProduct(product);
   if (productError) errors.push({ field: "#product", message: productError });
@@ -21,13 +23,18 @@ const chartHandler = async (
   if (quantityError)
     errors.push({ field: "#quantity", message: quantityError });
 
-  const priceError = await validatePrice(price, quantity, product);
+  const priceError = await validatePrice(price, product);
   if (priceError) errors.push({ field: "#price", message: priceError });
 
   const taxError = await validateTax(tax, product);
   if (taxError) errors.push({ field: "#tax", message: taxError });
 
-  return errors;
+  const duplicatedResult = await validateDuplicatedProduct(product, quantity);
+  if (duplicatedResult.error)
+    errors.push({ field: "#product", message: duplicatedResult.error });
+  if (duplicatedResult.handled) handled = true;
+
+  return { errors, handled };
 };
 
 export { chartHandler };
