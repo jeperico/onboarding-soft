@@ -32,12 +32,13 @@ const chartTableSerializer = async (): Promise<IChartRender[] | null> => {
       (e) => e.id === el.product_id,
     )?.name;
     const total = el.price * el.quantity;
+    const tax = total * (el.tax / 100);
 
     payload.push({
       id: el.id.toString(),
       quantity: el.quantity.toString(),
       price: formatCurrency(el.price),
-      tax: el.tax.toString().concat("%"),
+      tax: formatCurrency(tax),
       total: formatCurrency(total),
       product: product || "No data!",
     });

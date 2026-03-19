@@ -24,11 +24,12 @@ const chartTableSerializer = async () => {
     data.map(async (el) => {
         const product = (await serviceView("products"))?.find((e) => e.id === el.product_id)?.name;
         const total = el.price * el.quantity;
+        const tax = total * (el.tax / 100);
         payload.push({
             id: el.id.toString(),
             quantity: el.quantity.toString(),
             price: formatCurrency(el.price),
-            tax: el.tax.toString().concat("%"),
+            tax: formatCurrency(tax),
             total: formatCurrency(total),
             product: product || "No data!",
         });

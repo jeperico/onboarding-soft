@@ -131,6 +131,9 @@ const fieldsListener = () => {
     const tax = (await serviceView<ICategory>("categories"))?.find(
       (el) => el.id === product?.id,
     )?.tax;
+    const chart = (await serviceView<IChart>("chart"))?.find(
+      (el) => el.product_id === product?.id,
+    );
 
     const taxField = document.querySelector<HTMLInputElement>("#tax");
     if (!taxField || !tax) return;
@@ -139,6 +142,11 @@ const fieldsListener = () => {
     const priceField = document.querySelector<HTMLInputElement>("#price");
     if (!priceField || !product?.price) return;
     priceField.value = product.price.toString();
+
+    const quantityField = document.querySelector<HTMLInputElement>("#quantity");
+    if (!quantityField || !chart) return;
+    const stock = product?.stock - chart?.quantity;
+    quantityField.max = stock.toString();
   });
 };
 

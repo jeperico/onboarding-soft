@@ -6,6 +6,7 @@ const loadChart = async () => {
     await renderContent("/");
     await tableEvents("chart", "remove", renderChart);
     await formsEvents(createChart, "#home-form");
+    // TODO: Remove products without stock from selection
     await renderSelect("products", "#product", "name", "id");
     fieldsListener();
 };
