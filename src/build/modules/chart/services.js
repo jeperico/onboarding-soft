@@ -102,4 +102,4 @@ const fieldsListener = () => {
         priceField.value = product.price.toString();
     });
 };
-export { createChart, renderChart, fieldsListener, overwriteProduct };
+export { createChart, renderChart, overwriteProduct, fieldsListener };

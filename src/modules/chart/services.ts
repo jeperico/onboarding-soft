@@ -142,4 +142,4 @@ const fieldsListener = () => {
   });
 };
 
-export { createChart, renderChart, fieldsListener, overwriteProduct };
+export { createChart, renderChart, overwriteProduct, fieldsListener };
