@@ -91,16 +91,16 @@ const fieldsListener = () => {
     listener.addEventListener("change", async (e) => {
         const id = e.target.value;
         const product = (await serviceView("products"))?.find((el) => el.id === parseInt(id));
-        const tax = (await serviceView("categories"))?.find((el) => el.id === product?.id)?.tax;
+        const tax = (await serviceView("categories"))?.find((el) => el.id === product?.category_id)?.tax;
         const chart = (await serviceView("chart"))?.find((el) => el.product_id === product?.id);
         const taxField = document.querySelector("#tax");
         if (!taxField || !tax)
             return;
-        taxField.value = tax.toString();
+        taxField.value = (tax / 100).toString();
         const priceField = document.querySelector("#price");
         if (!priceField || !product?.price)
             return;
-        priceField.value = product.price.toString();
+        priceField.value = (product.price / 100).toString();
         const quantityField = document.querySelector("#quantity");
         if (!quantityField || !chart)
             return;

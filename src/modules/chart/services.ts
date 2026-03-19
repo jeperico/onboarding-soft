@@ -125,11 +125,12 @@ const fieldsListener = () => {
 
   listener.addEventListener("change", async (e) => {
     const id = (e.target as HTMLSelectElement).value;
+
     const product = (await serviceView<IProduct>("products"))?.find(
       (el) => el.id === parseInt(id),
     );
     const tax = (await serviceView<ICategory>("categories"))?.find(
-      (el) => el.id === product?.id,
+      (el) => el.id === product?.category_id,
     )?.tax;
     const chart = (await serviceView<IChart>("chart"))?.find(
       (el) => el.product_id === product?.id,
@@ -137,11 +138,11 @@ const fieldsListener = () => {
 
     const taxField = document.querySelector<HTMLInputElement>("#tax");
     if (!taxField || !tax) return;
-    taxField.value = tax.toString();
+    taxField.value = (tax / 100).toString();
 
     const priceField = document.querySelector<HTMLInputElement>("#price");
     if (!priceField || !product?.price) return;
-    priceField.value = product.price.toString();
+    priceField.value = (product.price / 100).toString();
 
     const quantityField = document.querySelector<HTMLInputElement>("#quantity");
     if (!quantityField || !chart) return;

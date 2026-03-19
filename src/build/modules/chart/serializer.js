@@ -7,11 +7,13 @@ const chartSerializer = async (form) => {
     const price = form.elements.namedItem("price");
     const tax = form.elements.namedItem("tax");
     const product = form.elements.namedItem("product");
+    console.log("price: ", price.value, parseFloat(price.value) * 100);
+    console.log("tax: ", tax.value, parseFloat(tax.value) * 100);
     const payload = {
         id: id,
         quantity: parseInt(quantity.value),
-        price: parseInt(price.value),
-        tax: parseFloat(tax.value),
+        price: parseFloat(price.value) * 100,
+        tax: parseFloat(tax.value) * 100,
         product_id: parseInt(product.value),
     };
     return payload;
