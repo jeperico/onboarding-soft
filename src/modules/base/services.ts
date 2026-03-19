@@ -14,12 +14,12 @@ const renderElement = (row: HTMLTableRowElement, text: string) => {
 const renderActionButton = (
   row: HTMLTableRowElement,
   id: string,
-  isView?: boolean,
+  variant: "delete" | "remove" | "view" | "none",
 ) => {
   try {
     const button = document.createElement("button");
-    button.textContent = isView ? "VIEW" : "DELETE";
-    button.className = `action-${isView ? "view" : "delete"} button-secondary`;
+    button.textContent = variant.toUpperCase();
+    button.className = `action-${variant} button-secondary`;
     button.id = id;
     const td = document.createElement("td");
     td.appendChild(button);

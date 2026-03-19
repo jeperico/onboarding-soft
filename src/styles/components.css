@@ -99,11 +99,13 @@ table {
   tbody {
     /* ACTION DELETE BUTTON */
     & .action-delete,
+    & .action-remove,
     & .action-view {
       visibility: hidden;
     }
 
     & > tr:hover .action-delete,
+    & > tr:hover .action-remove,
     & > tr:hover .action-view {
       visibility: visible;
     }

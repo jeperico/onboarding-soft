@@ -28,9 +28,7 @@ const tableEvents = async (
   if (render) await render();
 
   const buttons = document.querySelectorAll<HTMLButtonElement>(
-    variant === "delete" || variant === "remove"
-      ? ".action-delete"
-      : ".action-view",
+    `.action-${variant}`,
   );
 
   buttons.forEach((el) => {

@@ -9,11 +9,11 @@ const renderElement = (row, text) => {
         renderVoidElement(row);
     }
 };
-const renderActionButton = (row, id, isView) => {
+const renderActionButton = (row, id, variant) => {
     try {
         const button = document.createElement("button");
-        button.textContent = isView ? "VIEW" : "DELETE";
-        button.className = `action-${isView ? "view" : "delete"} button-secondary`;
+        button.textContent = variant.toUpperCase();
+        button.className = `action-${variant} button-secondary`;
         button.id = id;
         const td = document.createElement("td");
         td.appendChild(button);

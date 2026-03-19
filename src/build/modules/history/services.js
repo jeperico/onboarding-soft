@@ -18,7 +18,7 @@ const renderHistory = async () => {
         renderElement(row, formatCode(parseInt(el.id)));
         renderElement(row, el.tax);
         renderElement(row, el.total);
-        renderActionButton(row, el.id, true);
+        renderActionButton(row, el.id, "view");
         table.appendChild(row);
     });
     // IV - Output

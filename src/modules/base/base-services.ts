@@ -23,14 +23,13 @@ const serviceDelete = async (endpoint: Table, id: number) => {
 };
 
 const serviceRemove = async (endpoint: Table, id: number) => {
-  const response = (await serviceView<{ id: number }>(endpoint))?.filter(
-    (el) => {
-      el.id !== id;
-    },
-  );
+  const response = await serviceView<{ id: number }>(endpoint);
   if (!response) return null;
 
-  localStorage.setItem(endpoint, JSON.stringify(response));
+  const data = response.filter((el) => el.id !== id);
+  if (data.length !== response.length - 1) return null;
+
+  localStorage.setItem(endpoint, JSON.stringify(data));
   window.location.reload();
 };
 

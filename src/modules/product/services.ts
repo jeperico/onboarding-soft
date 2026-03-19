@@ -59,7 +59,7 @@ const renderProducts = async () => {
     renderElement(row, el.stock);
     renderElement(row, el.price);
     renderElement(row, el.category);
-    renderActionButton(row, el.id);
+    renderActionButton(row, el.id, "delete");
 
     table.appendChild(row);
   });

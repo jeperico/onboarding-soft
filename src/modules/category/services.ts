@@ -51,7 +51,7 @@ const renderCategory = async () => {
     renderElement(row, formatCode(parseInt(el.id)));
     renderElement(row, el.name);
     renderElement(row, el.tax);
-    renderActionButton(row, el.id);
+    renderActionButton(row, el.id, "delete");
 
     table.appendChild(row);
   });

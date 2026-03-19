@@ -65,7 +65,7 @@ const renderChart = async () => {
     renderElement(row, el.quantity);
     renderElement(row, el.tax);
     renderElement(row, el.total);
-    renderActionButton(row, el.id);
+    renderActionButton(row, el.id, "remove");
 
     table.appendChild(row);
   });

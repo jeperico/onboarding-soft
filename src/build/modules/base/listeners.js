@@ -9,9 +9,7 @@ const formsEvents = async (handler, form) => {
 const tableEvents = async (table, variant, render) => {
     if (render)
         await render();
-    const buttons = document.querySelectorAll(variant === "delete" || variant === "remove"
-        ? ".action-delete"
-        : ".action-view");
+    const buttons = document.querySelectorAll(`.action-${variant}`);
     buttons.forEach((el) => {
         el.addEventListener("click", () => {
             const id = Number(el.id);
