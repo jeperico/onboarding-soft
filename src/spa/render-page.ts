@@ -7,7 +7,7 @@ import loadProducts from "../modules/product/spa.js";
 import loadCategory from "../modules/category/spa.js";
 import { RouteKey } from "./routes.js";
 
-const renderPage = async (path: RouteKey) => {
+const renderPage = async (path: RouteKey, id?: number) => {
   switch (path) {
     case "/":
       await loadChart();
@@ -23,7 +23,11 @@ const renderPage = async (path: RouteKey) => {
       await loadHistory();
       break;
     case "/details":
-      loadDetails();
+      if (!id) {
+        loadHistory();
+        break;
+      }
+      loadDetails(id);
       break;
   }
 };

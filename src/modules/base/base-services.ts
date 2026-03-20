@@ -18,7 +18,7 @@ const serviceDelete = async (endpoint: Table, id: number) => {
   if (!payload) return null;
 
   localStorage.setItem(endpoint, JSON.stringify(response));
-  window.location.reload();
+  // window.location.reload();
 };
 
 const serviceRemove = async (endpoint: Table, id: number) => {
@@ -29,7 +29,7 @@ const serviceRemove = async (endpoint: Table, id: number) => {
   if (data.length !== response.length - 1) return null;
 
   localStorage.setItem(endpoint, JSON.stringify(data));
-  window.location.reload();
+  // window.location.reload();
 };
 
 export { serviceView, serviceDelete, serviceRemove };

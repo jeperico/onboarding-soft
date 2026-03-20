@@ -13,7 +13,7 @@ const serviceDelete = async (endpoint, id) => {
     if (!payload)
         return null;
     localStorage.setItem(endpoint, JSON.stringify(response));
-    window.location.reload();
+    // window.location.reload();
 };
 const serviceRemove = async (endpoint, id) => {
     const response = await serviceView(endpoint);
@@ -23,6 +23,6 @@ const serviceRemove = async (endpoint, id) => {
     if (data.length !== response.length - 1)
         return null;
     localStorage.setItem(endpoint, JSON.stringify(data));
-    window.location.reload();
+    // window.location.reload();
 };
 export { serviceView, serviceDelete, serviceRemove };

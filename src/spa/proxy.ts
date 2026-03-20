@@ -2,7 +2,9 @@ import renderApp from "./render-app.js";
 import routes, { RouteKey } from "./routes.js";
 import { FEATURE_FLAG_ENABLE_ROUTES } from "../feature-flags.js";
 
-const renderContent = async (path: RouteKey) => {
+type QueryParams = Record<string, string>;
+
+const renderContent = async (path: RouteKey, params?: QueryParams) => {
   const app = document.querySelector("main");
   if (!app) return;
 
@@ -12,12 +14,15 @@ const renderContent = async (path: RouteKey) => {
     return;
   }
 
+  const searchParams = new URLSearchParams(params).toString();
+  const url = searchParams ? `${path}?${searchParams}` : path;
+
   const res = await fetch(route.href);
   const html = await res.text();
 
   app.innerHTML = html;
   document.title = route.title;
-  if (FEATURE_FLAG_ENABLE_ROUTES) history.pushState({}, "", path);
+  if (FEATURE_FLAG_ENABLE_ROUTES) history.pushState({}, "", url);
 };
 
 // RENDER HEADER

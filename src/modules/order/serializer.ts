@@ -87,7 +87,6 @@ const TransactionViewSerializer = async (): Promise<
 
   const payload: ITransactionRender[] = [];
   await data.map(async (el) => {
-    console.log(el);
     const product = (await serviceView<IProduct>("products"))?.find(
       (e) => e.id === el.product_id,
     );

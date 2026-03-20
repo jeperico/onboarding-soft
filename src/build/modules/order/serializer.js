@@ -61,7 +61,6 @@ const TransactionViewSerializer = async () => {
         return null;
     const payload = [];
     await data.map(async (el) => {
-        console.log(el);
         const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
         const category = (await serviceView("categories"))?.find((e) => e.id === product?.category_id);
         const total = el.price * el.quantity;

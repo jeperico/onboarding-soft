@@ -21,7 +21,8 @@ const tableEvents = async (table, variant, render) => {
                     serviceRemove(table, id);
                     break;
                 case "view":
-                    renderPage("/details");
+                    // TODO: HERE TO PUT ID
+                    renderPage("/details", id);
                     break;
             }
         });

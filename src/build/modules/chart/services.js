@@ -64,11 +64,9 @@ const overwriteProduct = async (duplicated, quantity, chart) => {
         const currentQuantity = chart?.find((el) => el.id === duplicated.id)?.quantity;
         if (!currentQuantity)
             return null;
-        console.log(maxStock, currentQuantity, quantity);
         // II - Check availability
         if (currentQuantity + quantity > (maxStock?.stock || 0))
             return "Doesn't exist that quantity in stock";
-        console.log("chart: ", chart);
         // III - Update
         const payload = chart.map((el) => {
             if (el.id === duplicated.id) {

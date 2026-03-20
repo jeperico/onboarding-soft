@@ -13,9 +13,6 @@ const ChartCreateSerializer = async (
   const tax = form.elements.namedItem("tax") as HTMLInputElement;
   const product = form.elements.namedItem("product") as HTMLSelectElement;
 
-  console.log("price: ", price.value, parseFloat(price.value) * 100);
-  console.log("tax: ", tax.value, parseFloat(tax.value) * 100);
-
   const payload: IChart = {
     id: id,
     quantity: parseInt(quantity.value),

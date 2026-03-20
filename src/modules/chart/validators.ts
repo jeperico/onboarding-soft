@@ -47,7 +47,6 @@ const validateTax = async (
   tax: number,
   product_id: number,
 ): Promise<string | null> => {
-  console.log(tax);
   const product = (await serviceView<IProduct>("products"))?.find(
     (el) => el.id === product_id && el.is_active,
   );
@@ -57,7 +56,6 @@ const validateTax = async (
   );
   if (!category) return `The product category doesn't exists`;
 
-  console.log(category);
   if (tax !== category.tax) return "The tax is incorrect";
 
   return null;

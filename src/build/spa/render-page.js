@@ -2,7 +2,7 @@ import loadTransaction, { loadHistory, loadDetails, } from "../modules/order/spa
 import loadChart from "../modules/chart/spa.js";
 import loadProducts from "../modules/product/spa.js";
 import loadCategory from "../modules/category/spa.js";
-const renderPage = async (path) => {
+const renderPage = async (path, id) => {
     switch (path) {
         case "/":
             await loadChart();
@@ -18,7 +18,11 @@ const renderPage = async (path) => {
             await loadHistory();
             break;
         case "/details":
-            loadDetails();
+            if (!id) {
+                loadHistory();
+                break;
+            }
+            loadDetails(id);
             break;
     }
 };
