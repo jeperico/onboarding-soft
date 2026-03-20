@@ -23,6 +23,8 @@ const renderContent = async (path: RouteKey, params?: QueryParams) => {
   app.innerHTML = html;
   document.title = route.title;
   if (FEATURE_FLAG_ENABLE_ROUTES) history.pushState({}, "", url);
+  else if (path !== "/details") history.pushState({}, "", "/");
+  else if (searchParams) history.pushState({}, "", `?${searchParams}`);
 };
 
 // RENDER HEADER
