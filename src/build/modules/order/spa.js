@@ -10,7 +10,7 @@ const loadHistory = async () => {
     await tableEvents("orders", "view", renderOrders);
 };
 const loadDetails = async (id) => {
-    await renderContent("/details", { orders: id.toString() });
+    await renderContent("/details", { order: id.toString() });
     await tableEvents("transactions", "none", renderTransactions);
 };
 export default loadTransaction;

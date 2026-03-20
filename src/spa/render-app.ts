@@ -36,7 +36,7 @@ const renderApp = async () => {
     }
   });
 
-  await renderPage("/details");
+  await renderPage("/");
 };
 
 export default renderApp;

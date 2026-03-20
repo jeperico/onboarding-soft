@@ -80,8 +80,11 @@ const TransactionCreateSerializer = async (
 const TransactionViewSerializer = async (): Promise<
   ITransactionRender[] | null
 > => {
+  const url = new URLSearchParams(window.location.search);
+  const id = url.get("order");
+  if (!id) return null;
   const data = (await serviceView<ITransaction>("transactions"))?.filter(
-    (el) => el.is_active,
+    (el) => el.is_active && el.order_id === parseInt(id),
   );
   if (!data) return null;
 

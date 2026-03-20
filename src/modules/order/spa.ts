@@ -18,7 +18,7 @@ const loadHistory = async () => {
 };
 
 const loadDetails = async (id: number) => {
-  await renderContent("/details", { orders: id.toString() });
+  await renderContent("/details", { order: id.toString() });
   await tableEvents("transactions", "none", renderTransactions);
 };
 
