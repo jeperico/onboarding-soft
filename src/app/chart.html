@@ -10,12 +10,14 @@
         name="quantity"
         id="quantity"
         placeholder="Quantity"
+        min="1"
       />
       <div class="currency-input">
         <p>R$</p>
         <input
           type="number"
           step="0.01"
+          min="0.01"
           name="tax"
           id="tax"
           placeholder="Tax"
@@ -30,6 +32,7 @@
           name="price"
           id="price"
           step="0.01"
+          min="0.01"
           placeholder="Unit Price"
           disabled
         />
