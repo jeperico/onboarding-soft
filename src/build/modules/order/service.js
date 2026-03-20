@@ -4,7 +4,7 @@ import { formatCode } from "../../utils/format-code.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
 import { renderActionButton, renderElement } from "../base/services.js";
-import { OrderCreateSerializer, OrderViewSerializer, TransactionCreateSerializer, } from "./serializer.js";
+import { OrderCreateSerializer, OrderViewSerializer, TransactionCreateSerializer, TransactionViewSerializer, } from "./serializer.js";
 const finishPurchase = async (event) => {
     // I - Environment
     event.preventDefault();
@@ -63,4 +63,30 @@ const renderOrderDetails = async () => {
     taxField.innerText = formatCurrency(tax);
     totalField.innerText = formatCurrency(total);
 };
-export { finishPurchase, renderOrders, renderOrderDetails };
+const renderTransactions = async () => {
+    // I - Environment
+    const COLUMNS_COUNT = 6;
+    // II - Inputs
+    const data = await TransactionViewSerializer();
+    const table = document.querySelector("#tbody-details");
+    if (!data || !table) {
+        renderVoidTable("#tbody-details", COLUMNS_COUNT);
+        return;
+    }
+    // III - Rendering
+    data.forEach((el) => {
+        const row = document.createElement("tr");
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.product);
+        renderElement(row, el.category);
+        renderElement(row, el.quantity);
+        renderElement(row, el.tax);
+        renderElement(row, el.total);
+        table.appendChild(row);
+    });
+    const row = document.createElement("tr");
+    for (let i = 0; i < COLUMNS_COUNT; i++)
+        row.appendChild(document.createElement("td"));
+    table.appendChild(row);
+};
+export { finishPurchase, renderOrders, renderOrderDetails, renderTransactions };

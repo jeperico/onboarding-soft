@@ -55,4 +55,25 @@ const TransactionCreateSerializer = async (order) => {
     });
     return payload;
 };
-export { OrderCreateSerializer, OrderViewSerializer, TransactionCreateSerializer, };
+const TransactionViewSerializer = async () => {
+    const data = (await serviceView("transactions"))?.filter((el) => el.is_active);
+    if (!data)
+        return null;
+    const payload = [];
+    await data.map(async (el) => {
+        console.log(el);
+        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
+        const category = (await serviceView("categories"))?.find((e) => e.id === product?.category_id);
+        const total = el.price * el.quantity;
+        payload.push({
+            id: el.id.toString(),
+            product: product?.name || "No data!",
+            category: category?.name || "No data!",
+            quantity: el.quantity.toString(),
+            tax: category?.tax.toString().concat("%") || "No data!",
+            total: formatCurrency(total),
+        });
+    });
+    return payload;
+};
+export { OrderCreateSerializer, OrderViewSerializer, TransactionCreateSerializer, TransactionViewSerializer, };
