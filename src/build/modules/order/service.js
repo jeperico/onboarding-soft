@@ -1,7 +1,10 @@
 import renderPage from "../../spa/render-page.js";
+import { renderVoidTable } from "../../spa/render-void-table.js";
+import { formatCode } from "../../utils/format-code.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
-import { OrderCreateSerializer, TransactionCreateSerializer, } from "./serializer.js";
+import { renderActionButton, renderElement } from "../base/services.js";
+import { OrderCreateSerializer, OrderViewSerializer, TransactionCreateSerializer, } from "./serializer.js";
 const finishPurchase = async (event) => {
     // I - Environment
     event.preventDefault();
@@ -22,6 +25,27 @@ const finishPurchase = async (event) => {
     localStorage.setItem("chart", "");
     renderPage("/");
 };
+const renderOrders = async () => {
+    const COLUMNS_COUNT = 4;
+    const data = await OrderViewSerializer();
+    const table = await document.querySelector("#tbody-history");
+    if (!data || !table) {
+        renderVoidTable("#tbody-history", COLUMNS_COUNT);
+        return;
+    }
+    data.map((el) => {
+        const row = document.createElement("tr");
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.total_tax);
+        renderElement(row, el.total_price);
+        renderActionButton(row, el.id, "view");
+        table.appendChild(row);
+    });
+    const row = document.createElement("tr");
+    for (let i = 0; i < COLUMNS_COUNT; i++)
+        row.appendChild(document.createElement("td"));
+    table.appendChild(row);
+};
 // TODO: Padronize tax atomic values
 const renderOrderDetails = async () => {
     const taxField = document.querySelector("#render-tax");
@@ -39,4 +63,4 @@ const renderOrderDetails = async () => {
     taxField.innerText = formatCurrency(tax);
     totalField.innerText = formatCurrency(total);
 };
-export { finishPurchase, renderOrderDetails };
+export { finishPurchase, renderOrders, renderOrderDetails };
