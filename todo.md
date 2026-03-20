@@ -3,7 +3,6 @@
 ## JS Chalenge Module
 
 - padronize tax calculate
-- tax && price cannot be changed
 - price input must accept , and .
 - order must reduce product stock
 - product without stock must be deleted

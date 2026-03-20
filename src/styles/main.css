@@ -78,3 +78,9 @@ header {
   grid-template-columns: 6fr 4fr;
   gap: 0.5rem;
 }
+
+/* CURSORS */
+#home-form #tax,
+#home-form #price {
+  cursor: not-allowed;
+}
