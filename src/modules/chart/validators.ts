@@ -1,15 +1,12 @@
 import { ICategory } from "../../interfaces/category.js";
 import { IProduct } from "../../interfaces/product.js";
 import { serviceView } from "../base/base-services.js";
-import {
-  baseValidateNumber,
-  baseValidateRelation,
-} from "../base/validators.js";
+import { validateNumber, validateRelation } from "../base/validators.js";
 import { IChart } from "../../interfaces/chart.js";
 import { overwriteProduct } from "./services.js";
 
 const validateProduct = async (product_id: number): Promise<string | null> => {
-  return baseValidateRelation<IProduct>(product_id, "products", "Product");
+  return validateRelation<IProduct>(product_id, "products", "Product");
 };
 
 const validateQuantity = async (
@@ -21,7 +18,7 @@ const validateQuantity = async (
   );
   if (!max) return `This product doesn't exists`;
 
-  return baseValidateNumber(quantity, "Quantity", {
+  return validateNumber(quantity, "Quantity", {
     min: {
       value: 1,
       label: "1",

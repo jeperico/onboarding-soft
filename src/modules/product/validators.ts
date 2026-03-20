@@ -1,21 +1,21 @@
 import { ICategory } from "../../interfaces/category.js";
 import { IProduct } from "../../interfaces/product.js";
 import {
-  baseValidateString,
-  baseValidateNumber,
-  baseValidateRelation,
+  validateText,
+  validateNumber,
+  validateRelation,
 } from "../base/validators.js";
 
 const validateName = async (value: string): Promise<string | null> => {
-  return baseValidateString<IProduct>(value, "products", "Product");
+  return validateText<IProduct>(value, "products", "Product");
 };
 
 const validateCategory = async (value: number): Promise<string | null> => {
-  return baseValidateRelation<ICategory>(value, "categories", "category");
+  return validateRelation<ICategory>(value, "categories", "category");
 };
 
 const validateStock = (value: number): string | null => {
-  return baseValidateNumber(value, "Stock", {
+  return validateNumber(value, "Stock", {
     min: {
       value: 1,
       label: "1",
@@ -28,7 +28,7 @@ const validateStock = (value: number): string | null => {
 };
 
 const validatePrice = (value: number): string | null => {
-  return baseValidateNumber(value, "Price", {
+  return validateNumber(value, "Price", {
     min: {
       value: 1,
       label: "R$ 0.01",

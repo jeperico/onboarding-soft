@@ -1,14 +1,14 @@
 import { serviceView } from "../base/base-services.js";
-import { baseValidateNumber, baseValidateRelation, } from "../base/validators.js";
+import { validateNumber, validateRelation } from "../base/validators.js";
 import { overwriteProduct } from "./services.js";
 const validateProduct = async (product_id) => {
-    return baseValidateRelation(product_id, "products", "Product");
+    return validateRelation(product_id, "products", "Product");
 };
 const validateQuantity = async (quantity, product_id) => {
     const max = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!max)
         return `This product doesn't exists`;
-    return baseValidateNumber(quantity, "Quantity", {
+    return validateNumber(quantity, "Quantity", {
         min: {
             value: 1,
             label: "1",

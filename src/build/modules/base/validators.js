@@ -1,5 +1,5 @@
 import { serviceView } from "./base-services.js";
-const baseValidateString = async (value, table, name) => {
+const validateText = async (value, table, name) => {
     const regex = /^\p{L}[\p{L}\p{N}]*(?: [\p{L}\p{N}]+)*$/u;
     if (!regex.test(value))
         return `${name} name must start with a letter and contain only letters and numbers.`;
@@ -15,7 +15,7 @@ const baseValidateString = async (value, table, name) => {
     }
     return null;
 };
-const baseValidateNumber = (value, name, limits) => {
+const validateNumber = (value, name, limits) => {
     if (typeof value !== "number" || Number.isNaN(value))
         return `${name} must be a valid number.`;
     if (value < limits.min.value)
@@ -24,7 +24,7 @@ const baseValidateNumber = (value, name, limits) => {
         return `${name} cannot exceed ${limits.max.label}.`;
     return null;
 };
-const baseValidateRelation = async (value, table, name) => {
+const validateRelation = async (value, table, name) => {
     const data = (await serviceView(table))?.filter((e) => e.is_active);
     if (data) {
         const exist = data.find((el) => el.id === value);
@@ -33,4 +33,4 @@ const baseValidateRelation = async (value, table, name) => {
     }
     return null;
 };
-export { baseValidateString, baseValidateNumber, baseValidateRelation };
+export { validateText, validateNumber, validateRelation };

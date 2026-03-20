@@ -1,7 +1,7 @@
 import { Table } from "../../types/table.js";
 import { serviceView } from "./base-services.js";
 
-const baseValidateString = async <
+const validateText = async <
   IValidate extends { is_active: boolean; name: string },
 >(
   value: string,
@@ -29,7 +29,7 @@ const baseValidateString = async <
   return null;
 };
 
-const baseValidateNumber = (
+const validateNumber = (
   value: number,
   name: string,
   limits: {
@@ -48,7 +48,7 @@ const baseValidateNumber = (
   return null;
 };
 
-const baseValidateRelation = async <
+const validateRelation = async <
   IValidate extends { is_active: boolean; id: number },
 >(
   value: number,
@@ -66,4 +66,4 @@ const baseValidateRelation = async <
   return null;
 };
 
-export { baseValidateString, baseValidateNumber, baseValidateRelation };
+export { validateText, validateNumber, validateRelation };

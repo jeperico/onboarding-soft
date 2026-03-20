@@ -1,12 +1,12 @@
-import { baseValidateString, baseValidateNumber, baseValidateRelation, } from "../base/validators.js";
+import { validateText, validateNumber, validateRelation, } from "../base/validators.js";
 const validateName = async (value) => {
-    return baseValidateString(value, "products", "Product");
+    return validateText(value, "products", "Product");
 };
 const validateCategory = async (value) => {
-    return baseValidateRelation(value, "categories", "category");
+    return validateRelation(value, "categories", "category");
 };
 const validateStock = (value) => {
-    return baseValidateNumber(value, "Stock", {
+    return validateNumber(value, "Stock", {
         min: {
             value: 1,
             label: "1",
@@ -18,7 +18,7 @@ const validateStock = (value) => {
     });
 };
 const validatePrice = (value) => {
-    return baseValidateNumber(value, "Price", {
+    return validateNumber(value, "Price", {
         min: {
             value: 1,
             label: "R$ 0.01",
