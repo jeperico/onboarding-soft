@@ -1,12 +1,12 @@
 import renderPage from "../../spa/render-page.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
-import { TransactionSerializer } from "./serializer.js";
+import { TransactionCreateSerializer } from "./serializer.js";
 const finishPurchase = async (event) => {
   // I - Environment
   event.preventDefault();
   // II - Inputs
-  const payload = await TransactionSerializer();
+  const payload = await TransactionCreateSerializer();
   if (!payload) return;
   // III - Output
   const currentData = await serviceView("transactions");

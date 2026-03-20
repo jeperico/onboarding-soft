@@ -1,10 +1,11 @@
 import { IChart } from "../../interfaces/chart.js";
-import { IOrder } from "../../interfaces/order.js";
+import { IOrder, IOrderRender } from "../../interfaces/order.js";
 import { ITransaction } from "../../interfaces/transaction.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
+import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
 
-const OrderSerializer = async (): Promise<IOrder | null> => {
+const OrderCreateSerializer = async (): Promise<IOrder | null> => {
   const data = await serviceView<IChart>("chart");
   if (!data) return null;
 
@@ -27,7 +28,28 @@ const OrderSerializer = async (): Promise<IOrder | null> => {
   return payload;
 };
 
-const TransactionSerializer = async (
+const OrderViewSerializer = async (): Promise<IOrderRender[] | null> => {
+  const data = await serviceView<IOrder>("orders");
+  if (!data) return null;
+
+  const payload: IOrderRender[] = [];
+
+  data.map((el) => {
+    const id = el.id.toString();
+    const total_price = formatCurrency(el.total_price);
+    const total_tax = formatCurrency(el.total_tax);
+
+    payload.push({
+      id: id,
+      total_price: total_price,
+      total_tax: total_tax,
+    });
+  });
+
+  return payload;
+};
+
+const TransactionCreateSerializer = async (
   order: number,
 ): Promise<ITransaction[] | null> => {
   const data = await serviceView<IChart>("chart");
@@ -50,4 +72,8 @@ const TransactionSerializer = async (
   return payload;
 };
 
-export { OrderSerializer, TransactionSerializer };
+export {
+  OrderCreateSerializer,
+  OrderViewSerializer,
+  TransactionCreateSerializer,
+};

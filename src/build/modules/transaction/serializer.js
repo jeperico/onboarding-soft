@@ -1,6 +1,6 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { serviceView } from "../base/base-services.js";
-const TransactionSerializer = async () => {
+const TransactionCreateSerializer = async () => {
   const data = await serviceView("chart");
   if (!data) return null;
   const id = (await autoIncrement("transactions")) || 1;
@@ -16,4 +16,4 @@ const TransactionSerializer = async () => {
   });
   return payload;
 };
-export { TransactionSerializer };
+export { TransactionCreateSerializer };

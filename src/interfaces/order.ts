@@ -5,4 +5,10 @@ interface IOrder {
   created_at: Date;
 }
 
-export { IOrder };
+interface IOrderRender {
+  id: string;
+  total_price: string;
+  total_tax: string;
+}
+
+export { IOrder, IOrderRender };

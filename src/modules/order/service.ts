@@ -4,13 +4,16 @@ import { ITransaction } from "../../interfaces/transaction.js";
 import renderPage from "../../spa/render-page.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
-import { OrderSerializer, TransactionSerializer } from "./serializer.js";
+import {
+  OrderCreateSerializer,
+  TransactionCreateSerializer,
+} from "./serializer.js";
 
 const finishPurchase = async (event: SubmitEvent) => {
   // I - Environment
   event.preventDefault();
 
-  const order = await OrderSerializer();
+  const order = await OrderCreateSerializer();
   if (!order) return;
 
   const currentOrders = await serviceView<IOrder>("orders");
@@ -20,7 +23,7 @@ const finishPurchase = async (event: SubmitEvent) => {
   );
 
   // II - Inputs
-  const transactions = await TransactionSerializer(order.id);
+  const transactions = await TransactionCreateSerializer(order.id);
   if (!transactions) return;
 
   // III - Output

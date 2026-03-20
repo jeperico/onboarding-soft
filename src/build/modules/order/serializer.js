@@ -1,6 +1,7 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
+import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
-const OrderSerializer = async () => {
+const OrderCreateSerializer = async () => {
     const data = await serviceView("chart");
     if (!data)
         return null;
@@ -19,7 +20,24 @@ const OrderSerializer = async () => {
     };
     return payload;
 };
-const TransactionSerializer = async (order) => {
+const OrderViewSerializer = async () => {
+    const data = await serviceView("orders");
+    if (!data)
+        return null;
+    const payload = [];
+    data.map((el) => {
+        const id = el.id.toString();
+        const total_price = formatCurrency(el.total_price);
+        const total_tax = formatCurrency(el.total_tax);
+        payload.push({
+            id: id,
+            total_price: total_price,
+            total_tax: total_tax,
+        });
+    });
+    return payload;
+};
+const TransactionCreateSerializer = async (order) => {
     const data = await serviceView("chart");
     if (!data)
         return null;
@@ -37,4 +55,4 @@ const TransactionSerializer = async (order) => {
     });
     return payload;
 };
-export { OrderSerializer, TransactionSerializer };
+export { OrderCreateSerializer, OrderViewSerializer, TransactionCreateSerializer, };
