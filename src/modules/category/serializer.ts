@@ -2,7 +2,7 @@ import { ICategory, ICategoryRender } from "../../interfaces/category.js";
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { serviceView } from "../base/base-services.js";
 
-const CategorySerializer = async (
+const CategoryCreateSerializer = async (
   form: HTMLFormElement,
 ): Promise<ICategory> => {
   const id = await autoIncrement("categories");
@@ -19,7 +19,7 @@ const CategorySerializer = async (
   return payload;
 };
 
-const CategoryTableSerializer = async (): Promise<ICategoryRender[] | null> => {
+const CategoryViewSerializer = async (): Promise<ICategoryRender[] | null> => {
   const data = (await serviceView<ICategory>("categories"))?.filter(
     (el) => el.is_active,
   );
@@ -37,4 +37,4 @@ const CategoryTableSerializer = async (): Promise<ICategoryRender[] | null> => {
   return payload;
 };
 
-export { CategorySerializer, CategoryTableSerializer };
+export { CategoryCreateSerializer, CategoryViewSerializer };

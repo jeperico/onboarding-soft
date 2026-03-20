@@ -1,7 +1,7 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
-const ChartSerializer = async (form) => {
+const ChartCreateSerializer = async (form) => {
     const id = await autoIncrement("chart");
     const quantity = form.elements.namedItem("quantity");
     const price = form.elements.namedItem("price");
@@ -18,7 +18,7 @@ const ChartSerializer = async (form) => {
     };
     return payload;
 };
-const chartTableSerializer = async () => {
+const ChartViewSerializer = async () => {
     const data = await serviceView("chart");
     if (!data)
         return null;
@@ -38,4 +38,4 @@ const chartTableSerializer = async () => {
     });
     return payload;
 };
-export { ChartSerializer, chartTableSerializer };
+export { ChartCreateSerializer, ChartViewSerializer };

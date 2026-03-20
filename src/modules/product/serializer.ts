@@ -4,7 +4,9 @@ import { autoIncrement } from "../../utils/auto-increment.js";
 import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 
-const ProductSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
+const ProductCreateSerializer = async (
+  form: HTMLFormElement,
+): Promise<IProduct> => {
   const id = await autoIncrement("products");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const stock = form.elements.namedItem("stock") as HTMLInputElement;
@@ -23,7 +25,7 @@ const ProductSerializer = async (form: HTMLFormElement): Promise<IProduct> => {
   return payload;
 };
 
-const ProductTableSerializer = async (): Promise<IProductRender[] | null> => {
+const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
   const data = (await serviceView<IProduct>("products"))?.filter(
     (el) => el.is_active,
   );
@@ -47,4 +49,4 @@ const ProductTableSerializer = async (): Promise<IProductRender[] | null> => {
   return payload;
 };
 
-export { ProductSerializer, ProductTableSerializer };
+export { ProductCreateSerializer, ProductViewSerializer };

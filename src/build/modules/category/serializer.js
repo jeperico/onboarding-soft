@@ -1,6 +1,6 @@
 import { autoIncrement } from "../../utils/auto-increment.js";
 import { serviceView } from "../base/base-services.js";
-const CategorySerializer = async (form) => {
+const CategoryCreateSerializer = async (form) => {
     const id = await autoIncrement("categories");
     const name = form.elements.namedItem("name");
     const tax = form.elements.namedItem("tax");
@@ -12,7 +12,7 @@ const CategorySerializer = async (form) => {
     };
     return payload;
 };
-const CategoryTableSerializer = async () => {
+const CategoryViewSerializer = async () => {
     const data = (await serviceView("categories"))?.filter((el) => el.is_active);
     if (!data)
         return null;
@@ -26,4 +26,4 @@ const CategoryTableSerializer = async () => {
     });
     return payload;
 };
-export { CategorySerializer, CategoryTableSerializer };
+export { CategoryCreateSerializer, CategoryViewSerializer };
