@@ -44,7 +44,7 @@ const finishPurchase = async (event: SubmitEvent) => {
 
   localStorage.setItem("chart", "");
 
-  renderPage("/");
+  renderPage("/history");
 };
 
 const renderOrders = async () => {

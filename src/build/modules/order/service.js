@@ -23,7 +23,7 @@ const finishPurchase = async (event) => {
         ? [...currentTransactions, ...transactions]
         : transactions));
     localStorage.setItem("chart", "");
-    renderPage("/");
+    renderPage("/history");
 };
 const renderOrders = async () => {
     const COLUMNS_COUNT = 4;
