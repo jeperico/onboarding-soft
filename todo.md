@@ -2,6 +2,8 @@
 
 ## JS Chalenge Module
 
+- padronize tax calculate
+
 > Forms
 
 - feat: lazy validate

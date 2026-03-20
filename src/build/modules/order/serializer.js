@@ -19,7 +19,7 @@ const OrderSerializer = async () => {
     };
     return payload;
 };
-const transactionSerializer = async (order) => {
+const TransactionSerializer = async (order) => {
     const data = await serviceView("chart");
     if (!data)
         return null;
@@ -37,4 +37,4 @@ const transactionSerializer = async (order) => {
     });
     return payload;
 };
-export { OrderSerializer, transactionSerializer };
+export { OrderSerializer, TransactionSerializer };

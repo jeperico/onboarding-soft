@@ -4,7 +4,7 @@ import { autoIncrement } from "../../utils/auto-increment.js";
 import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 
-const chartSerializer = async (form: HTMLFormElement): Promise<IChart> => {
+const ChartSerializer = async (form: HTMLFormElement): Promise<IChart> => {
   const id = await autoIncrement("chart");
   const quantity = form.elements.namedItem("quantity") as HTMLInputElement;
   const price = form.elements.namedItem("price") as HTMLInputElement;
@@ -50,4 +50,4 @@ const chartTableSerializer = async (): Promise<IChartRender[] | null> => {
   return payload;
 };
 
-export { chartSerializer, chartTableSerializer };
+export { ChartSerializer, chartTableSerializer };

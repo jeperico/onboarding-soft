@@ -1,6 +1,6 @@
 import { renderVoidTable } from "../../spa/render-void-table.js";
 import { formatCode } from "../../utils/format-code.js";
-import { detailsTableSerializer } from "./serializers.js";
+import { DetailsTableSerializer } from "./serializers.js";
 import { renderElement } from "../base/services.js";
 
 const renderDetails = async () => {
@@ -8,7 +8,7 @@ const renderDetails = async () => {
   const COLUMNS_COUNT = 6;
 
   // II - Inputs
-  const data = await detailsTableSerializer();
+  const data = await DetailsTableSerializer();
   const table = document.querySelector("#tbody-details");
   if (!data || !table) {
     renderVoidTable("#tbody-details", COLUMNS_COUNT);

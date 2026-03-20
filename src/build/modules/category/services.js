@@ -5,12 +5,12 @@ import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { renderActionButton, renderElement } from "../base/services.js";
 import { categoryHandler } from "./handlers.js";
-import { categorySerializer, categoryTableSerializer } from "./serializer.js";
+import { CategorySerializer, CategoryTableSerializer } from "./serializer.js";
 const createCategory = async (event) => {
     // I - Environment
     event.preventDefault();
     // II - Inputs
-    const payload = await categorySerializer(event.target);
+    const payload = await CategorySerializer(event.target);
     if (!payload.name || !payload.tax)
         return;
     // III - Errors handling
@@ -28,7 +28,7 @@ const renderCategory = async () => {
     // I - Environment
     const COLUMNS_COUNT = 4;
     // II - Inputs
-    const data = await categoryTableSerializer();
+    const data = await CategoryTableSerializer();
     const table = document.querySelector("#tbody-category");
     if (!data || !table) {
         renderVoidTable("#tbody-category", COLUMNS_COUNT);

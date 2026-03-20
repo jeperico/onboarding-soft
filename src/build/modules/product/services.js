@@ -3,14 +3,14 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
-import { productSerializer, productTableSerializer } from "./serializer.js";
+import { ProductSerializer, ProductTableSerializer } from "./serializer.js";
 import { productHandler } from "./handlers.js";
 import { renderActionButton, renderElement } from "../base/services.js";
 const createProduct = async (event) => {
     // I - Environment
     event.preventDefault();
     // II - Inputs
-    const payload = await productSerializer(event.target);
+    const payload = await ProductSerializer(event.target);
     if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
         return;
     // III - Errors handling
@@ -28,7 +28,7 @@ const renderProducts = async () => {
     // I - Environment
     const COLUMNS_COUNT = 6;
     // II - Inputs
-    const data = await productTableSerializer();
+    const data = await ProductTableSerializer();
     const table = document.querySelector("#tbody-products");
     if (!data || !table) {
         renderVoidTable("#tbody-products", COLUMNS_COUNT);

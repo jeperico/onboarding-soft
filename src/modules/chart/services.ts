@@ -2,7 +2,7 @@ import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
 import { serviceView } from "../base/base-services.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
-import { chartSerializer, chartTableSerializer } from "./serializer.js";
+import { ChartSerializer, chartTableSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
 import { IChart } from "../../interfaces/chart.js";
 import { renderActionButton, renderElement } from "../base/services.js";
@@ -14,7 +14,7 @@ const createChart = async (event: SubmitEvent) => {
   event.preventDefault();
 
   // II - Inputs
-  const payload = await chartSerializer(event.target as HTMLFormElement);
+  const payload = await ChartSerializer(event.target as HTMLFormElement);
   if (
     !payload.product_id ||
     !payload.quantity ||

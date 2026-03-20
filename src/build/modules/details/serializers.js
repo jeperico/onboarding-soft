@@ -1,6 +1,6 @@
 import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
-const detailsTableSerializer = async () => {
+const DetailsTableSerializer = async () => {
     const data = (await serviceView("transactions"))?.filter((el) => el.is_active);
     if (!data)
         return null;
@@ -20,4 +20,4 @@ const detailsTableSerializer = async () => {
     });
     return payload;
 };
-export { detailsTableSerializer };
+export { DetailsTableSerializer };

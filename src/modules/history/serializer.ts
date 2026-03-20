@@ -8,7 +8,7 @@ import { ICategory } from "../../interfaces/category.js";
 import { serviceView } from "../base/base-services.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 
-const historyTableSerializer = async (): Promise<
+const HistoryTableSerializer = async (): Promise<
   ITransactionRender[] | null
 > => {
   const data = (await serviceView<ITransaction>("transactions"))?.filter(
@@ -36,4 +36,4 @@ const historyTableSerializer = async (): Promise<
   return payload;
 };
 
-export { historyTableSerializer };
+export { HistoryTableSerializer };

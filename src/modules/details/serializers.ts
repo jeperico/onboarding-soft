@@ -4,7 +4,7 @@ import { IDetailsRender, ITransaction } from "../../interfaces/transaction.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
 
-const detailsTableSerializer = async (): Promise<IDetailsRender[] | null> => {
+const DetailsTableSerializer = async (): Promise<IDetailsRender[] | null> => {
   const data = (await serviceView<ITransaction>("transactions"))?.filter(
     (el) => el.is_active,
   );
@@ -33,4 +33,4 @@ const detailsTableSerializer = async (): Promise<IDetailsRender[] | null> => {
   return payload;
 };
 
-export { detailsTableSerializer };
+export { DetailsTableSerializer };

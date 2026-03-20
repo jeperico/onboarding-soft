@@ -4,7 +4,7 @@ import { ITransaction } from "../../interfaces/transaction.js";
 import renderPage from "../../spa/render-page.js";
 import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
-import { OrderSerializer, transactionSerializer } from "./serializer.js";
+import { OrderSerializer, TransactionSerializer } from "./serializer.js";
 
 const finishPurchase = async (event: SubmitEvent) => {
   // I - Environment
@@ -20,7 +20,7 @@ const finishPurchase = async (event: SubmitEvent) => {
   );
 
   // II - Inputs
-  const transactions = await transactionSerializer(order.id);
+  const transactions = await TransactionSerializer(order.id);
   if (!transactions) return;
 
   // III - Output
@@ -41,16 +41,17 @@ const finishPurchase = async (event: SubmitEvent) => {
 
 // TODO: Padronize tax atomic values
 const renderOrderDetails = async () => {
-  // I - Inputs
   const taxField = document.querySelector<HTMLParagraphElement>("#render-tax");
   const totalField =
     document.querySelector<HTMLParagraphElement>("#render-total");
   if (!taxField || !totalField) return;
 
-  // II - Data
   const data = await serviceView<IChart>("chart");
-  if (!data) return;
-  console.log(data);
+  if (!data) {
+    taxField.innerText = formatCurrency(0);
+    totalField.innerText = formatCurrency(0);
+    return;
+  }
 
   const tax = data.reduce((sum, el) => (sum += el.tax * el.quantity), 0);
   const total = data.reduce((sum, el) => (sum += el.price * el.quantity), 0);

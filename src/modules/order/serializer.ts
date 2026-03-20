@@ -27,7 +27,7 @@ const OrderSerializer = async (): Promise<IOrder | null> => {
   return payload;
 };
 
-const transactionSerializer = async (
+const TransactionSerializer = async (
   order: number,
 ): Promise<ITransaction[] | null> => {
   const data = await serviceView<IChart>("chart");
@@ -50,4 +50,4 @@ const transactionSerializer = async (
   return payload;
 };
 
-export { OrderSerializer, transactionSerializer };
+export { OrderSerializer, TransactionSerializer };

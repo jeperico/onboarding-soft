@@ -1,14 +1,14 @@
 import { renderVoidTable } from "../../spa/render-void-table.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderActionButton, renderElement } from "../base/services.js";
-import { historyTableSerializer } from "./serializer.js";
+import { HistoryTableSerializer } from "./serializer.js";
 
 const renderHistory = async () => {
   // I - Environment
   const COLUMNS_COUNT = 4;
 
   // II - Inputs
-  const data = await historyTableSerializer();
+  const data = await HistoryTableSerializer();
   const table = await document.querySelector("#tbody-history");
   if (!data || !table) {
     renderVoidTable("#tbody-history", COLUMNS_COUNT);
