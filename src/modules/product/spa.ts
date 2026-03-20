@@ -6,7 +6,7 @@ import { renderProducts, createProduct } from "./services.js";
 
 const loadProducts = async () => {
   await renderContent("/products");
-  await tableEvents("products", "delete", renderProducts);
+  await tableEvents("products", "delete", renderProducts, "/products");
   await formsEvents(createProduct);
   await renderSelect<ICategory>("categories", "#category", "name", "id");
 };

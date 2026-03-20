@@ -6,7 +6,7 @@ const formsEvents = async (handler, form) => {
         return;
     element.addEventListener("submit", handler);
 };
-const tableEvents = async (table, variant, render) => {
+const tableEvents = async (table, variant, render, page) => {
     if (render)
         await render();
     const buttons = document.querySelectorAll(`.action-${variant}`);
@@ -16,9 +16,13 @@ const tableEvents = async (table, variant, render) => {
             switch (variant) {
                 case "delete":
                     serviceDelete(table, id);
+                    if (page)
+                        renderPage(page);
                     break;
                 case "remove":
                     serviceRemove(table, id);
+                    if (page)
+                        renderPage(page);
                     break;
                 case "view":
                     // TODO: HERE TO PUT ID

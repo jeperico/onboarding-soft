@@ -1,4 +1,5 @@
 import renderPage from "../../spa/render-page.js";
+import { RouteKey } from "../../spa/routes.js";
 import { Table } from "../../types/table.js";
 import { serviceDelete, serviceRemove } from "./base-services.js";
 
@@ -8,6 +9,7 @@ interface EventListenerOptions {
   render: () => void;
   handler: (event: SubmitEvent) => void;
   form?: string;
+  page?: RouteKey;
 }
 
 const formsEvents = async (
@@ -24,6 +26,7 @@ const tableEvents = async (
   table: EventListenerOptions["table"],
   variant: EventListenerOptions["variant"],
   render: EventListenerOptions["render"],
+  page?: EventListenerOptions["page"],
 ) => {
   if (render) await render();
 
@@ -38,9 +41,11 @@ const tableEvents = async (
       switch (variant) {
         case "delete":
           serviceDelete(table, id);
+          if (page) renderPage(page);
           break;
         case "remove":
           serviceRemove(table, id);
+          if (page) renderPage(page);
           break;
         case "view":
           // TODO: HERE TO PUT ID

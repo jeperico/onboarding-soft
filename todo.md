@@ -3,17 +3,11 @@
 ## JS Chalenge Module
 
 - padronize tax calculate
+- rerender page when create
+- tax && price cannot be changed
+- price input must accept , and .
+- order must reduce product stock
+- product without stock must be deleted
 
-> Forms
-
-- feat: lazy validate
-
-> Tables
-
-- feat: see about last child tr and multiples values
-
-> SPA:
-
-- fix: spa cant reload after create
-- fix: spa cant reload after delete
-- feat: implement modern pathnames
+* feat: lazy validate
+* feat: see about last child tr and multiples values
