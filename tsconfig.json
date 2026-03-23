@@ -13,7 +13,7 @@
   "include": [
     "assets/**/*",
     "src/interfaces",
-    "src/services",
+    "src/modules",
     "src/spa",
     "src/types",
     "src/utils",

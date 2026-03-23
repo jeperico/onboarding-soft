@@ -1,18 +1,19 @@
-import { FormHandlerResponse } from "../../interfaces/form-handler-response";
+import { ErrorResponse } from "../../interfaces/error-response.js";
+import { validateName, validateTax } from "./validators.js";
 
-const categoryFormHandler = (): FormHandlerResponse => {
+const categoryHandler = async (
+  name: string,
+  tax: number,
+): Promise<ErrorResponse> => {
   const errors = [];
-  const name = (document.querySelector("#category") as HTMLInputElement).value;
-  const tax = (document.querySelector("#tax") as HTMLInputElement).value;
 
-  // TODO: VALIDATE FIELDS
-  console.log(name, tax);
+  const nameError = await validateName(name);
+  if (nameError) errors.push({ field: "#name", message: nameError });
 
-  return {
-    success: true,
-    message: "Category created successfully",
-    errors: null,
-  };
+  const taxError = validateTax(tax);
+  if (taxError) errors.push({ field: "#tax", message: taxError });
+
+  return errors;
 };
 
-export { categoryFormHandler };
+export { categoryHandler };

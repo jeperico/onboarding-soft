@@ -1,6 +1,6 @@
 import renderPage from "./render-page.js";
 import routes from "./routes.js";
-const renderApp = () => {
+const renderApp = async () => {
     const links = document.querySelectorAll(".proxy-route");
     links.forEach((item, index) => {
         item.addEventListener("click", () => {
@@ -23,15 +23,15 @@ const renderApp = () => {
             }
         });
     });
-    window.addEventListener("popstate", () => {
+    window.addEventListener("popstate", async () => {
         const path = location.pathname;
         if (path in routes) {
             renderPage(path);
         }
         else {
-            renderPage("/");
+            await renderPage("/");
         }
     });
-    renderPage("/categories");
+    await renderPage("/");
 };
 export default renderApp;

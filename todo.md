@@ -2,19 +2,10 @@
 
 ## JS Chalenge Module
 
-> Forms
+- padronize tax calculate
+- price input must accept , and .
+- order must reduce product stock
+- product without stock must be deleted
 
-- feat: render disables
-- feat: validate inputs
-- feat: lazy validate
-
-> Tables
-
-- feat: unmock values
-- feat: see about last child tr and multiples values
-
-> SPA:
-
-- fix: spa cant reload after create
-- fix: spa cant reload after delete
-- feat: implement modern pathnames
+* feat: lazy validate
+* feat: see about last child tr and multiples values

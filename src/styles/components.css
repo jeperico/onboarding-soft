@@ -39,6 +39,35 @@ input {
   }
 }
 
+.currency-input,
+.percent-input {
+  position: relative;
+
+  & p {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  & input {
+    text-align: right;
+  }
+}
+
+/* FORM ERROR MESSAGES */
+.errors-form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.error-form-message {
+  color: red;
+}
+
 /* BUTTONS */
 button {
   padding: 0.5rem;
@@ -87,11 +116,13 @@ table {
   tbody {
     /* ACTION DELETE BUTTON */
     & .action-delete,
+    & .action-remove,
     & .action-view {
       visibility: hidden;
     }
 
     & > tr:hover .action-delete,
+    & > tr:hover .action-remove,
     & > tr:hover .action-view {
       visibility: visible;
     }

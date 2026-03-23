@@ -1,116 +1,85 @@
 import { IProduct } from "../../interfaces/product.js";
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { autoIncrement } from "../../utils/auto-increment.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
-import { productFormHandler } from "./handlers.js";
+import { renderErrorMessage } from "../../utils/render-error-message.js";
+import {
+  ProductCreateSerializer,
+  ProductViewSerializer,
+} from "./serializer.js";
+import { productHandler } from "./handlers.js";
+import { renderActionButton, renderElement } from "../base/services.js";
 
-/**
- * Handles product form submission.
- *
- * @param event - Form submit event.
- * @returns void
- */
 const createProduct = async (event: SubmitEvent) => {
-  // 1° - ENVIRONMENT
+  // I - Environment
   event.preventDefault();
 
-  // 2° - INPUT
-  const id = await autoIncrement("products");
-  const form = event.target as HTMLFormElement;
-  const product = (form.elements.namedItem("product") as HTMLInputElement)
-    .value;
-  const category = (form.elements.namedItem("category") as HTMLSelectElement)
-    .value;
-  const price = parseInt(
-    (form.elements.namedItem("price") as HTMLInputElement).value,
+  // II - Inputs
+  const payload = await ProductCreateSerializer(
+    event.target as HTMLFormElement,
   );
-  const amount = parseInt(
-    (form.elements.namedItem("amount") as HTMLInputElement).value,
+  if (
+    !payload.name ||
+    !payload.stock ||
+    !payload.price ||
+    !payload.tax ||
+    !payload.category_id
+  )
+    return;
+
+  // III - Errors handling
+  const errors = await productHandler(
+    payload.name,
+    payload.stock,
+    payload.price,
+    payload.tax,
+    payload.category_id,
   );
+  if (errors.length > 0) {
+    renderErrorMessage(errors);
+    return;
+  }
 
-  // 3° - PROCESS
-  const validate = productFormHandler();
-  const current = await baseServiceView<IProduct>("products");
-  if (!product || !category || !price || !amount) return;
-
-  const payload: IProduct = {
-    id: id,
-    name: product,
-    stock: amount,
-    price: price,
-    category_id: "1",
-    is_active: true,
-  };
-
-  // 4° - OUTPUT
+  // IV - Output
+  const currentData = await serviceView<IProduct>("products");
   localStorage.setItem(
     "products",
-    JSON.stringify(current ? [...current, payload] : [payload]),
+    JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
   renderPage("/products");
 };
 
-/**
- * Renders products rows inside `<tbody>`.
- *
- * @returns void
- */
 const renderProducts = async () => {
-  // 1° - INPUT
-  const data = await baseServiceView<IProduct>("products");
-  if (!data) {
-    renderVoidTable("#tbody-products", 6);
+  // I - Environment
+  const COLUMNS_COUNT = 6;
+
+  // II - Inputs
+  const data = await ProductViewSerializer();
+  const table = document.querySelector("#tbody-products");
+  if (!data || !table) {
+    renderVoidTable("#tbody-products", COLUMNS_COUNT);
     return;
   }
 
-  const table = document.querySelector("#tbody-products");
-  if (!table) return;
-
-  // 2° - PROCESS /  OUTPUT
-  if (!data || !table) return;
-
-  const payload = data.filter((el: { is_active: boolean }) => {
-    return el.is_active;
-  });
-  payload.forEach((el, index) => {
+  // III - Rendering
+  data.map((el) => {
     const row = document.createElement("tr");
-    const td = document.createElement("td");
 
-    const code = td.cloneNode();
-    code.textContent = formatCode(index);
-    row.appendChild(code);
-
-    const product = td.cloneNode();
-    product.textContent = el.name;
-    row.appendChild(product);
-
-    const amount = td.cloneNode();
-    amount.textContent = el.stock.toString();
-    row.appendChild(amount);
-
-    const price = td.cloneNode();
-    price.textContent = el.price.toString();
-    row.appendChild(price);
-
-    const category = td.cloneNode();
-    category.textContent = el.category_id;
-    row.appendChild(category);
-
-    const button = document.createElement("button");
-    button.textContent = "DELETE";
-    button.className = "action-delete button-secondary";
-    button.id = el.id.toString();
-    const action = td.cloneNode();
-    action.appendChild(button);
-    row.appendChild(action);
+    renderElement(row, formatCode(parseInt(el.id)));
+    renderElement(row, el.name);
+    renderElement(row, el.stock);
+    renderElement(row, el.price);
+    renderElement(row, el.category);
+    renderActionButton(row, el.id, "delete");
 
     table.appendChild(row);
   });
 
+  // IV - Output
   const row = document.createElement("tr");
-  for (let i = 0; i < 6; i++) row.appendChild(document.createElement("td"));
+  for (let i = 0; i < COLUMNS_COUNT; i++)
+    row.appendChild(document.createElement("td"));
   table.appendChild(row);
 };
 

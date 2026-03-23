@@ -1,8 +1,12 @@
-import { loadCategory, loadDetails, loadHistory, loadProducts, loadTransactions, } from "../services/loads.js";
-const renderPage = (path) => {
+import loadTransaction, { loadHistory, loadDetails, } from "../modules/order/spa.js";
+import loadChart from "../modules/chart/spa.js";
+import loadProducts from "../modules/product/spa.js";
+import loadCategory from "../modules/category/spa.js";
+const renderPage = async (path, id) => {
     switch (path) {
         case "/":
-            loadTransactions();
+            await loadChart();
+            loadTransaction();
             break;
         case "/products":
             loadProducts();
@@ -11,10 +15,14 @@ const renderPage = (path) => {
             loadCategory();
             break;
         case "/history":
-            loadHistory();
+            await loadHistory();
             break;
         case "/details":
-            loadDetails();
+            if (!id) {
+                loadHistory();
+                break;
+            }
+            loadDetails(id);
             break;
     }
 };

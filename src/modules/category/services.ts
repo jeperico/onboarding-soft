@@ -1,102 +1,70 @@
 import { ICategory } from "../../interfaces/category.js";
 import renderPage from "../../spa/render-page.js";
 import { renderVoidTable } from "../../spa/render-void-table.js";
-import { autoIncrement } from "../../utils/auto-increment.js";
-import { baseServiceView } from "../../utils/base-services.js";
+import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
-import { categoryFormHandler } from "./handlers.js";
+import { renderErrorMessage } from "../../utils/render-error-message.js";
+import { renderActionButton, renderElement } from "../base/services.js";
+import { categoryHandler } from "./handlers.js";
+import {
+  CategoryCreateSerializer,
+  CategoryViewSerializer,
+} from "./serializer.js";
 
-/**
- * Handles category form submission.
- *
- * @param event - Form submit event.
- * @returns void
- */
 const createCategory = async (event: SubmitEvent) => {
-  // 1° - ENVIRONMENT
+  // I - Environment
   event.preventDefault();
 
-  // 2° - INPUT
-  const id = await autoIncrement("categories");
-  const form = event.target as HTMLFormElement;
-  const category = (form.elements.namedItem("category") as HTMLInputElement)
-    .value;
-  const tax = parseInt(
-    (form.elements.namedItem("tax") as HTMLInputElement).value,
+  // II - Inputs
+  const payload = await CategoryCreateSerializer(
+    event.target as HTMLFormElement,
   );
+  if (!payload.name || !payload.tax) return;
 
-  // 3° - PROCESS
-  const validate = categoryFormHandler();
-  console.log("validate: ", validate);
-  const current = await baseServiceView<ICategory>("categories");
-  if (!category || !tax) return;
+  // III - Errors handling
+  const errors = await categoryHandler(payload.name, payload.tax);
+  if (errors.length > 0) {
+    renderErrorMessage(errors);
+    return;
+  }
 
-  const payload: ICategory = {
-    id: id,
-    name: category,
-    tax: tax,
-    is_active: true,
-  };
-
-  // 4° - OUTPUT
+  // IV - Output
+  const currentData = await serviceView<ICategory>("categories");
   localStorage.setItem(
     "categories",
-    JSON.stringify(current ? [...current, payload] : [payload]),
+    JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
   renderPage("/categories");
 };
 
-/**
- * Renders category rows inside `<tbody>`.
- *
- * @returns void
- */
 const renderCategory = async () => {
-  // 1° - INPUT
-  const data = await baseServiceView<ICategory>("categories");
-  if (!data) {
-    renderVoidTable("#tbody-category", 4);
+  // I - Environment
+  const COLUMNS_COUNT = 4;
+
+  // II - Inputs
+  const data = await CategoryViewSerializer();
+  const table = document.querySelector("#tbody-category");
+  if (!data || !table) {
+    renderVoidTable("#tbody-category", COLUMNS_COUNT);
     return;
   }
 
-  const table = document.querySelector("#tbody-category");
-  if (!table) return;
-
-  // 2° - PROCESS /  OUTPUT
-  if (!data || !table) return;
-
-  const payload = data.filter((el: { is_active: boolean }) => {
-    return el.is_active;
-  });
-  payload.forEach((el, index) => {
+  // III - Rendering
+  data.map((el) => {
     const row = document.createElement("tr");
-    const td = document.createElement("td");
 
-    const code = td.cloneNode();
-    code.textContent = formatCode(index);
-    row.appendChild(code);
-
-    const category = td.cloneNode();
-    category.textContent = el.name;
-    row.appendChild(category);
-
-    const tax = td.cloneNode();
-    tax.textContent = el.tax.toString();
-    row.appendChild(tax);
-
-    const button = document.createElement("button");
-    button.textContent = "DELETE";
-    button.className = "action-delete button-secondary";
-    button.id = el.id.toString();
-    const action = td.cloneNode();
-    action.appendChild(button);
-    row.appendChild(action);
+    renderElement(row, formatCode(parseInt(el.id)));
+    renderElement(row, el.name);
+    renderElement(row, el.tax);
+    renderActionButton(row, el.id, "delete");
 
     table.appendChild(row);
   });
 
+  // IV - Output
   const row = document.createElement("tr");
-  for (let i = 0; i < 4; i++) row.appendChild(document.createElement("td"));
+  for (let i = 0; i < COLUMNS_COUNT; i++)
+    row.appendChild(document.createElement("td"));
   table.appendChild(row);
 };
 

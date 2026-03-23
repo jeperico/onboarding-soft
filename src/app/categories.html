@@ -4,21 +4,27 @@
     <div>
       <input
         type="text"
-        id="category"
-        name="category"
+        id="name"
+        name="name"
         required
         placeholder="Category"
       />
-      <input
-        type="number"
-        min="1"
-        id="tax"
-        name="tax"
-        required
-        placeholder="Tax"
-      />
+      <div class="percent-input">
+        <p>%</p>
+        <input
+          type="number"
+          min="1"
+          max="100"
+          id="tax"
+          name="tax"
+          required
+          placeholder="Tax"
+        />
+      </div>
     </div>
+
     <button type="submit" class="button-primary">Add Category</button>
+    <div class="errors-form-container"></div>
   </form>
 </section>
 

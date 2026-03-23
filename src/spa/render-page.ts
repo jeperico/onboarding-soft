@@ -1,16 +1,17 @@
-import {
-  loadCategory,
-  loadDetails,
+import loadTransaction, {
   loadHistory,
-  loadProducts,
-  loadTransactions,
-} from "../services/loads.js";
+  loadDetails,
+} from "../modules/order/spa.js";
+import loadChart from "../modules/chart/spa.js";
+import loadProducts from "../modules/product/spa.js";
+import loadCategory from "../modules/category/spa.js";
 import { RouteKey } from "./routes.js";
 
-const renderPage = (path: RouteKey) => {
+const renderPage = async (path: RouteKey, id?: number) => {
   switch (path) {
     case "/":
-      loadTransactions();
+      await loadChart();
+      loadTransaction();
       break;
     case "/products":
       loadProducts();
@@ -19,10 +20,14 @@ const renderPage = (path: RouteKey) => {
       loadCategory();
       break;
     case "/history":
-      loadHistory();
+      await loadHistory();
       break;
     case "/details":
-      loadDetails();
+      if (!id) {
+        loadHistory();
+        break;
+      }
+      loadDetails(id);
       break;
   }
 };

@@ -1,13 +1,12 @@
-const categoryFormHandler = () => {
+import { validateName, validateTax } from "./validators.js";
+const categoryHandler = async (name, tax) => {
     const errors = [];
-    const name = document.querySelector("#category").value;
-    const tax = document.querySelector("#tax").value;
-    // TODO: VALIDATE FIELDS
-    console.log(name, tax);
-    return {
-        success: true,
-        message: "Category created successfully",
-        errors: null,
-    };
+    const nameError = await validateName(name);
+    if (nameError)
+        errors.push({ field: "#name", message: nameError });
+    const taxError = validateTax(tax);
+    if (taxError)
+        errors.push({ field: "#tax", message: taxError });
+    return errors;
 };
-export { categoryFormHandler };
+export { categoryHandler };

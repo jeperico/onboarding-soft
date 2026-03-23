@@ -1,22 +1,38 @@
-import { FormHandlerResponse } from "../../interfaces/form-handler-response";
+import { ErrorResponse } from "../../interfaces/error-response.js";
+import {
+  validateName,
+  validateStock,
+  validatePrice,
+  validateTax,
+  validateCategory,
+} from "./validators.js";
 
-const productFormHandler = (): FormHandlerResponse => {
+const productHandler = async (
+  name: string,
+  stock: number,
+  price: number,
+  tax: number,
+  category: number,
+): Promise<ErrorResponse> => {
   const errors = [];
-  const product = (document.querySelector("#product") as HTMLSelectElement)
-    .value;
-  const category = (document.querySelector("#category") as HTMLSelectElement)
-    .value;
-  const price = (document.querySelector("#price") as HTMLInputElement).value;
-  const amount = (document.querySelector("#amount") as HTMLInputElement).value;
 
-  // TODO: VALIDATE FIELDS
-  console.log(product, category, price, amount);
+  const nameError = await validateName(name);
+  if (nameError) errors.push({ field: "#name", message: nameError });
 
-  return {
-    success: true,
-    message: "Product created successfully",
-    errors: null,
-  };
+  const stockError = validateStock(stock);
+  if (stockError) errors.push({ field: "#stock", message: stockError });
+
+  const priceError = validatePrice(price);
+  if (priceError) errors.push({ field: "#price", message: priceError });
+
+  const taxError = await validateTax(tax, price, category);
+  if (taxError) errors.push({ field: "#price", message: taxError });
+
+  const categoryError = await validateCategory(category);
+  if (categoryError)
+    errors.push({ field: "#category", message: categoryError });
+
+  return errors;
 };
 
-export { productFormHandler };
+export { productHandler };

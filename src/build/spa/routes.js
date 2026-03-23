@@ -1,7 +1,7 @@
 const routes = {
     "/": {
         title: "Home",
-        href: "/src/app/home.html",
+        href: "/src/app/chart.html",
     },
     "/products": {
         title: "Products",

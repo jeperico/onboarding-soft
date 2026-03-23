@@ -1,11 +1,19 @@
 interface ITransaction {
   id: number;
-  state: "active" | "bought";
-  amount: number;
+  quantity: number;
   price: number;
-  product_id: string;
-  created_at: Date;
+  product_id: number;
+  order_id: number;
   is_active: boolean;
 }
 
-export { ITransaction };
+interface ITransactionRender {
+  id: string;
+  product: string;
+  category: string;
+  quantity: string;
+  tax: string;
+  total: string;
+}
+
+export { ITransaction, ITransactionRender };

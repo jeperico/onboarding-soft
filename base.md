@@ -3,7 +3,7 @@
 ## Business Rules:
 
 1. As seller: register categories with: tax;
-2. As seller: register products with: categories | amount | price
+2. As seller: register products with: categories | stock | price
 3. As manager: view sales history by date
 4. As client: add products on cart
 5. As client: finish purchase with products
@@ -12,77 +12,50 @@
 
 > categories:
 
-- id: uuid
+- id: int
 - name: string
 - tax: number
 - is_active: boolean
 
 > products:
 
-- id: uuid
+- id: int
 - name: string
 - stock: int
 - price: int
-- category_id: uuid fk(categories)
+- category_id: int fk(categories)
 - is_active: boolean
+<!-- TODO: Refactor logic to new [COUNT] -->
+
+> chart:
+
+- id: int
+- quantity: int
+- total_price: int
+- total_tax: int
+- product_id: int fk(products)
+  <!-- TODO: Refactor logic to new [TOTAL] fields -->
 
 > transaction:
 
-- id: uuid
-- state: 'active' | 'bought'
-- amount: int
-- price: int
-- product_id: uuid fk(products)
+- id: int
+- quantity: int
+- total_price: int
+- total_tax: int
+- product_id: int fk(products)
+  <!-- TODO: Refactor logic to new [TOTAL] fields -->
+  <!-- TODO: Remove is_active from [TRANSACTIONS] -->
+
+> orders:
+
+- id: int
+- total_price: int
+- total_tax: int
 - created_at: date
-- is_active: boolean
 
 ## Test Cases:
 
-### Defaults
-
-> Inputs:
-
-- mustn't be changed via F12 (Inspect | Dev Tools)
-
-> Selects:
-
-- mustn't bypass adding options via F12
-
-### Transactions
-
-> Product:
-
-- [TYPE]:
-- [RegEx]:
-
-* must be
-* must be
-
-> Amount:
-
-- [TYPE]:
-- [RegEx]:
-
-* must be
-* must be
-
-> Tax:
-
-- [TYPE]:
-- [RegEx]:
-
-* must be
-* must be
-
-> Price:
-
-- [TYPE]:
-- [RegEx]:
-
-* must be
-* must be
-
-### Products
+### Chart
 
 > Product:
 
@@ -94,29 +67,70 @@
 * mustn't aceppt white spaces, special carachters or HTML tags
 * must be a unique field (validate white spaces and letters case)
 
+> Quantity:
+
+- [TYPE]: numbers int
+- [SIZE]: max | min
+- [RegEx]:
+
+* must accept integers numbers
+* must be less than the product current stock
+* mustn't accept white spaces, special carachters or HTML tags
+
+> Tax:
+
+- [TYPE]: int or decimal
+- [SIZE]: max 100% | min 0.01
+- [RegEx]: toFixed(2) decimal floats
+
+* must match to the product category tax
+* must accept integers or decimal with 2 decimal plates
+* mustn't be edited
+* mustn't accept white spaces, special carachters or HTML tags
+
+> Price:
+
+- [TYPE]: int presented by cents
+- [SIZE]: max | min 001
+- [RegEx]: R$ x,xx
+
+* must accept integers (decimal with 2 decimal plates)
+* must match to the product price
+* mustn't be edited
+* mustn't accept white spaces, special carachters or HTML tags
+
+### Products
+
+> Product:
+
+- [TYPE]: text string
+- [SIZE]: max | min
+
+* must accept letters, and numbers only pre followed by a letter
+* mustn't aceppt white spaces, special carachters or HTML tags
+* must be a unique field (validate white spaces and letters case)
+
 > Category:
 
 - [TYPE]: text string
 - [SIZE]: max | min
-- [RegEx]:
 
 * must accept letters, and numbers only pre followed by a letter
 * mustn't aceppt white spaces, special carachters or HTML tags
 
 > Price:
 
-- [TYPE]: int or decimal
-- [SIZE]: max | min
+- [TYPE]: int presented by cents
+- [SIZE]: max | min 001
 - [RegEx]: R$ x,xx
 
-* must accept integers or decimal with 2 decimal plates
+* must accept integers (decimal with 2 decimal plates)
 * mustn't accept white spaces, special carachters or HTML tags
 
-> Amount:
+> Stock:
 
 - [TYPE]: numbers int
 - [SIZE]: max | min
-- [RegEx]:
 
 * must accept integers numbers
 * mustn't accept white spaces, special carachters or HTML tags
