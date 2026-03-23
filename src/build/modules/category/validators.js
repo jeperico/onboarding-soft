@@ -1,8 +1,8 @@
 import { validateNumber, validateText } from "../base/validators.js";
-const validateName = async (value) => {
+const validateCategoryName = async (value) => {
     return validateText(value, "categories", "Category");
 };
-const validateTax = (value) => {
+const validateCategoryTax = (value) => {
     return validateNumber(value, "Tax", {
         min: {
             value: 0.01,
@@ -14,4 +14,4 @@ const validateTax = (value) => {
         },
     });
 };
-export { validateName, validateTax };
+export { validateCategoryName, validateCategoryTax };

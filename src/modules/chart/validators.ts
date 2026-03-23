@@ -1,15 +1,16 @@
-import { ICategory } from "../../interfaces/category.js";
 import { IProduct } from "../../interfaces/product.js";
 import { serviceView } from "../base/base-services.js";
 import { validateNumber, validateRelation } from "../base/validators.js";
 import { IChart } from "../../interfaces/chart.js";
 import { overwriteProduct } from "./services.js";
 
-const validateProduct = async (product_id: number): Promise<string | null> => {
+const validateChartName = async (
+  product_id: number,
+): Promise<string | null> => {
   return validateRelation<IProduct>(product_id, "products", "Product");
 };
 
-const validateQuantity = async (
+const validateChartQuantity = async (
   quantity: number,
   product_id: number,
 ): Promise<string | null> => {
@@ -30,7 +31,7 @@ const validateQuantity = async (
   });
 };
 
-const validatePrice = async (
+const validateChartPrice = async (
   price: number,
   product_id: number,
 ): Promise<string | null> => {
@@ -43,7 +44,7 @@ const validatePrice = async (
   return null;
 };
 
-const validateTax = async (
+const validateChartTax = async (
   tax: number,
   product_id: number,
 ): Promise<string | null> => {
@@ -57,7 +58,7 @@ const validateTax = async (
   return null;
 };
 
-const validateDuplicatedProduct = async (
+const validateChartDuplicated = async (
   product_id: number,
   quantity: number,
 ): Promise<{ handled: boolean; error?: string }> => {
@@ -71,9 +72,9 @@ const validateDuplicatedProduct = async (
 };
 
 export {
-  validateProduct,
-  validateQuantity,
-  validatePrice,
-  validateTax,
-  validateDuplicatedProduct,
+  validateChartName,
+  validateChartQuantity,
+  validateChartPrice,
+  validateChartTax,
+  validateChartDuplicated,
 };

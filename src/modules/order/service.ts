@@ -15,7 +15,6 @@ import {
 } from "./serializer.js";
 
 const finishPurchase = async (event: SubmitEvent) => {
-  // I - Environment
   event.preventDefault();
 
   const order = await OrderCreateSerializer();
@@ -27,11 +26,9 @@ const finishPurchase = async (event: SubmitEvent) => {
     JSON.stringify(currentOrders ? [...currentOrders, order] : [order]),
   );
 
-  // II - Inputs
   const transactions = await TransactionCreateSerializer(order.id);
   if (!transactions) return;
 
-  // III - Output
   const currentTransactions = await serviceView<ITransaction>("transactions");
   localStorage.setItem(
     "transactions",
@@ -95,10 +92,8 @@ const renderOrderDetails = async () => {
 };
 
 const renderTransactions = async () => {
-  // I - Environment
   const COLUMNS_COUNT = 6;
 
-  // II - Inputs
   const data = await TransactionViewSerializer();
   const table = document.querySelector("#tbody-details");
   if (!data || !table) {
@@ -106,7 +101,6 @@ const renderTransactions = async () => {
     return;
   }
 
-  // III - Rendering
   data.forEach((el) => {
     const row = document.createElement("tr");
 

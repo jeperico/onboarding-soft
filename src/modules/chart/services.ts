@@ -9,7 +9,6 @@ import { renderActionButton, renderElement } from "../base/services.js";
 import { IProduct } from "../../interfaces/product.js";
 
 const createChart = async (event: SubmitEvent) => {
-  // I - Environment
   event.preventDefault();
 
   // II - Inputs
@@ -22,7 +21,6 @@ const createChart = async (event: SubmitEvent) => {
   )
     return;
 
-  // III - Errors handling
   const { errors, handled } = await chartHandler(
     payload.product_id,
     payload.quantity,
@@ -38,7 +36,6 @@ const createChart = async (event: SubmitEvent) => {
     return;
   }
 
-  // IV - Output
   const currentData = await serviceView<IChart>("chart");
   localStorage.setItem(
     "chart",
@@ -48,10 +45,8 @@ const createChart = async (event: SubmitEvent) => {
 };
 
 const renderChart = async () => {
-  // I - Environment
   const COLUMNS_COUNT = 6;
 
-  // II - Inputs
   const data = await ChartViewSerializer();
   const table = document.querySelector("#tbody-chart");
   if (!data || !table) {
@@ -59,7 +54,6 @@ const renderChart = async () => {
     return;
   }
 
-  // III - Rendering
   data.map((el) => {
     const row = document.createElement("tr");
 
@@ -73,7 +67,6 @@ const renderChart = async () => {
     table.appendChild(row);
   });
 
-  // IV - Output
   const row = document.createElement("tr");
   for (let i = 0; i < COLUMNS_COUNT; i++)
     row.appendChild(document.createElement("td"));
@@ -86,7 +79,6 @@ const overwriteProduct = async (
   chart: IChart[],
 ): Promise<string | null> => {
   try {
-    // I - Inputs
     const maxStock = (await serviceView<IProduct>("products"))?.find(
       (el) => el.id === duplicated.product_id,
     );
@@ -95,11 +87,9 @@ const overwriteProduct = async (
     )?.quantity;
     if (!currentQuantity) return null;
 
-    // II - Check availability
     if (currentQuantity + quantity > (maxStock?.stock || 0))
       return "Doesn't exist that quantity in stock";
 
-    // III - Update
     const payload = chart.map((el) => {
       if (el.id === duplicated.id) {
         el.quantity += quantity;

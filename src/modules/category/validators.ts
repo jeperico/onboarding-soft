@@ -1,11 +1,11 @@
 import { ICategory } from "../../interfaces/category.js";
 import { validateNumber, validateText } from "../base/validators.js";
 
-const validateName = async (value: string): Promise<string | null> => {
+const validateCategoryName = async (value: string): Promise<string | null> => {
   return validateText<ICategory>(value, "categories", "Category");
 };
 
-const validateTax = (value: number): string | null => {
+const validateCategoryTax = (value: number): string | null => {
   return validateNumber(value, "Tax", {
     min: {
       value: 0.01,
@@ -18,4 +18,4 @@ const validateTax = (value: number): string | null => {
   });
 };
 
-export { validateName, validateTax };
+export { validateCategoryName, validateCategoryTax };

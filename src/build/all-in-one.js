@@ -1,0 +1,1008 @@
+// -----------------------------------------
+// FEATURE FLAGS
+// -----------------------------------------
+const FEATURE_FLAG_ENABLE_ROUTES = false;
+// -----------------------------------------
+// UTILS
+// -----------------------------------------
+// -----------------------
+// utils/auto-increment.ts
+// -----------------------
+const autoIncrement = async (table) => {
+    const data = await serviceView(table);
+    if (!data || data.length === 0)
+        return 1;
+    const lastItem = data[data.length - 1];
+    if (!lastItem || typeof lastItem.id !== "number") {
+        return 1;
+    }
+    return lastItem.id + 1;
+};
+// -----------------------
+// utils/format-code.ts
+// -----------------------
+const formatCode = (index) => {
+    return String(index).padStart(3, "0");
+};
+// -----------------------
+// utils/format-currency.ts
+// -----------------------
+const formatCurrency = (value) => {
+    const price = value / 100;
+    const data = price.toLocaleString("pt-br", {
+        style: "currency",
+        currency: "BRL",
+    });
+    return data;
+};
+// -----------------------
+// utils/render-error-message.ts
+// -----------------------
+const renderErrorMessage = (errors) => {
+    const container = document.querySelector(".errors-form-container");
+    if (!container)
+        return;
+    container.innerHTML = "";
+    errors.map((error) => {
+        const message = document.createElement("p");
+        message.innerText = error.message;
+        message.classList.add("error-form-message");
+        container.appendChild(message);
+        const clean = document.querySelector(error.field);
+        clean.value = "";
+    });
+};
+// -----------------------------------------
+// SPA
+// -----------------------------------------
+// -----------------------
+// spa/routes.ts
+// -----------------------
+const routes = {
+    "/": {
+        title: "Home",
+        href: "/src/app/chart.html",
+    },
+    "/products": {
+        title: "Products",
+        href: "/src/app/products.html",
+    },
+    "/categories": {
+        title: "Categories",
+        href: "/src/app/categories.html",
+    },
+    "/history": {
+        title: "History",
+        href: "/src/app/history.html",
+    },
+    "/details": {
+        title: "Details",
+        href: "/src/app/details.html",
+    },
+};
+const renderContent = async (path, params) => {
+    const app = await document.querySelector("main");
+    if (!app)
+        return;
+    const route = routes[path];
+    if (!route) {
+        app.innerHTML = "<h1>404</h1>";
+        return;
+    }
+    const searchParams = new URLSearchParams(params).toString();
+    const url = searchParams ? `${path}?${searchParams}` : path;
+    const res = await fetch(route.href, {
+        cache: "no-store",
+    });
+    const html = await res.text();
+    app.innerHTML = html;
+    document.title = route.title;
+    if (FEATURE_FLAG_ENABLE_ROUTES)
+        history.pushState({}, "", url);
+    else if (path !== "/details")
+        history.pushState({}, "", "/");
+    else if (searchParams)
+        history.pushState({}, "", `?${searchParams}`);
+};
+// -----------------------
+// spa/render-app.ts
+// -----------------------
+const renderApp = async () => {
+    const links = document.querySelectorAll(".proxy-route");
+    links.forEach((item, index) => {
+        item.addEventListener("click", () => {
+            switch (index) {
+                case 0:
+                    renderPage("/");
+                    break;
+                case 1:
+                    renderPage("/products");
+                    break;
+                case 2:
+                    renderPage("/categories");
+                    break;
+                case 3:
+                    renderPage("/history");
+                    break;
+                default:
+                    renderPage("/");
+                    break;
+            }
+        });
+    });
+    window.addEventListener("popstate", async () => {
+        const path = location.pathname;
+        if (path in routes) {
+            renderPage(path);
+        }
+        else {
+            await renderPage(location.pathname);
+        }
+    });
+    await renderPage(location.pathname);
+};
+// -----------------------
+// spa/render-page.ts
+// -----------------------
+const renderPage = async (path, id) => {
+    switch (path) {
+        case "/":
+            await loadChart();
+            loadTransaction();
+            break;
+        case "/products":
+            loadProducts();
+            break;
+        case "/categories":
+            loadCategory();
+            break;
+        case "/history":
+            await loadHistory();
+            break;
+        case "/details":
+            if (!id) {
+                loadHistory();
+                break;
+            }
+            loadDetails(id);
+            break;
+    }
+};
+// -----------------------
+// spa/render-void-table.ts
+// -----------------------
+const renderVoidTable = (tableId, columns) => {
+    const table = document.querySelector(tableId);
+    if (!table)
+        return;
+    const row = document.createElement("tr");
+    for (let i = 0; i < columns; i++)
+        row.appendChild(document.createElement("td"));
+    table.appendChild(row);
+};
+// RENDER HEADER
+await renderApp();
+// -----------------------------------------
+// MODULES
+// -----------------------------------------
+// -----------------------------------------
+// BASE
+// -----------------------------------------
+// -----------------------
+// modules/base/base-services.ts
+// -----------------------
+const serviceView = async (endpoint) => {
+    const response = localStorage.getItem(endpoint);
+    if (!response)
+        return null;
+    return JSON.parse(response);
+};
+const serviceDelete = async (endpoint, id) => {
+    const response = await serviceView(endpoint);
+    const payload = await response?.map((el) => {
+        if (el.id === id)
+            el.is_active = false;
+    });
+    if (!payload)
+        return null;
+    localStorage.setItem(endpoint, JSON.stringify(response));
+    // window.location.reload();
+};
+const serviceRemove = async (endpoint, id) => {
+    const response = await serviceView(endpoint);
+    if (!response)
+        return null;
+    const data = response.filter((el) => el.id !== id);
+    if (data.length !== response.length - 1)
+        return null;
+    localStorage.setItem(endpoint, JSON.stringify(data));
+    // window.location.reload();
+};
+const formsEvents = async (handler, form) => {
+    const element = document.querySelector(form || "form");
+    if (!element)
+        return;
+    element.addEventListener("submit", handler);
+};
+const tableEvents = async (table, variant, render, page) => {
+    if (render)
+        await render();
+    const buttons = document.querySelectorAll(`.action-${variant}`);
+    buttons.forEach((el) => {
+        el.addEventListener("click", () => {
+            const id = Number(el.id);
+            switch (variant) {
+                case "delete":
+                    serviceDelete(table, id);
+                    if (page)
+                        renderPage(page);
+                    break;
+                case "remove":
+                    serviceRemove(table, id);
+                    if (page)
+                        renderPage(page);
+                    break;
+                case "view":
+                    // TODO: HERE TO PUT ID
+                    renderPage("/details", id);
+                    break;
+            }
+        });
+    });
+};
+// -----------------------
+// modules/base/services.ts
+// -----------------------
+const renderElement = (row, text) => {
+    try {
+        const td = document.createElement("td");
+        td.textContent = text;
+        row.appendChild(td);
+    }
+    catch {
+        renderVoidElement(row);
+    }
+};
+const renderActionButton = (row, id, variant) => {
+    try {
+        const button = document.createElement("button");
+        button.textContent = variant.toUpperCase();
+        button.className = `action-${variant} button-secondary`;
+        button.id = id;
+        const td = document.createElement("td");
+        td.appendChild(button);
+        row.appendChild(td);
+    }
+    catch {
+        renderVoidElement(row);
+    }
+};
+const renderVoidElement = (row) => {
+    const td = document.createElement("td");
+    td.textContent = "No data!";
+    row.appendChild(td);
+};
+const renderSelect = async (table, select, fieldText, fieldValue) => {
+    const parent = document.querySelector(select);
+    const data = await serviceView(table);
+    if (!parent || !data)
+        return;
+    data.forEach((el) => {
+        if (!el.is_active)
+            return;
+        const option = document.createElement("option");
+        const text = el[fieldText];
+        const value = el[fieldValue];
+        option.innerText = String(text);
+        option.value = String(value);
+        parent.appendChild(option);
+    });
+};
+// -----------------------
+// modules/base/validators.ts
+// -----------------------
+const validateText = async (value, table, name) => {
+    const regex = /^\p{L}[\p{L}\p{N}]*(?: [\p{L}\p{N}]+)*$/u;
+    if (!regex.test(value))
+        return `${name} name must start with a letter and contain only letters and numbers.`;
+    if (value.length > 100)
+        return `${name} name cannot exceed 100 characters.`;
+    if (value.length < 3)
+        return `${name} name must contain at least 2 characters.`;
+    const data = (await serviceView(table))?.filter((e) => e.is_active);
+    if (data) {
+        const exists = data.find((el) => el.name.toLowerCase() === value.toLowerCase());
+        if (exists)
+            return `A ${name.toLowerCase()} with this name already exists.`;
+    }
+    return null;
+};
+const validateNumber = (value, name, limits) => {
+    if (typeof value !== "number" || Number.isNaN(value))
+        return `${name} must be a valid number.`;
+    if (value < limits.min.value)
+        return `${name} must be at least ${limits.min.label}.`;
+    if (value > limits.max.value)
+        return `${name} cannot exceed ${limits.max.label}.`;
+    return null;
+};
+const validateRelation = async (value, table, name) => {
+    const data = (await serviceView(table))?.filter((e) => e.is_active);
+    if (data) {
+        const exist = data.find((el) => el.id === value);
+        if (!exist)
+            return `This ${name} doesn't exists.`;
+    }
+    return null;
+};
+// -----------------------------------------
+// CATEGORY
+// -----------------------------------------
+// -----------------------
+// modules/category/handlers.ts
+// -----------------------
+const categoryHandler = async (name, tax) => {
+    const errors = [];
+    const nameError = await validateCategoryName(name);
+    if (nameError)
+        errors.push({ field: "#name", message: nameError });
+    const taxError = validateCategoryTax(tax);
+    if (taxError)
+        errors.push({ field: "#tax", message: taxError });
+    return errors;
+};
+// -----------------------
+// modules/category/serializers.ts
+// -----------------------
+const CategoryCreateSerializer = async (form) => {
+    const id = await autoIncrement("categories");
+    const name = form.elements.namedItem("name");
+    const tax = form.elements.namedItem("tax");
+    const payload = {
+        id: id,
+        name: name.value.replace(/\s+/g, " ").trim(),
+        tax: parseFloat(parseFloat(tax.value).toFixed(2)),
+        is_active: true,
+    };
+    return payload;
+};
+const CategoryViewSerializer = async () => {
+    const data = (await serviceView("categories"))?.filter((el) => el.is_active);
+    if (!data)
+        return null;
+    const payload = [];
+    data.map((el) => {
+        payload.push({
+            id: el.id.toString(),
+            name: el.name,
+            tax: el.tax.toString().concat("%"),
+        });
+    });
+    return payload;
+};
+// -----------------------
+// modules/category/services.ts
+// -----------------------
+const createCategory = async (event) => {
+    event.preventDefault();
+    const payload = await CategoryCreateSerializer(event.target);
+    if (!payload.name || !payload.tax)
+        return;
+    const errors = await categoryHandler(payload.name, payload.tax);
+    if (errors.length > 0) {
+        renderErrorMessage(errors);
+        return;
+    }
+    const currentData = await serviceView("categories");
+    localStorage.setItem("categories", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
+    renderPage("/categories");
+};
+const renderCategory = async () => {
+    const COLUMNS_COUNT = 4;
+    const data = await CategoryViewSerializer();
+    const table = document.querySelector("#tbody-category");
+    if (!data || !table) {
+        renderVoidTable("#tbody-category", COLUMNS_COUNT);
+        return;
+    }
+    data.map((el) => {
+        const row = document.createElement("tr");
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.name);
+        renderElement(row, el.tax);
+        renderActionButton(row, el.id, "delete");
+        table.appendChild(row);
+    });
+    const row = document.createElement("tr");
+    for (let i = 0; i < COLUMNS_COUNT; i++)
+        row.appendChild(document.createElement("td"));
+    table.appendChild(row);
+};
+// -----------------------
+// modules/category/spa.ts
+// -----------------------
+const loadCategory = async () => {
+    await renderContent("/categories");
+    await tableEvents("categories", "delete", renderCategory, "/categories");
+    await formsEvents(createCategory);
+};
+// -----------------------
+// modules/base/validators.ts
+// -----------------------
+const validateCategoryName = async (value) => {
+    return validateText(value, "categories", "Category");
+};
+const validateCategoryTax = (value) => {
+    return validateNumber(value, "Tax", {
+        min: {
+            value: 0.01,
+            label: "0.01%",
+        },
+        max: {
+            value: 100,
+            label: "100%",
+        },
+    });
+};
+// -----------------------------------------
+// CHART
+// -----------------------------------------
+// -----------------------
+// modules/chart/handlers.ts
+// -----------------------
+const chartHandler = async (product, quantity, price, tax) => {
+    const errors = [];
+    let handled = false;
+    const productError = await validateChartName(product);
+    if (productError)
+        errors.push({ field: "#product", message: productError });
+    const quantityError = await validateChartQuantity(quantity, product);
+    if (quantityError)
+        errors.push({ field: "#quantity", message: quantityError });
+    const priceError = await validateChartPrice(price, product);
+    if (priceError)
+        errors.push({ field: "#price", message: priceError });
+    const taxError = await validateChartTax(tax, product);
+    if (taxError)
+        errors.push({ field: "#tax", message: taxError });
+    const duplicatedResult = await validateChartDuplicated(product, quantity);
+    if (duplicatedResult.error)
+        errors.push({ field: "#product", message: duplicatedResult.error });
+    if (duplicatedResult.handled)
+        handled = true;
+    return { errors, handled };
+};
+// -----------------------
+// modules/chart/serializers.ts
+// -----------------------
+const ChartCreateSerializer = async (form) => {
+    const id = await autoIncrement("chart");
+    const quantity = form.elements.namedItem("quantity");
+    const price = form.elements.namedItem("price");
+    const tax = form.elements.namedItem("tax");
+    const product = form.elements.namedItem("product");
+    const payload = {
+        id: id,
+        quantity: parseInt(quantity.value),
+        price: parseInt((parseFloat(price.value) * 100).toFixed(0)),
+        tax: parseInt((parseFloat(tax.value) * 100).toFixed(0)),
+        product_id: parseInt(product.value),
+    };
+    return payload;
+};
+const ChartViewSerializer = async () => {
+    const data = await serviceView("chart");
+    if (!data)
+        return null;
+    const payload = [];
+    data.map(async (el) => {
+        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
+        const total = el.price * el.quantity;
+        const tax = product?.tax
+            ? formatCurrency(product.tax * el.quantity)
+            : "No data!";
+        payload.push({
+            id: el.id.toString(),
+            quantity: el.quantity.toString(),
+            price: formatCurrency(el.price),
+            tax: tax,
+            total: formatCurrency(total),
+            product: product?.name || "No data!",
+        });
+    });
+    return payload;
+};
+// -----------------------
+// modules/chart/services.ts
+// -----------------------
+const createChart = async (event) => {
+    event.preventDefault();
+    const payload = await ChartCreateSerializer(event.target);
+    if (!payload.product_id ||
+        !payload.quantity ||
+        !payload.price ||
+        !payload.tax)
+        return;
+    const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
+    if (errors.length > 0) {
+        renderErrorMessage(errors);
+        return;
+    }
+    if (handled) {
+        renderPage("/");
+        return;
+    }
+    const currentData = await serviceView("chart");
+    localStorage.setItem("chart", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
+    renderPage("/");
+};
+const renderChart = async () => {
+    const COLUMNS_COUNT = 6;
+    const data = await ChartViewSerializer();
+    const table = document.querySelector("#tbody-chart");
+    if (!data || !table) {
+        renderVoidTable("#tbody-chart", COLUMNS_COUNT);
+        return;
+    }
+    data.map((el) => {
+        const row = document.createElement("tr");
+        renderElement(row, el.product);
+        renderElement(row, el.price);
+        renderElement(row, el.quantity);
+        renderElement(row, el.tax);
+        renderElement(row, el.total);
+        renderActionButton(row, el.id, "remove");
+        table.appendChild(row);
+    });
+    const row = document.createElement("tr");
+    for (let i = 0; i < COLUMNS_COUNT; i++)
+        row.appendChild(document.createElement("td"));
+    table.appendChild(row);
+};
+const overwriteProduct = async (duplicated, quantity, chart) => {
+    try {
+        const maxStock = (await serviceView("products"))?.find((el) => el.id === duplicated.product_id);
+        const currentQuantity = chart?.find((el) => el.id === duplicated.id)?.quantity;
+        if (!currentQuantity)
+            return null;
+        if (currentQuantity + quantity > (maxStock?.stock || 0))
+            return "Doesn't exist that quantity in stock";
+        const payload = chart.map((el) => {
+            if (el.id === duplicated.id) {
+                el.quantity += quantity;
+            }
+            return el;
+        });
+        localStorage.setItem("chart", JSON.stringify(payload));
+        renderPage("/");
+        return null;
+    }
+    catch {
+        return "Internal Error";
+    }
+};
+const fieldsListener = () => {
+    const listener = document.querySelector("#product");
+    if (!listener)
+        return;
+    listener.addEventListener("change", async (e) => {
+        const id = e.target.value;
+        const product = (await serviceView("products"))?.find((el) => el.id === parseInt(id));
+        const tax = product?.tax;
+        const chart = (await serviceView("chart"))?.find((el) => el.product_id === product?.id);
+        const taxField = document.querySelector("#tax");
+        if (!taxField || !tax)
+            return;
+        taxField.value = (tax / 100).toFixed(2);
+        const priceField = document.querySelector("#price");
+        if (!priceField || !product?.price)
+            return;
+        priceField.value = (product.price / 100).toFixed(2);
+        const quantityField = document.querySelector("#quantity");
+        if (!quantityField || !chart)
+            return;
+        const stock = product?.stock - chart?.quantity;
+        quantityField.max = stock.toString();
+    });
+};
+// -----------------------
+// modules/chart/spa.ts
+// -----------------------
+const loadChart = async () => {
+    await renderContent("/");
+    await tableEvents("chart", "remove", renderChart, "/");
+    await formsEvents(createChart, "#home-form");
+    // TODO: Remove products without stock from selection
+    await renderSelect("products", "#product", "name", "id");
+    fieldsListener();
+};
+// -----------------------
+// modules/chart/validators.ts
+// -----------------------
+const validateChartName = async (product_id) => {
+    return validateRelation(product_id, "products", "Product");
+};
+const validateChartQuantity = async (quantity, product_id) => {
+    const max = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
+    if (!max)
+        return `This product doesn't exists`;
+    return validateNumber(quantity, "Quantity", {
+        min: {
+            value: 1,
+            label: "1",
+        },
+        max: {
+            value: max.stock,
+            label: max.stock.toString(),
+        },
+    });
+};
+const validateChartPrice = async (price, product_id) => {
+    const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
+    if (!product)
+        return `This product doesn't exists`;
+    if (price !== product.price)
+        return "The price is incorrect";
+    return null;
+};
+const validateChartTax = async (tax, product_id) => {
+    const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
+    if (!product)
+        return `This product doesn't exists`;
+    if (tax !== product.tax)
+        return "The tax is incorrect";
+    return null;
+};
+const validateChartDuplicated = async (product_id, quantity) => {
+    const chart = await serviceView("chart");
+    const duplicated = chart?.find((el) => el.product_id === product_id);
+    if (!chart || !duplicated)
+        return { handled: false };
+    const error = await overwriteProduct(duplicated, quantity, chart);
+    if (error)
+        return { handled: false, error };
+    return { handled: true };
+};
+// -----------------------------------------
+// ORDER
+// -----------------------------------------
+// -----------------------
+// modules/order/serializers.ts
+// -----------------------
+const OrderCreateSerializer = async () => {
+    const data = await serviceView("chart");
+    if (!data)
+        return null;
+    const id = await autoIncrement("orders");
+    let total_tax = 0;
+    let total_price = 0;
+    data.map((el) => {
+        total_tax += el.tax * el.quantity;
+        total_price += el.price * el.quantity;
+    });
+    const payload = {
+        id: id,
+        total_tax: total_tax,
+        total_price: total_price,
+        created_at: new Date(),
+    };
+    return payload;
+};
+const OrderViewSerializer = async () => {
+    const data = await serviceView("orders");
+    if (!data)
+        return null;
+    const payload = [];
+    data.map((el) => {
+        const id = el.id.toString();
+        const total_price = formatCurrency(el.total_price);
+        const total_tax = formatCurrency(el.total_tax);
+        payload.push({
+            id: id,
+            total_price: total_price,
+            total_tax: total_tax,
+        });
+    });
+    return payload;
+};
+const TransactionCreateSerializer = async (order) => {
+    const data = await serviceView("chart");
+    if (!data)
+        return null;
+    const id = (await autoIncrement("transactions")) || 1;
+    const payload = [];
+    data.map(async (el, index) => {
+        payload.push({
+            id: id + index,
+            quantity: el.quantity,
+            price: el.price,
+            product_id: el.product_id,
+            order_id: order,
+            is_active: true,
+        });
+    });
+    return payload;
+};
+const TransactionViewSerializer = async () => {
+    const url = new URLSearchParams(window.location.search);
+    const id = url.get("order");
+    if (!id)
+        return null;
+    const data = (await serviceView("transactions"))?.filter((el) => el.is_active && el.order_id === parseInt(id));
+    if (!data)
+        return null;
+    const payload = [];
+    await data.map(async (el) => {
+        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
+        const category = (await serviceView("categories"))?.find((e) => e.id === product?.category_id)?.name;
+        const tax = (product?.tax || 0) * el.quantity;
+        const total = el.price * el.quantity;
+        payload.push({
+            id: el.id.toString(),
+            product: product?.name || "No data!",
+            category: category || "No data!",
+            quantity: el.quantity.toString(),
+            tax: formatCurrency(tax),
+            total: formatCurrency(total),
+        });
+    });
+    return payload;
+};
+// -----------------------
+// modules/order/services.ts
+// -----------------------
+const finishPurchase = async (event) => {
+    event.preventDefault();
+    const order = await OrderCreateSerializer();
+    if (!order)
+        return;
+    const currentOrders = await serviceView("orders");
+    localStorage.setItem("orders", JSON.stringify(currentOrders ? [...currentOrders, order] : [order]));
+    const transactions = await TransactionCreateSerializer(order.id);
+    if (!transactions)
+        return;
+    const currentTransactions = await serviceView("transactions");
+    localStorage.setItem("transactions", JSON.stringify(currentTransactions
+        ? [...currentTransactions, ...transactions]
+        : transactions));
+    localStorage.setItem("chart", "");
+    renderPage("/history");
+};
+const renderOrders = async () => {
+    const COLUMNS_COUNT = 4;
+    const data = await OrderViewSerializer();
+    const table = await document.querySelector("#tbody-history");
+    if (!data || !table) {
+        renderVoidTable("#tbody-history", COLUMNS_COUNT);
+        return;
+    }
+    data.map((el) => {
+        const row = document.createElement("tr");
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.total_tax);
+        renderElement(row, el.total_price);
+        renderActionButton(row, el.id, "view");
+        table.appendChild(row);
+    });
+    const row = document.createElement("tr");
+    for (let i = 0; i < COLUMNS_COUNT; i++)
+        row.appendChild(document.createElement("td"));
+    table.appendChild(row);
+};
+const renderOrderDetails = async () => {
+    const taxField = document.querySelector("#render-tax");
+    const totalField = document.querySelector("#render-total");
+    if (!taxField || !totalField)
+        return;
+    const data = await serviceView("chart");
+    if (!data) {
+        taxField.innerText = formatCurrency(0);
+        totalField.innerText = formatCurrency(0);
+        return;
+    }
+    const tax = data.reduce((sum, el) => (sum += el.tax * el.quantity), 0);
+    const total = data.reduce((sum, el) => (sum += el.price * el.quantity), 0);
+    taxField.innerText = formatCurrency(tax);
+    totalField.innerText = formatCurrency(total);
+};
+const renderTransactions = async () => {
+    const COLUMNS_COUNT = 6;
+    const data = await TransactionViewSerializer();
+    const table = document.querySelector("#tbody-details");
+    if (!data || !table) {
+        renderVoidTable("#tbody-details", COLUMNS_COUNT);
+        return;
+    }
+    data.forEach((el) => {
+        const row = document.createElement("tr");
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.product);
+        renderElement(row, el.category);
+        renderElement(row, el.quantity);
+        renderElement(row, el.tax);
+        renderElement(row, el.total);
+        table.appendChild(row);
+    });
+    const row = document.createElement("tr");
+    for (let i = 0; i < COLUMNS_COUNT; i++)
+        row.appendChild(document.createElement("td"));
+    table.appendChild(row);
+};
+// -----------------------
+// modules/order/spa.ts
+// -----------------------
+const loadTransaction = async () => {
+    await formsEvents(finishPurchase, "#chart-details");
+    renderOrderDetails();
+};
+const loadHistory = async () => {
+    await renderContent("/history");
+    await tableEvents("orders", "view", renderOrders);
+};
+const loadDetails = async (id) => {
+    await renderContent("/details", { order: id.toString() });
+    await tableEvents("transactions", "none", renderTransactions);
+};
+// -----------------------------------------
+// PRODUCT
+// -----------------------------------------
+// -----------------------
+// modules/product/handlers.ts
+// -----------------------
+const productHandler = async (name, stock, price, tax, category) => {
+    const errors = [];
+    const nameError = await validateProductName(name);
+    if (nameError)
+        errors.push({ field: "#name", message: nameError });
+    const stockError = validateProductStock(stock);
+    if (stockError)
+        errors.push({ field: "#stock", message: stockError });
+    const priceError = validateProductPrice(price);
+    if (priceError)
+        errors.push({ field: "#price", message: priceError });
+    const taxError = await validateProductTax(tax, price, category);
+    if (taxError)
+        errors.push({ field: "#price", message: taxError });
+    const categoryError = await validateProductCategory(category);
+    if (categoryError)
+        errors.push({ field: "#category", message: categoryError });
+    return errors;
+};
+// -----------------------
+// modules/product/serializers.ts
+// -----------------------
+const ProductCreateSerializer = async (form) => {
+    const id = await autoIncrement("products");
+    const name = form.elements.namedItem("name");
+    const stock = form.elements.namedItem("stock");
+    const category = form.elements.namedItem("category");
+    const priceField = form.elements.namedItem("price");
+    const price = parseInt((parseFloat(priceField.value) * 100).toFixed(0));
+    const percentTax = (await serviceView("categories"))?.find((el) => el.id === parseInt(category.value))?.tax;
+    const tax = ((percentTax || 0) * price) / 100;
+    const payload = {
+        id: id,
+        name: name.value.replace(/\s+/g, " ").trim(),
+        stock: parseInt(stock.value),
+        price: price,
+        tax: tax,
+        category_id: parseInt(category.value),
+        is_active: true,
+    };
+    return payload;
+};
+const ProductViewSerializer = async () => {
+    const data = (await serviceView("products"))?.filter((el) => el.is_active);
+    if (!data)
+        return null;
+    const payload = [];
+    data.map(async (el) => {
+        const category = (await serviceView("categories"))?.find((e) => e.id === el.category_id)?.name;
+        payload.push({
+            id: el.id.toString(),
+            name: el.name.toString(),
+            stock: el.stock.toString(),
+            price: formatCurrency(el.price),
+            category: category || "No data!",
+        });
+    });
+    return payload;
+};
+// -----------------------
+// modules/product/services.ts
+// -----------------------
+const createProduct = async (event) => {
+    event.preventDefault();
+    const payload = await ProductCreateSerializer(event.target);
+    if (!payload.name ||
+        !payload.stock ||
+        !payload.price ||
+        !payload.tax ||
+        !payload.category_id)
+        return;
+    const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
+    if (errors.length > 0) {
+        renderErrorMessage(errors);
+        return;
+    }
+    const currentData = await serviceView("products");
+    localStorage.setItem("products", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
+    renderPage("/products");
+};
+const renderProducts = async () => {
+    const COLUMNS_COUNT = 6;
+    const data = await ProductViewSerializer();
+    const table = document.querySelector("#tbody-products");
+    if (!data || !table) {
+        renderVoidTable("#tbody-products", COLUMNS_COUNT);
+        return;
+    }
+    data.map((el) => {
+        const row = document.createElement("tr");
+        renderElement(row, formatCode(parseInt(el.id)));
+        renderElement(row, el.name);
+        renderElement(row, el.stock);
+        renderElement(row, el.price);
+        renderElement(row, el.category);
+        renderActionButton(row, el.id, "delete");
+        table.appendChild(row);
+    });
+    const row = document.createElement("tr");
+    for (let i = 0; i < COLUMNS_COUNT; i++)
+        row.appendChild(document.createElement("td"));
+    table.appendChild(row);
+};
+// -----------------------
+// modules/product/spa.ts
+// -----------------------
+const loadProducts = async () => {
+    await renderContent("/products");
+    await tableEvents("products", "delete", renderProducts, "/products");
+    await formsEvents(createProduct);
+    await renderSelect("categories", "#category", "name", "id");
+};
+// -----------------------
+// modules/product/validators.ts
+// -----------------------
+const validateProductName = async (name) => {
+    return validateText(name, "products", "Product");
+};
+const validateProductCategory = async (category_id) => {
+    return validateRelation(category_id, "categories", "category");
+};
+const validateProductStock = (stock) => {
+    return validateNumber(stock, "Stock", {
+        min: {
+            value: 1,
+            label: "1",
+        },
+        max: {
+            value: 999999,
+            label: "999.999",
+        },
+    });
+};
+const validateProductPrice = (price) => {
+    return validateNumber(price, "Price", {
+        min: {
+            value: 1,
+            label: "R$ 0.01",
+        },
+        max: {
+            value: 99999999,
+            label: "R$ 999.999,99",
+        },
+    });
+};
+const validateProductTax = async (tax, price, category_id) => {
+    if (!tax)
+        return "No tax";
+    const category = (await serviceView("categories"))?.find((el) => el.id === category_id)?.tax;
+    if (!category)
+        return "No category found";
+    const compare = (category * price) / 100;
+    if (compare !== tax)
+        return "Invalid tax value";
+    return null;
+};
+export {};

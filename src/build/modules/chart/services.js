@@ -6,7 +6,6 @@ import { ChartCreateSerializer, ChartViewSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
 import { renderActionButton, renderElement } from "../base/services.js";
 const createChart = async (event) => {
-    // I - Environment
     event.preventDefault();
     // II - Inputs
     const payload = await ChartCreateSerializer(event.target);
@@ -15,7 +14,6 @@ const createChart = async (event) => {
         !payload.price ||
         !payload.tax)
         return;
-    // III - Errors handling
     const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
@@ -25,22 +23,18 @@ const createChart = async (event) => {
         renderPage("/");
         return;
     }
-    // IV - Output
     const currentData = await serviceView("chart");
     localStorage.setItem("chart", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
     renderPage("/");
 };
 const renderChart = async () => {
-    // I - Environment
     const COLUMNS_COUNT = 6;
-    // II - Inputs
     const data = await ChartViewSerializer();
     const table = document.querySelector("#tbody-chart");
     if (!data || !table) {
         renderVoidTable("#tbody-chart", COLUMNS_COUNT);
         return;
     }
-    // III - Rendering
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, el.product);
@@ -51,7 +45,6 @@ const renderChart = async () => {
         renderActionButton(row, el.id, "remove");
         table.appendChild(row);
     });
-    // IV - Output
     const row = document.createElement("tr");
     for (let i = 0; i < COLUMNS_COUNT; i++)
         row.appendChild(document.createElement("td"));
@@ -59,15 +52,12 @@ const renderChart = async () => {
 };
 const overwriteProduct = async (duplicated, quantity, chart) => {
     try {
-        // I - Inputs
         const maxStock = (await serviceView("products"))?.find((el) => el.id === duplicated.product_id);
         const currentQuantity = chart?.find((el) => el.id === duplicated.id)?.quantity;
         if (!currentQuantity)
             return null;
-        // II - Check availability
         if (currentQuantity + quantity > (maxStock?.stock || 0))
             return "Doesn't exist that quantity in stock";
-        // III - Update
         const payload = chart.map((el) => {
             if (el.id === duplicated.id) {
                 el.quantity += quantity;

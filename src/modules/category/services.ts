@@ -12,23 +12,19 @@ import {
 } from "./serializer.js";
 
 const createCategory = async (event: SubmitEvent) => {
-  // I - Environment
   event.preventDefault();
 
-  // II - Inputs
   const payload = await CategoryCreateSerializer(
     event.target as HTMLFormElement,
   );
   if (!payload.name || !payload.tax) return;
 
-  // III - Errors handling
   const errors = await categoryHandler(payload.name, payload.tax);
   if (errors.length > 0) {
     renderErrorMessage(errors);
     return;
   }
 
-  // IV - Output
   const currentData = await serviceView<ICategory>("categories");
   localStorage.setItem(
     "categories",
@@ -38,10 +34,8 @@ const createCategory = async (event: SubmitEvent) => {
 };
 
 const renderCategory = async () => {
-  // I - Environment
   const COLUMNS_COUNT = 4;
 
-  // II - Inputs
   const data = await CategoryViewSerializer();
   const table = document.querySelector("#tbody-category");
   if (!data || !table) {
@@ -49,7 +43,6 @@ const renderCategory = async () => {
     return;
   }
 
-  // III - Rendering
   data.map((el) => {
     const row = document.createElement("tr");
 
@@ -61,7 +54,6 @@ const renderCategory = async () => {
     table.appendChild(row);
   });
 
-  // IV - Output
   const row = document.createElement("tr");
   for (let i = 0; i < COLUMNS_COUNT; i++)
     row.appendChild(document.createElement("td"));

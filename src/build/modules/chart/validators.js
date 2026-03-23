@@ -1,10 +1,10 @@
 import { serviceView } from "../base/base-services.js";
 import { validateNumber, validateRelation } from "../base/validators.js";
 import { overwriteProduct } from "./services.js";
-const validateProduct = async (product_id) => {
+const validateChartName = async (product_id) => {
     return validateRelation(product_id, "products", "Product");
 };
-const validateQuantity = async (quantity, product_id) => {
+const validateChartQuantity = async (quantity, product_id) => {
     const max = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!max)
         return `This product doesn't exists`;
@@ -19,7 +19,7 @@ const validateQuantity = async (quantity, product_id) => {
         },
     });
 };
-const validatePrice = async (price, product_id) => {
+const validateChartPrice = async (price, product_id) => {
     const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!product)
         return `This product doesn't exists`;
@@ -27,7 +27,7 @@ const validatePrice = async (price, product_id) => {
         return "The price is incorrect";
     return null;
 };
-const validateTax = async (tax, product_id) => {
+const validateChartTax = async (tax, product_id) => {
     const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!product)
         return `This product doesn't exists`;
@@ -35,7 +35,7 @@ const validateTax = async (tax, product_id) => {
         return "The tax is incorrect";
     return null;
 };
-const validateDuplicatedProduct = async (product_id, quantity) => {
+const validateChartDuplicated = async (product_id, quantity) => {
     const chart = await serviceView("chart");
     const duplicated = chart?.find((el) => el.product_id === product_id);
     if (!chart || !duplicated)
@@ -45,4 +45,4 @@ const validateDuplicatedProduct = async (product_id, quantity) => {
         return { handled: false, error };
     return { handled: true };
 };
-export { validateProduct, validateQuantity, validatePrice, validateTax, validateDuplicatedProduct, };
+export { validateChartName, validateChartQuantity, validateChartPrice, validateChartTax, validateChartDuplicated, };

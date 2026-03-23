@@ -7,9 +7,7 @@ import { ProductCreateSerializer, ProductViewSerializer, } from "./serializer.js
 import { productHandler } from "./handlers.js";
 import { renderActionButton, renderElement } from "../base/services.js";
 const createProduct = async (event) => {
-    // I - Environment
     event.preventDefault();
-    // II - Inputs
     const payload = await ProductCreateSerializer(event.target);
     if (!payload.name ||
         !payload.stock ||
@@ -17,28 +15,23 @@ const createProduct = async (event) => {
         !payload.tax ||
         !payload.category_id)
         return;
-    // III - Errors handling
     const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {
         renderErrorMessage(errors);
         return;
     }
-    // IV - Output
     const currentData = await serviceView("products");
     localStorage.setItem("products", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
     renderPage("/products");
 };
 const renderProducts = async () => {
-    // I - Environment
     const COLUMNS_COUNT = 6;
-    // II - Inputs
     const data = await ProductViewSerializer();
     const table = document.querySelector("#tbody-products");
     if (!data || !table) {
         renderVoidTable("#tbody-products", COLUMNS_COUNT);
         return;
     }
-    // III - Rendering
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
@@ -49,7 +42,6 @@ const renderProducts = async () => {
         renderActionButton(row, el.id, "delete");
         table.appendChild(row);
     });
-    // IV - Output
     const row = document.createElement("tr");
     for (let i = 0; i < COLUMNS_COUNT; i++)
         row.appendChild(document.createElement("td"));

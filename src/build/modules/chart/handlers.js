@@ -1,20 +1,20 @@
-import { validateProduct, validateQuantity, validatePrice, validateTax, validateDuplicatedProduct, } from "./validators.js";
+import { validateChartName, validateChartQuantity, validateChartPrice, validateChartTax, validateChartDuplicated, } from "./validators.js";
 const chartHandler = async (product, quantity, price, tax) => {
     const errors = [];
     let handled = false;
-    const productError = await validateProduct(product);
+    const productError = await validateChartName(product);
     if (productError)
         errors.push({ field: "#product", message: productError });
-    const quantityError = await validateQuantity(quantity, product);
+    const quantityError = await validateChartQuantity(quantity, product);
     if (quantityError)
         errors.push({ field: "#quantity", message: quantityError });
-    const priceError = await validatePrice(price, product);
+    const priceError = await validateChartPrice(price, product);
     if (priceError)
         errors.push({ field: "#price", message: priceError });
-    const taxError = await validateTax(tax, product);
+    const taxError = await validateChartTax(tax, product);
     if (taxError)
         errors.push({ field: "#tax", message: taxError });
-    const duplicatedResult = await validateDuplicatedProduct(product, quantity);
+    const duplicatedResult = await validateChartDuplicated(product, quantity);
     if (duplicatedResult.error)
         errors.push({ field: "#product", message: duplicatedResult.error });
     if (duplicatedResult.handled)

@@ -1,10 +1,10 @@
 import { ErrorResponse } from "../../interfaces/error-response.js";
 import {
-  validateName,
-  validateStock,
-  validatePrice,
-  validateTax,
-  validateCategory,
+  validateProductName,
+  validateProductStock,
+  validateProductPrice,
+  validateProductTax,
+  validateProductCategory,
 } from "./validators.js";
 
 const productHandler = async (
@@ -16,19 +16,19 @@ const productHandler = async (
 ): Promise<ErrorResponse> => {
   const errors = [];
 
-  const nameError = await validateName(name);
+  const nameError = await validateProductName(name);
   if (nameError) errors.push({ field: "#name", message: nameError });
 
-  const stockError = validateStock(stock);
+  const stockError = validateProductStock(stock);
   if (stockError) errors.push({ field: "#stock", message: stockError });
 
-  const priceError = validatePrice(price);
+  const priceError = validateProductPrice(price);
   if (priceError) errors.push({ field: "#price", message: priceError });
 
-  const taxError = await validateTax(tax, price, category);
+  const taxError = await validateProductTax(tax, price, category);
   if (taxError) errors.push({ field: "#price", message: taxError });
 
-  const categoryError = await validateCategory(category);
+  const categoryError = await validateProductCategory(category);
   if (categoryError)
     errors.push({ field: "#category", message: categoryError });
 
