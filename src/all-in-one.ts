@@ -503,7 +503,9 @@ const renderApp = async () => {
     }
   });
 
-  await renderPage(location.pathname as RouteKey);
+  if (FEATURE_FLAG_ENABLE_SERVER)
+    await renderPage(location.pathname as RouteKey);
+  else renderPage("/");
 };
 
 // -----------------------
@@ -1522,7 +1524,7 @@ const ProductCreateSerializer = async (
   const percentTax = (await serviceView<ICategory>("categories"))?.find(
     (el) => el.id === parseInt(category.value),
   )?.tax;
-  const tax = ((percentTax || 0) * (price / 100)).toFixed(0);
+  const tax = (((percentTax || 0) * price) / 100).toFixed(0);
 
   const payload: IProduct = {
     id: id,
@@ -1571,13 +1573,7 @@ const createProduct = async (event: SubmitEvent) => {
   const payload = await ProductCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (
-    !payload.name ||
-    !payload.stock ||
-    !payload.price ||
-    !payload.tax ||
-    !payload.category_id
-  )
+  if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
     return;
 
   const errors = await productHandler(
@@ -1685,13 +1681,12 @@ const validateProductTax = async (
   price: number,
   category_id: number,
 ): Promise<string | null> => {
-  if (!tax) return "No tax";
   const category = (await serviceView<ICategory>("categories"))?.find(
     (el) => el.id === category_id,
   )?.tax;
   if (!category) return "No category found";
 
-  const compare = parseInt((category * (price / 100)).toFixed(0));
+  const compare = parseInt(((category * price) / 100).toFixed(0));
 
   if (compare !== tax) return "Invalid tax value";
 

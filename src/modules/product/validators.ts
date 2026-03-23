@@ -48,13 +48,12 @@ const validateProductTax = async (
   price: number,
   category_id: number,
 ): Promise<string | null> => {
-  if (!tax) return "No tax";
   const category = (await serviceView<ICategory>("categories"))?.find(
     (el) => el.id === category_id,
   )?.tax;
   if (!category) return "No category found";
 
-  const compare = parseInt((category * (price / 100)).toFixed(0));
+  const compare = parseInt(((category * price) / 100).toFixed(0));
 
   if (compare !== tax) return "Invalid tax value";
 

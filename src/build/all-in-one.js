@@ -364,7 +364,10 @@ const renderApp = async () => {
             await renderPage(location.pathname);
         }
     });
-    await renderPage(location.pathname);
+    if (FEATURE_FLAG_ENABLE_SERVER)
+        await renderPage(location.pathname);
+    else
+        renderPage("/");
 };
 // -----------------------
 // spa/render-page.ts
@@ -1102,7 +1105,7 @@ const ProductCreateSerializer = async (form) => {
     const priceField = form.elements.namedItem("price");
     const price = parseInt((parseFloat(priceField.value) * 100).toFixed(0));
     const percentTax = (await serviceView("categories"))?.find((el) => el.id === parseInt(category.value))?.tax;
-    const tax = ((percentTax || 0) * (price / 100)).toFixed(0);
+    const tax = (((percentTax || 0) * price) / 100).toFixed(0);
     const payload = {
         id: id,
         name: name.value.replace(/\s+/g, " ").trim(),
@@ -1137,11 +1140,7 @@ const ProductViewSerializer = async () => {
 const createProduct = async (event) => {
     event.preventDefault();
     const payload = await ProductCreateSerializer(event.target);
-    if (!payload.name ||
-        !payload.stock ||
-        !payload.price ||
-        !payload.tax ||
-        !payload.category_id)
+    if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
         return;
     const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {
@@ -1218,12 +1217,10 @@ const validateProductPrice = (price) => {
     });
 };
 const validateProductTax = async (tax, price, category_id) => {
-    if (!tax)
-        return "No tax";
     const category = (await serviceView("categories"))?.find((el) => el.id === category_id)?.tax;
     if (!category)
         return "No category found";
-    const compare = parseInt((category * (price / 100)).toFixed(0));
+    const compare = parseInt(((category * price) / 100).toFixed(0));
     if (compare !== tax)
         return "Invalid tax value";
     return null;

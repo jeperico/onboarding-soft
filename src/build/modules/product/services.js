@@ -9,11 +9,7 @@ import { renderActionButton, renderElement } from "../base/services.js";
 const createProduct = async (event) => {
     event.preventDefault();
     const payload = await ProductCreateSerializer(event.target);
-    if (!payload.name ||
-        !payload.stock ||
-        !payload.price ||
-        !payload.tax ||
-        !payload.category_id)
+    if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
         return;
     const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {

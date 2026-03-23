@@ -1,3 +1,4 @@
+import { FEATURE_FLAG_ENABLE_SERVER } from "../feature-flags.js";
 import renderPage from "./render-page.js";
 import routes, { RouteKey } from "./routes.js";
 
@@ -36,7 +37,9 @@ const renderApp = async () => {
     }
   });
 
-  await renderPage(location.pathname as RouteKey);
+  if (FEATURE_FLAG_ENABLE_SERVER)
+    await renderPage(location.pathname as RouteKey);
+  else renderPage("/");
 };
 
 export default renderApp;

@@ -17,13 +17,7 @@ const createProduct = async (event: SubmitEvent) => {
   const payload = await ProductCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (
-    !payload.name ||
-    !payload.stock ||
-    !payload.price ||
-    !payload.tax ||
-    !payload.category_id
-  )
+  if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
     return;
 
   const errors = await productHandler(

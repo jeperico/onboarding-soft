@@ -1,3 +1,4 @@
+import { FEATURE_FLAG_ENABLE_SERVER } from "../feature-flags.js";
 import renderPage from "./render-page.js";
 import routes from "./routes.js";
 const renderApp = async () => {
@@ -32,6 +33,9 @@ const renderApp = async () => {
             await renderPage(location.pathname);
         }
     });
-    await renderPage(location.pathname);
+    if (FEATURE_FLAG_ENABLE_SERVER)
+        await renderPage(location.pathname);
+    else
+        renderPage("/");
 };
 export default renderApp;

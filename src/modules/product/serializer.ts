@@ -18,7 +18,7 @@ const ProductCreateSerializer = async (
   const percentTax = (await serviceView<ICategory>("categories"))?.find(
     (el) => el.id === parseInt(category.value),
   )?.tax;
-  const tax = ((percentTax || 0) * (price / 100)).toFixed(0);
+  const tax = (((percentTax || 0) * price) / 100).toFixed(0);
 
   const payload: IProduct = {
     id: id,
