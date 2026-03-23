@@ -5,8 +5,8 @@
 ### Prerequisites
 
 - WSL (Windows Subsystem for Linux)
-- Make
-- Node.js (or required runtime)
+- Node.js
+- Make (optional)
 
 ### Installation & Setup
 
@@ -20,20 +20,24 @@ or download as [ZIP](https://github.com/jeperico/onboarding-soft/archive/refs/he
 
 2. **Extract to Downloads folder**
 
-```bash
-unzip onboarding-soft.zip -d ~/Downloads/
-```
-
 3. **Open WSL and navigate to the project**
 
 ```bash
-cd /mnt/c/Users/[YOUR_USER]/Downloads/onboarding-soft
+cd /
+cd /mnt/c/Users/[YOUR_USER]/Downloads/[PROJECT_FOLDER]/[PROJECT_FOLDER_IF_EXIST]
 ```
 
 4. **Run the project**
 
 ```bash
-make run
+make start
+```
+
+or
+
+```bash
+npm i
+npm run dev
 ```
 
 5. **Open in browser**
