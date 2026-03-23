@@ -127,9 +127,7 @@ const fieldsListener = () => {
     const product = (await serviceView<IProduct>("products"))?.find(
       (el) => el.id === parseInt(id),
     );
-    const tax = (await serviceView<ICategory>("categories"))?.find(
-      (el) => el.id === product?.category_id,
-    )?.tax;
+    const tax = product?.tax;
     const chart = (await serviceView<IChart>("chart"))?.find(
       (el) => el.product_id === product?.id,
     );
