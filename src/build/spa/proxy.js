@@ -2,7 +2,7 @@ import renderApp from "./render-app.js";
 import routes from "./routes.js";
 import { FEATURE_FLAG_ENABLE_ROUTES } from "../feature-flags.js";
 const renderContent = async (path, params) => {
-    const app = document.querySelector("main");
+    const app = await document.querySelector("main");
     if (!app)
         return;
     const route = routes[path];
@@ -12,7 +12,9 @@ const renderContent = async (path, params) => {
     }
     const searchParams = new URLSearchParams(params).toString();
     const url = searchParams ? `${path}?${searchParams}` : path;
-    const res = await fetch(route.href);
+    const res = await fetch(route.href, {
+        cache: "no-store",
+    });
     const html = await res.text();
     app.innerHTML = html;
     document.title = route.title;

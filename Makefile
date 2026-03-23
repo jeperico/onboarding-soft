@@ -1,9 +1,9 @@
 start:
 	npm i
-	npx serve .	
+	npm run dev	
 
 run:
-	npx serve .
+	npm run dev
 
 dev:
 	tsc -w

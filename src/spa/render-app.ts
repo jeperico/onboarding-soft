@@ -32,11 +32,11 @@ const renderApp = async () => {
     if (path in routes) {
       renderPage(path as RouteKey);
     } else {
-      await renderPage("/");
+      await renderPage(location.pathname as RouteKey);
     }
   });
 
-  await renderPage("/");
+  await renderPage(location.pathname as RouteKey);
 };
 
 export default renderApp;

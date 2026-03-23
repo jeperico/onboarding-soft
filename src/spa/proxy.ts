@@ -5,7 +5,7 @@ import { FEATURE_FLAG_ENABLE_ROUTES } from "../feature-flags.js";
 type QueryParams = Record<string, string>;
 
 const renderContent = async (path: RouteKey, params?: QueryParams) => {
-  const app = document.querySelector("main");
+  const app = await document.querySelector("main");
   if (!app) return;
 
   const route = routes[path];
@@ -17,7 +17,9 @@ const renderContent = async (path: RouteKey, params?: QueryParams) => {
   const searchParams = new URLSearchParams(params).toString();
   const url = searchParams ? `${path}?${searchParams}` : path;
 
-  const res = await fetch(route.href);
+  const res = await fetch(route.href, {
+    cache: "no-store",
+  });
   const html = await res.text();
 
   app.innerHTML = html;

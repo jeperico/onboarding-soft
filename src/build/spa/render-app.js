@@ -29,9 +29,9 @@ const renderApp = async () => {
             renderPage(path);
         }
         else {
-            await renderPage("/");
+            await renderPage(location.pathname);
         }
     });
-    await renderPage("/");
+    await renderPage(location.pathname);
 };
 export default renderApp;
