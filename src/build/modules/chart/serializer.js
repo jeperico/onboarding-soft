@@ -22,16 +22,18 @@ const ChartViewSerializer = async () => {
         return null;
     const payload = [];
     data.map(async (el) => {
-        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id)?.name;
+        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
         const total = el.price * el.quantity;
-        const tax = total * (el.tax / 100);
+        const tax = product?.tax
+            ? formatCurrency(product.tax * el.quantity)
+            : "No data!";
         payload.push({
             id: el.id.toString(),
             quantity: el.quantity.toString(),
             price: formatCurrency(el.price),
-            tax: formatCurrency(tax),
+            tax: tax,
             total: formatCurrency(total),
-            product: product || "No data!",
+            product: product?.name || "No data!",
         });
     });
     return payload;
