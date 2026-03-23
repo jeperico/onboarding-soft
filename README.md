@@ -40,5 +40,3 @@ make run
    Navigate to `http://localhost:3000` (or the port displayed in your terminal if 3000 is in use)
 
 ---
-
-**Note:** Ensure all dependencies are installed before running `make run`.
