@@ -7,7 +7,6 @@ import { chartHandler } from "./handlers.js";
 import { IChart } from "../../interfaces/chart.js";
 import { renderActionButton, renderElement } from "../base/services.js";
 import { IProduct } from "../../interfaces/product.js";
-import { ICategory } from "../../interfaces/category.js";
 
 const createChart = async (event: SubmitEvent) => {
   // I - Environment
