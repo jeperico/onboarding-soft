@@ -1,21 +1,24 @@
 import { ICategory } from "../../interfaces/category.js";
 import { IProduct } from "../../interfaces/product.js";
+import { serviceView } from "../base/base-services.js";
 import {
   validateText,
   validateNumber,
   validateRelation,
 } from "../base/validators.js";
 
-const validateName = async (value: string): Promise<string | null> => {
-  return validateText<IProduct>(value, "products", "Product");
+const validateName = async (name: string): Promise<string | null> => {
+  return validateText<IProduct>(name, "products", "Product");
 };
 
-const validateCategory = async (value: number): Promise<string | null> => {
-  return validateRelation<ICategory>(value, "categories", "category");
+const validateCategory = async (
+  category_id: number,
+): Promise<string | null> => {
+  return validateRelation<ICategory>(category_id, "categories", "category");
 };
 
-const validateStock = (value: number): string | null => {
-  return validateNumber(value, "Stock", {
+const validateStock = (stock: number): string | null => {
+  return validateNumber(stock, "Stock", {
     min: {
       value: 1,
       label: "1",
@@ -27,8 +30,8 @@ const validateStock = (value: number): string | null => {
   });
 };
 
-const validatePrice = (value: number): string | null => {
-  return validateNumber(value, "Price", {
+const validatePrice = (price: number): string | null => {
+  return validateNumber(price, "Price", {
     min: {
       value: 1,
       label: "R$ 0.01",
@@ -40,4 +43,28 @@ const validatePrice = (value: number): string | null => {
   });
 };
 
-export { validateName, validateStock, validatePrice, validateCategory };
+const validateTax = async (
+  tax: number,
+  price: number,
+  category_id: number,
+): Promise<string | null> => {
+  if (!tax) return "No tax";
+  const category = (await serviceView<ICategory>("categories"))?.find(
+    (el) => el.id === category_id,
+  )?.tax;
+  if (!category) return "No category found";
+
+  const compare = (category * price) / 100;
+
+  if (compare !== tax) return "Invalid tax value";
+
+  return null;
+};
+
+export {
+  validateName,
+  validateStock,
+  validatePrice,
+  validateTax,
+  validateCategory,
+};

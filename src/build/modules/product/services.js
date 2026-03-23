@@ -11,10 +11,14 @@ const createProduct = async (event) => {
     event.preventDefault();
     // II - Inputs
     const payload = await ProductCreateSerializer(event.target);
-    if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+    if (!payload.name ||
+        !payload.stock ||
+        !payload.price ||
+        !payload.tax ||
+        !payload.category_id)
         return;
     // III - Errors handling
-    const errors = await productHandler(payload.name, payload.stock, payload.price, payload.category_id);
+    const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {
         renderErrorMessage(errors);
         return;

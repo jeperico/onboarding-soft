@@ -19,7 +19,13 @@ const createProduct = async (event: SubmitEvent) => {
   const payload = await ProductCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+  if (
+    !payload.name ||
+    !payload.stock ||
+    !payload.price ||
+    !payload.tax ||
+    !payload.category_id
+  )
     return;
 
   // III - Errors handling
@@ -27,6 +33,7 @@ const createProduct = async (event: SubmitEvent) => {
     payload.name,
     payload.stock,
     payload.price,
+    payload.tax,
     payload.category_id,
   );
   if (errors.length > 0) {

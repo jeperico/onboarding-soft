@@ -1,12 +1,13 @@
+import { serviceView } from "../base/base-services.js";
 import { validateText, validateNumber, validateRelation, } from "../base/validators.js";
-const validateName = async (value) => {
-    return validateText(value, "products", "Product");
+const validateName = async (name) => {
+    return validateText(name, "products", "Product");
 };
-const validateCategory = async (value) => {
-    return validateRelation(value, "categories", "category");
+const validateCategory = async (category_id) => {
+    return validateRelation(category_id, "categories", "category");
 };
-const validateStock = (value) => {
-    return validateNumber(value, "Stock", {
+const validateStock = (stock) => {
+    return validateNumber(stock, "Stock", {
         min: {
             value: 1,
             label: "1",
@@ -17,8 +18,8 @@ const validateStock = (value) => {
         },
     });
 };
-const validatePrice = (value) => {
-    return validateNumber(value, "Price", {
+const validatePrice = (price) => {
+    return validateNumber(price, "Price", {
         min: {
             value: 1,
             label: "R$ 0.01",
@@ -29,4 +30,15 @@ const validatePrice = (value) => {
         },
     });
 };
-export { validateName, validateStock, validatePrice, validateCategory };
+const validateTax = async (tax, price, category_id) => {
+    if (!tax)
+        return "No tax";
+    const category = (await serviceView("categories"))?.find((el) => el.id === category_id)?.tax;
+    if (!category)
+        return "No category found";
+    const compare = (category * price) / 100;
+    if (compare !== tax)
+        return "Invalid tax value";
+    return null;
+};
+export { validateName, validateStock, validatePrice, validateTax, validateCategory, };

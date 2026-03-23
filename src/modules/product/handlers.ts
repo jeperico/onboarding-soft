@@ -3,6 +3,7 @@ import {
   validateName,
   validateStock,
   validatePrice,
+  validateTax,
   validateCategory,
 } from "./validators.js";
 
@@ -10,6 +11,7 @@ const productHandler = async (
   name: string,
   stock: number,
   price: number,
+  tax: number,
   category: number,
 ): Promise<ErrorResponse> => {
   const errors = [];
@@ -22,6 +24,9 @@ const productHandler = async (
 
   const priceError = validatePrice(price);
   if (priceError) errors.push({ field: "#price", message: priceError });
+
+  const taxError = await validateTax(tax, price, category);
+  if (taxError) errors.push({ field: "#price", message: taxError });
 
   const categoryError = await validateCategory(category);
   if (categoryError)

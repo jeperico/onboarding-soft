@@ -10,14 +10,22 @@ const ProductCreateSerializer = async (
   const id = await autoIncrement("products");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const stock = form.elements.namedItem("stock") as HTMLInputElement;
-  const price = form.elements.namedItem("price") as HTMLInputElement;
   const category = form.elements.namedItem("category") as HTMLSelectElement;
+
+  const priceField = form.elements.namedItem("price") as HTMLInputElement;
+  const price = parseInt((parseFloat(priceField.value) * 100).toFixed(0));
+
+  const percentTax = (await serviceView<ICategory>("categories"))?.find(
+    (el) => el.id === parseInt(category.value),
+  )?.tax;
+  const tax = ((percentTax || 0) * price) / 100;
 
   const payload: IProduct = {
     id: id,
     name: name.value.replace(/\s+/g, " ").trim(),
     stock: parseInt(stock.value),
-    price: parseInt((parseFloat(price.value) * 100).toFixed(0)),
+    price: price,
+    tax: tax,
     category_id: parseInt(category.value),
     is_active: true,
   };

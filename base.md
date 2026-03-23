@@ -23,7 +23,6 @@
 - name: string
 - stock: int
 - price: int
-- count_transactions: int
 - category_id: int fk(categories)
 - is_active: boolean
 <!-- TODO: Refactor logic to new [COUNT] -->
