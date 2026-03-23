@@ -116,12 +116,7 @@ interface ITransactionRender {
 // -----------------------
 // types/table.ts
 // -----------------------
-export type Table =
-  | "categories"
-  | "products"
-  | "transactions"
-  | "chart"
-  | "orders";
+type Table = "categories" | "products" | "transactions" | "chart" | "orders";
 
 // -----------------------------------------
 // UTILS
@@ -327,9 +322,6 @@ const renderVoidTable = (tableId: string, columns: number) => {
     row.appendChild(document.createElement("td"));
   table.appendChild(row);
 };
-
-// RENDER HEADER
-await renderApp();
 
 // -----------------------------------------
 // MODULES
@@ -1481,3 +1473,8 @@ const validateProductTax = async (
 
   return null;
 };
+
+// RENDER HEADER
+window.addEventListener("DOMContentLoaded", () => {
+  renderApp();
+});

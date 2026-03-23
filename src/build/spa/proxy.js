@@ -26,5 +26,7 @@ const renderContent = async (path, params) => {
         history.pushState({}, "", `?${searchParams}`);
 };
 // RENDER HEADER
-await renderApp();
+window.addEventListener("DOMContentLoaded", () => {
+    renderApp();
+});
 export { renderContent };

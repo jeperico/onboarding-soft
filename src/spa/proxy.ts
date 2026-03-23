@@ -30,6 +30,8 @@ const renderContent = async (path: RouteKey, params?: QueryParams) => {
 };
 
 // RENDER HEADER
-await renderApp();
+window.addEventListener("DOMContentLoaded", () => {
+  renderApp();
+});
 
 export { renderContent };

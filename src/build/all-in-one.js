@@ -1,3 +1,4 @@
+"use strict";
 // -----------------------------------------
 // FEATURE FLAGS
 // -----------------------------------------
@@ -180,8 +181,6 @@ const renderVoidTable = (tableId, columns) => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
-// RENDER HEADER
-await renderApp();
 // -----------------------------------------
 // MODULES
 // -----------------------------------------
@@ -1005,4 +1004,7 @@ const validateProductTax = async (tax, price, category_id) => {
         return "Invalid tax value";
     return null;
 };
-export {};
+// RENDER HEADER
+window.addEventListener("DOMContentLoaded", () => {
+    renderApp();
+});
