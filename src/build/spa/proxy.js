@@ -1,6 +1,6 @@
 import renderApp from "./render-app.js";
 import routes from "./routes.js";
-import { FEATURE_FLAG_ENABLE_ROUTES } from "../feature-flags.js";
+import { FEATURE_FLAG_ENABLE_ROUTES, FEATURE_FLAG_ENABLE_SERVER, } from "../feature-flags.js";
 const renderContent = async (path, params) => {
     const app = await document.querySelector("main");
     if (!app)
@@ -12,15 +12,21 @@ const renderContent = async (path, params) => {
     }
     const searchParams = new URLSearchParams(params).toString();
     const url = searchParams ? `${path}?${searchParams}` : path;
-    const res = await fetch(route.href, {
-        cache: "no-store",
-    });
-    const html = await res.text();
+    let html = "";
+    if (FEATURE_FLAG_ENABLE_SERVER) {
+        const res = await fetch(route.href, {
+            cache: "no-store",
+        });
+        html = await res.text();
+    }
+    else {
+        html = route.content;
+    }
     app.innerHTML = html;
     document.title = route.title;
     if (FEATURE_FLAG_ENABLE_ROUTES)
         history.pushState({}, "", url);
-    else if (path !== "/details")
+    else if (FEATURE_FLAG_ENABLE_SERVER && path !== "/details")
         history.pushState({}, "", "/");
     else if (searchParams)
         history.pushState({}, "", `?${searchParams}`);
