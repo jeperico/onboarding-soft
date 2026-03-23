@@ -54,7 +54,7 @@ const validateProductTax = async (
   )?.tax;
   if (!category) return "No category found";
 
-  const compare = (category * price) / 100;
+  const compare = parseInt((category * (price / 100)).toFixed(0));
 
   if (compare !== tax) return "Invalid tax value";
 

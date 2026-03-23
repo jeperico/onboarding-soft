@@ -1522,14 +1522,14 @@ const ProductCreateSerializer = async (
   const percentTax = (await serviceView<ICategory>("categories"))?.find(
     (el) => el.id === parseInt(category.value),
   )?.tax;
-  const tax = ((percentTax || 0) * price) / 100;
+  const tax = ((percentTax || 0) * (price / 100)).toFixed(0);
 
   const payload: IProduct = {
     id: id,
     name: name.value.replace(/\s+/g, " ").trim(),
     stock: parseInt(stock.value),
     price: price,
-    tax: tax,
+    tax: parseInt(tax),
     category_id: parseInt(category.value),
     is_active: true,
   };
@@ -1691,7 +1691,7 @@ const validateProductTax = async (
   )?.tax;
   if (!category) return "No category found";
 
-  const compare = (category * price) / 100;
+  const compare = parseInt((category * (price / 100)).toFixed(0));
 
   if (compare !== tax) return "Invalid tax value";
 
