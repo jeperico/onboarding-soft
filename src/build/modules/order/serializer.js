@@ -66,14 +66,15 @@ const TransactionViewSerializer = async () => {
     const payload = [];
     await data.map(async (el) => {
         const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
-        const category = (await serviceView("categories"))?.find((e) => e.id === product?.category_id);
+        const category = (await serviceView("categories"))?.find((e) => e.id === product?.category_id)?.name;
+        const tax = (product?.tax || 0) * el.quantity;
         const total = el.price * el.quantity;
         payload.push({
             id: el.id.toString(),
             product: product?.name || "No data!",
-            category: category?.name || "No data!",
+            category: category || "No data!",
             quantity: el.quantity.toString(),
-            tax: category?.tax.toString().concat("%") || "No data!",
+            tax: formatCurrency(tax),
             total: formatCurrency(total),
         });
     });

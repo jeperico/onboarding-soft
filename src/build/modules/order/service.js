@@ -46,7 +46,6 @@ const renderOrders = async () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
-// TODO: Padronize tax atomic values
 const renderOrderDetails = async () => {
     const taxField = document.querySelector("#render-tax");
     const totalField = document.querySelector("#render-total");
