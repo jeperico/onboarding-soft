@@ -421,6 +421,9 @@ const serviceView = async (endpoint) => {
     return JSON.parse(response);
 };
 const serviceDelete = async (endpoint, id) => {
+    const confirm = window.confirm("Are you sure you want to delete this item?");
+    if (!confirm)
+        return;
     const response = await serviceView(endpoint);
     const payload = await response?.map((el) => {
         if (el.id === id)
@@ -432,6 +435,9 @@ const serviceDelete = async (endpoint, id) => {
     // window.location.reload();
 };
 const serviceRemove = async (endpoint, id) => {
+    const confirm = window.confirm("Are you sure you want to delete this item?");
+    if (!confirm)
+        return;
     const response = await serviceView(endpoint);
     if (!response)
         return null;
@@ -466,7 +472,6 @@ const tableEvents = async (table, variant, render, page) => {
                         renderPage(page);
                     break;
                 case "view":
-                    // TODO: HERE TO PUT ID
                     renderPage("/details", id);
                     break;
             }

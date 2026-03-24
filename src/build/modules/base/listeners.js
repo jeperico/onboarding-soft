@@ -25,7 +25,6 @@ const tableEvents = async (table, variant, render, page) => {
                         renderPage(page);
                     break;
                 case "view":
-                    // TODO: HERE TO PUT ID
                     renderPage("/details", id);
                     break;
             }

@@ -18,7 +18,6 @@ const createCategory = async (event: SubmitEvent) => {
     event.target as HTMLFormElement,
   );
   if (!payload.name) return;
-  console.log(payload.tax);
 
   const errors = await categoryHandler(payload.name, payload.tax);
   if (errors.length > 0) {

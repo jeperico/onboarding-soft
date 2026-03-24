@@ -9,6 +9,9 @@ const serviceView = async <IResponseData>(
 };
 
 const serviceDelete = async (endpoint: Table, id: number) => {
+  const confirm = window.confirm("Are you sure you want to delete this item?");
+  if (!confirm) return;
+
   const response = await serviceView<{ id: number; is_active: boolean }>(
     endpoint,
   );
@@ -22,6 +25,9 @@ const serviceDelete = async (endpoint: Table, id: number) => {
 };
 
 const serviceRemove = async (endpoint: Table, id: number) => {
+  const confirm = window.confirm("Are you sure you want to delete this item?");
+  if (!confirm) return;
+
   const response = await serviceView<{ id: number }>(endpoint);
   if (!response) return null;
 
