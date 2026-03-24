@@ -3,6 +3,9 @@ const autoIncrement = async (table) => {
     const data = await serviceView(table);
     if (!data || data.length === 0)
         return 1;
+    const hasIsActive = data.some((item) => "is_active" in item);
+    if (!hasIsActive)
+        return data.length + 1;
     const lastActive = data
         .filter((item) => item.is_active)
         .sort((a, b) => b.id - a.id)[0];
