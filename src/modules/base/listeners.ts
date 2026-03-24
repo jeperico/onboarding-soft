@@ -76,4 +76,39 @@ const tableEvents = async <
   });
 };
 
-export { formsEvents, tableEvents };
+const inputMutations = () => {
+  const inputs = document.querySelectorAll<HTMLInputElement>("input");
+
+  inputs.forEach((input) => {
+    const originalType = input.type;
+
+    const config = {
+      attributes: true,
+      childList: false,
+      subtree: false,
+    };
+
+    const callback: MutationCallback = (mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "type"
+        ) {
+          observer.disconnect();
+
+          const target = mutation.target as HTMLInputElement;
+          target.type = originalType;
+          target.value = "";
+          console.log(target);
+
+          observer.observe(target, config);
+        }
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(input, config);
+  });
+};
+
+export { formsEvents, tableEvents, inputMutations };

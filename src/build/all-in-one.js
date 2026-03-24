@@ -494,6 +494,32 @@ const tableEvents = async (table, variant, render, page) => {
         });
     });
 };
+const inputMutations = () => {
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+        const originalType = input.type;
+        const config = {
+            attributes: true,
+            childList: false,
+            subtree: false,
+        };
+        const callback = (mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === "attributes" &&
+                    mutation.attributeName === "type") {
+                    observer.disconnect();
+                    const target = mutation.target;
+                    target.type = originalType;
+                    target.value = "";
+                    console.log(target);
+                    observer.observe(target, config);
+                }
+            }
+        };
+        const observer = new MutationObserver(callback);
+        observer.observe(input, config);
+    });
+};
 // -----------------------
 // modules/base/services.ts
 // -----------------------
@@ -713,6 +739,7 @@ const loadCategory = async () => {
     await renderContent("/categories");
     await tableEvents("categories", "delete", renderCategory, "/categories");
     await formsEvents(createCategory);
+    inputMutations();
     formatTaxInput();
 };
 // -----------------------
@@ -902,6 +929,7 @@ const loadChart = async () => {
     await tableEvents("chart", "remove", renderChart, "/");
     await formsEvents(createChart, "#home-form");
     await renderSelect("products", "#product", "name", "id");
+    inputMutations();
     fieldsListener();
 };
 // -----------------------
@@ -1247,6 +1275,7 @@ const loadProducts = async () => {
     await tableEvents("products", "delete", renderProducts, "/products");
     await formsEvents(createProduct);
     await renderSelect("categories", "#category", "name", "id");
+    inputMutations();
 };
 // -----------------------
 // modules/product/validators.ts

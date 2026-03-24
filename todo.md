@@ -9,12 +9,7 @@
 
 ### 001 - JS REVIEWS
 
-> /category
-
-- inputs types mustn't be changeds
-
 > /product
 
-- inputs types mustn't be changeds
 - when (user finish chart)
   - product stock must be reduced
