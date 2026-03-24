@@ -568,34 +568,43 @@ const serviceView = async <IResponseData>(
   return JSON.parse(response);
 };
 
-const serviceDelete = async (endpoint: Table, id: number) => {
+const serviceDelete = async <
+  IService extends { id: number; is_active?: boolean },
+>(
+  endpoint: Table,
+  id: number,
+  beforeDelete?: (id: number) => Promise<boolean>,
+) => {
   const confirm = window.confirm("Are you sure you want to delete this item?");
   if (!confirm) return;
 
-  const response = await serviceView<{ id: number; is_active: boolean }>(
-    endpoint,
-  );
-  const payload = await response?.map((el) => {
-    if (el.id === id) el.is_active = false;
-  });
-  if (!payload) return null;
+  if (beforeDelete) {
+    const canDelete = await beforeDelete(id);
+    if (!canDelete) return;
+  }
 
-  localStorage.setItem(endpoint, JSON.stringify(response));
-  // window.location.reload();
-};
+  const data = await serviceView<IService>(endpoint);
+  if (!data) return null;
 
-const serviceRemove = async (endpoint: Table, id: number) => {
-  const confirm = window.confirm("Are you sure you want to delete this item?");
-  if (!confirm) return;
+  const hasIsActive = data.some((item) => "is_active" in item);
+  let updatedData = [];
 
-  const response = await serviceView<{ id: number }>(endpoint);
-  if (!response) return null;
+  if (hasIsActive) {
+    updatedData = data.map((item) =>
+      item.id === id ? { ...item, is_active: false } : item,
+    );
+  } else {
+    updatedData = data.filter((item) => item.id !== id);
+  }
 
-  const data = response.filter((el) => el.id !== id);
-  if (data.length !== response.length - 1) return null;
+  const stillExists = updatedData.find((item) => item.id === id);
 
-  localStorage.setItem(endpoint, JSON.stringify(data));
-  // window.location.reload();
+  if (!hasIsActive && stillExists) {
+    alert("Error removing item.");
+    return;
+  }
+
+  localStorage.setItem(endpoint, JSON.stringify(updatedData));
 };
 
 // -----------------------
@@ -621,7 +630,9 @@ const formsEvents = async (
   element.addEventListener("submit", handler);
 };
 
-const tableEvents = async (
+const tableEvents = async <
+  IValidate extends { id: number; is_active?: boolean },
+>(
   table: EventListenerOptions["table"],
   variant: EventListenerOptions["variant"],
   render: EventListenerOptions["render"],
@@ -634,18 +645,20 @@ const tableEvents = async (
   );
 
   buttons.forEach((el) => {
-    el.addEventListener("click", () => {
+    el.addEventListener("click", async () => {
       const id = Number(el.id);
+
+      let validator: ((id: number) => Promise<boolean>) | undefined;
+      if (table === "categories") validator = validateCategoryDelete;
+      if (table === "products") validator = validateProductDelete;
 
       switch (variant) {
         case "delete":
-          serviceDelete(table, id);
-          if (page) renderPage(page);
-          break;
         case "remove":
-          serviceRemove(table, id);
+          await serviceDelete<IValidate>(table, id, validator);
           if (page) renderPage(page);
           break;
+
         case "view":
           renderPage("/details", id);
           break;
@@ -808,6 +821,21 @@ const categoryHandler = async (
   return errors;
 };
 
+const validateCategoryDelete = async (categoryId: number) => {
+  const products = await serviceView<IProduct>("products");
+
+  const hasProducts = products?.some(
+    (p) => p.category_id === categoryId && p.is_active !== false,
+  );
+
+  if (hasProducts) {
+    alert("Cannot delete category because it has associated products.");
+    return false;
+  }
+
+  return true;
+};
+
 // -----------------------
 // modules/category/serializers.ts
 // -----------------------
@@ -947,7 +975,12 @@ const formatTaxInput = () => {
 
 const loadCategory = async () => {
   await renderContent("/categories");
-  await tableEvents("categories", "delete", renderCategory, "/categories");
+  await tableEvents<ICategory>(
+    "categories",
+    "delete",
+    renderCategory,
+    "/categories",
+  );
   await formsEvents(createCategory);
   formatTaxInput();
 };
@@ -1199,9 +1232,8 @@ const fieldsListener = () => {
 
 const loadChart = async () => {
   await renderContent("/");
-  await tableEvents("chart", "remove", renderChart, "/");
+  await tableEvents<IChart>("chart", "remove", renderChart, "/");
   await formsEvents(createChart, "#home-form");
-  // TODO: Remove products without stock from selection
   await renderSelect<IProduct>("products", "#product", "name", "id");
   fieldsListener();
 };
@@ -1680,7 +1712,12 @@ const renderProducts = async () => {
 
 const loadProducts = async () => {
   await renderContent("/products");
-  await tableEvents("products", "delete", renderProducts, "/products");
+  await tableEvents<IProduct>(
+    "products",
+    "delete",
+    renderProducts,
+    "/products",
+  );
   await formsEvents(createProduct);
   await renderSelect<ICategory>("categories", "#category", "name", "id");
 };
@@ -1740,6 +1777,19 @@ const validateProductTax = async (
   if (compare !== tax) return "Invalid tax value";
 
   return null;
+};
+
+const validateProductDelete = async (productId: number) => {
+  const charts = await serviceView<IChart>("chart");
+
+  const hasChart = charts?.some((c) => c.product_id === productId);
+
+  if (hasChart) {
+    alert("Cannot delete product because it is used in chart.");
+    return false;
+  }
+
+  return true;
 };
 
 // RENDER HEADER

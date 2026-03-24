@@ -4,31 +4,31 @@ const serviceView = async (endpoint) => {
         return null;
     return JSON.parse(response);
 };
-const serviceDelete = async (endpoint, id) => {
+const serviceDelete = async (endpoint, id, beforeDelete) => {
     const confirm = window.confirm("Are you sure you want to delete this item?");
     if (!confirm)
         return;
-    const response = await serviceView(endpoint);
-    const payload = await response?.map((el) => {
-        if (el.id === id)
-            el.is_active = false;
-    });
-    if (!payload)
+    if (beforeDelete) {
+        const canDelete = await beforeDelete(id);
+        if (!canDelete)
+            return;
+    }
+    const data = await serviceView(endpoint);
+    if (!data)
         return null;
-    localStorage.setItem(endpoint, JSON.stringify(response));
-    // window.location.reload();
-};
-const serviceRemove = async (endpoint, id) => {
-    const confirm = window.confirm("Are you sure you want to delete this item?");
-    if (!confirm)
+    const hasIsActive = data.some((item) => "is_active" in item);
+    let updatedData = [];
+    if (hasIsActive) {
+        updatedData = data.map((item) => item.id === id ? { ...item, is_active: false } : item);
+    }
+    else {
+        updatedData = data.filter((item) => item.id !== id);
+    }
+    const stillExists = updatedData.find((item) => item.id === id);
+    if (!hasIsActive && stillExists) {
+        alert("Error removing item.");
         return;
-    const response = await serviceView(endpoint);
-    if (!response)
-        return null;
-    const data = response.filter((el) => el.id !== id);
-    if (data.length !== response.length - 1)
-        return null;
-    localStorage.setItem(endpoint, JSON.stringify(data));
-    // window.location.reload();
+    }
+    localStorage.setItem(endpoint, JSON.stringify(updatedData));
 };
-export { serviceView, serviceDelete, serviceRemove };
+export { serviceView, serviceDelete };

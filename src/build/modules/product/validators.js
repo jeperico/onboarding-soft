@@ -39,4 +39,13 @@ const validateProductTax = async (tax, price, category_id) => {
         return "Invalid tax value";
     return null;
 };
-export { validateProductName, validateProductStock, validateProductPrice, validateProductTax, validateProductCategory, };
+const validateProductDelete = async (productId) => {
+    const charts = await serviceView("chart");
+    const hasChart = charts?.some((c) => c.product_id === productId);
+    if (hasChart) {
+        alert("Cannot delete product because it is used in chart.");
+        return false;
+    }
+    return true;
+};
+export { validateProductName, validateProductStock, validateProductPrice, validateProductTax, validateProductCategory, validateProductDelete, };

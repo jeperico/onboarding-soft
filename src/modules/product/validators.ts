@@ -60,10 +60,24 @@ const validateProductTax = async (
   return null;
 };
 
+const validateProductDelete = async (productId: number) => {
+  const charts = await serviceView<IChart>("chart");
+
+  const hasChart = charts?.some((c) => c.product_id === productId);
+
+  if (hasChart) {
+    alert("Cannot delete product because it is used in chart.");
+    return false;
+  }
+
+  return true;
+};
+
 export {
   validateProductName,
   validateProductStock,
   validateProductPrice,
   validateProductTax,
   validateProductCategory,
+  validateProductDelete,
 };

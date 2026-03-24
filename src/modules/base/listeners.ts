@@ -1,7 +1,9 @@
 import renderPage from "../../spa/render-page.js";
 import { RouteKey } from "../../spa/routes.js";
 import { Table } from "../../types/table.js";
-import { serviceDelete, serviceRemove } from "./base-services.js";
+import { validateCategoryDelete } from "../category/validators.js";
+import { validateProductDelete } from "../product/validators.js";
+import { serviceDelete } from "./base-services.js";
 
 interface EventListenerOptions {
   table: Table;
@@ -22,7 +24,9 @@ const formsEvents = async (
   element.addEventListener("submit", handler);
 };
 
-const tableEvents = async (
+const tableEvents = async <
+  IValidate extends { id: number; is_active?: boolean },
+>(
   table: EventListenerOptions["table"],
   variant: EventListenerOptions["variant"],
   render: EventListenerOptions["render"],
@@ -35,18 +39,20 @@ const tableEvents = async (
   );
 
   buttons.forEach((el) => {
-    el.addEventListener("click", () => {
+    el.addEventListener("click", async () => {
       const id = Number(el.id);
+
+      let validator: ((id: number) => Promise<boolean>) | undefined;
+      if (table === "categories") validator = validateCategoryDelete;
+      if (table === "products") validator = validateProductDelete;
 
       switch (variant) {
         case "delete":
-          serviceDelete(table, id);
-          if (page) renderPage(page);
-          break;
         case "remove":
-          serviceRemove(table, id);
+          await serviceDelete<IValidate>(table, id, validator);
           if (page) renderPage(page);
           break;
+
         case "view":
           renderPage("/details", id);
           break;

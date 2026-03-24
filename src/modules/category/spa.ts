@@ -4,7 +4,12 @@ import { createCategory, formatTaxInput, renderCategory } from "./services.js";
 
 const loadCategory = async () => {
   await renderContent("/categories");
-  await tableEvents("categories", "delete", renderCategory, "/categories");
+  await tableEvents<ICategory>(
+    "categories",
+    "delete",
+    renderCategory,
+    "/categories",
+  );
   await formsEvents(createCategory);
   formatTaxInput();
 };
