@@ -129,10 +129,13 @@ type Table = "categories" | "products" | "transactions" | "chart" | "orders";
 const autoIncrement = async (table: Table) => {
   const data = await serviceView<{
     id: number;
-    is_active: boolean;
+    is_active?: boolean;
   }>(table);
 
   if (!data || data.length === 0) return 1;
+  const hasIsActive = data.some((item) => "is_active" in item);
+
+  if (!hasIsActive) return data.length + 1;
 
   const lastActive = data
     .filter((item) => item.is_active)
