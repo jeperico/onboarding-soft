@@ -17,7 +17,8 @@
     "src/spa",
     "src/types",
     "src/utils",
-    "src/feature-flags.ts"
+    "src/feature-flags.ts",
+    "src/all-in-one.ts"
   ],
   "exclude": ["node_modules"]
 }

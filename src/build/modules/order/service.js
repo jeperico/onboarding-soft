@@ -6,18 +6,15 @@ import { serviceView } from "../base/base-services.js";
 import { renderActionButton, renderElement } from "../base/services.js";
 import { OrderCreateSerializer, OrderViewSerializer, TransactionCreateSerializer, TransactionViewSerializer, } from "./serializer.js";
 const finishPurchase = async (event) => {
-    // I - Environment
     event.preventDefault();
     const order = await OrderCreateSerializer();
     if (!order)
         return;
     const currentOrders = await serviceView("orders");
     localStorage.setItem("orders", JSON.stringify(currentOrders ? [...currentOrders, order] : [order]));
-    // II - Inputs
     const transactions = await TransactionCreateSerializer(order.id);
     if (!transactions)
         return;
-    // III - Output
     const currentTransactions = await serviceView("transactions");
     localStorage.setItem("transactions", JSON.stringify(currentTransactions
         ? [...currentTransactions, ...transactions]
@@ -63,16 +60,13 @@ const renderOrderDetails = async () => {
     totalField.innerText = formatCurrency(total);
 };
 const renderTransactions = async () => {
-    // I - Environment
     const COLUMNS_COUNT = 6;
-    // II - Inputs
     const data = await TransactionViewSerializer();
     const table = document.querySelector("#tbody-details");
     if (!data || !table) {
         renderVoidTable("#tbody-details", COLUMNS_COUNT);
         return;
     }
-    // III - Rendering
     data.forEach((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));

@@ -11,7 +11,6 @@ const autoIncrement = async (table: Table) => {
 
   if (!lastItem || typeof lastItem.id !== "number") {
     return 1;
-    throw new Error(`[CODEBASE FAIL] Invalid id on ${table} table`);
   }
 
   return lastItem.id + 1;

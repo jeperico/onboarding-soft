@@ -1,5 +1,29 @@
 {
   "dependencies": {
+    "express": "^5.2.1",
     "typescript": "^5.9.3"
+  },
+  "name": "onboarding-soft",
+  "version": "1.0.0",
+  "description": "- WSL (Windows Subsystem for Linux) - Make - Node.js (or required runtime)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeperico/onboarding-soft.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jeperico/onboarding-soft/issues"
+  },
+  "homepage": "https://github.com/jeperico/onboarding-soft#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
