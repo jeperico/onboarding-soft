@@ -11,7 +11,6 @@
 
 > /category
 
-- category delete must be confirmed via confirm alert
 - inputs types mustn't be changeds
 - category already with products mustn't be deleted
 
@@ -24,7 +23,6 @@
 
 > /chart
 
-- product delete must be confirmed via confirm alert
 - chart finish must finish chart
 - when (user try to exced the product stock)
   - alert no stock available
