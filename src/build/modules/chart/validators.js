@@ -8,7 +8,7 @@ const validateChartQuantity = async (quantity, product_id) => {
     const max = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!max)
         return `This product doesn't exists`;
-    return validateNumber(quantity, "Quantity", {
+    const error = await validateNumber(quantity, "Quantity", {
         min: {
             value: 1,
             label: "1",
@@ -18,6 +18,9 @@ const validateChartQuantity = async (quantity, product_id) => {
             label: max.stock.toString(),
         },
     });
+    if (error !== null)
+        alert(error);
+    return error;
 };
 const validateChartPrice = async (price, product_id) => {
     const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);

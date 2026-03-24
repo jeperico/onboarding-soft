@@ -24,5 +24,3 @@
 > /chart
 
 - chart finish must finish chart
-- when (user try to exced the product stock)
-  - alert no stock available

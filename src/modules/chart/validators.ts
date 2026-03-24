@@ -19,7 +19,7 @@ const validateChartQuantity = async (
   );
   if (!max) return `This product doesn't exists`;
 
-  return validateNumber(quantity, "Quantity", {
+  const error = await validateNumber(quantity, "Quantity", {
     min: {
       value: 1,
       label: "1",
@@ -29,6 +29,9 @@ const validateChartQuantity = async (
       label: max.stock.toString(),
     },
   });
+  if (error !== null) alert(error);
+
+  return error;
 };
 
 const validateChartPrice = async (
