@@ -1,12 +1,12 @@
 import { validateNumber, validateText } from "../base/validators.js";
-const validateCategoryName = async (value) => {
-    return validateText(value, "categories", "Category");
+const validateCategoryName = async (name) => {
+    return validateText(name, "categories", "Category");
 };
-const validateCategoryTax = (value) => {
-    return validateNumber(value, "Tax", {
+const validateCategoryTax = (tax) => {
+    return validateNumber(tax, "Tax", {
         min: {
-            value: 0.01,
-            label: "0.01%",
+            value: 0,
+            label: "0%",
         },
         max: {
             value: 100,

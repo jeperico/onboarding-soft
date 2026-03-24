@@ -11,8 +11,6 @@
 
 > /category
 
-- tax must be between 0 and 100 (0 accepted)
-- tax must be fixed in 2 decimal plates
 - category delete must be confirmed via confirm alert
 - when (user delete the last category)
   - code must return to the last

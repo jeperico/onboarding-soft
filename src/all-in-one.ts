@@ -354,15 +354,7 @@ const routes = {
           />
           <div class="percent-input">
             <p>%</p>
-            <input
-              type="number"
-              min="1"
-              max="100"
-              id="tax"
-              name="tax"
-              required
-              placeholder="Tax"
-            />
+            <input type="text" id="tax" name="tax" required placeholder="Tax" />
           </div>
         </div>
 
@@ -853,7 +845,7 @@ const createCategory = async (event: SubmitEvent) => {
   const payload = await CategoryCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name || !payload.tax) return;
+  if (!payload.name) return;
 
   const errors = await categoryHandler(payload.name, payload.tax);
   if (errors.length > 0) {
@@ -896,6 +888,47 @@ const renderCategory = async () => {
   table.appendChild(row);
 };
 
+const formatTaxInput = () => {
+  const taxInput = document.querySelector<HTMLInputElement>("#tax");
+  if (!taxInput) return;
+
+  const regexTaxInput = (e: Event): void => {
+    if (!e.target || !(e.target instanceof HTMLInputElement)) return;
+    let value = (e.target as HTMLInputElement).value;
+
+    value = value.replace(/[^0-9.,]/g, "");
+    value = value.replace(",", ".");
+    let [integer, decimal] = value.split(".");
+
+    if (value.split(".").length > 2) {
+      value = integer + "." + value.split(".").slice(1).join("");
+      [integer, decimal] = value.split(".");
+    }
+
+    if (decimal !== undefined) {
+      decimal = decimal.slice(0, 2);
+      value = `${integer}.${decimal}`;
+    }
+
+    if (value.endsWith(".")) {
+      e.target.value = value;
+      return;
+    }
+
+    let number: number = parseFloat(value);
+    if (!isNaN(number)) {
+      if (number > 100) number = 100;
+      if (number < 0) number = 0;
+
+      value = number.toString();
+    }
+
+    e.target.value = value;
+  };
+
+  taxInput.addEventListener("input", regexTaxInput);
+};
+
 // -----------------------
 // modules/category/spa.ts
 // -----------------------
@@ -904,21 +937,22 @@ const loadCategory = async () => {
   await renderContent("/categories");
   await tableEvents("categories", "delete", renderCategory, "/categories");
   await formsEvents(createCategory);
+  formatTaxInput();
 };
 
 // -----------------------
 // modules/base/validators.ts
 // -----------------------
 
-const validateCategoryName = async (value: string): Promise<string | null> => {
-  return validateText<ICategory>(value, "categories", "Category");
+const validateCategoryName = async (name: string): Promise<string | null> => {
+  return validateText<ICategory>(name, "categories", "Category");
 };
 
-const validateCategoryTax = (value: number): string | null => {
-  return validateNumber(value, "Tax", {
+const validateCategoryTax = (tax: number): string | null => {
+  return validateNumber(tax, "Tax", {
     min: {
-      value: 0.01,
-      label: "0.01%",
+      value: 0,
+      label: "0%",
     },
     max: {
       value: 100,
