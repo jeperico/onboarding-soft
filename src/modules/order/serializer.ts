@@ -18,9 +18,20 @@ const OrderCreateSerializer = async (): Promise<IOrder | null> => {
   let total_tax = 0;
   let total_price = 0;
 
-  data.map((el) => {
+  data.map(async (el) => {
     total_tax += el.tax * el.quantity;
     total_price += el.price * el.quantity;
+
+    const products = await serviceView<IProduct>("products");
+    if (!products) return;
+    products?.map((e) => {
+      if (e.id === el.product_id) e.stock -= el.quantity;
+    });
+
+    const data = products.filter((e) => e.stock > 0);
+    if (!data) return;
+
+    localStorage.setItem("products", JSON.stringify(data));
   });
 
   const payload: IOrder = {

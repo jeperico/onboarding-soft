@@ -8,8 +8,3 @@
 - lazy validate
 
 ### 001 - JS REVIEWS
-
-> /product
-
-- when (user finish chart)
-  - product stock must be reduced
