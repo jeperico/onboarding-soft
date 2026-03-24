@@ -12,7 +12,7 @@ const validateText = async <
   if (!regex.test(value))
     return `${name} name must start with a letter and contain only letters and numbers.`;
 
-  if (value.length > 100) return `${name} name cannot exceed 100 characters.`;
+  if (value.length > 28) return `${name} name cannot exceed 28 characters.`;
   if (value.length < 3)
     return `${name} name must contain at least 2 characters.`;
 
