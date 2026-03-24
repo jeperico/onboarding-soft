@@ -276,7 +276,9 @@ const routes = {
           </div>
         </div>
         <div>
-          <button class="button-secondary">Cancel</button>
+          <button type="button" class="button-secondary" id="no-submit">
+            Cancel
+          </button>
           <button type="submit" class="button-primary">Finish</button>
         </div>
       </form>
@@ -628,6 +630,21 @@ const formsEvents = async (
   if (!element) return;
 
   element.addEventListener("submit", handler);
+
+  const cancelButton = element.querySelector<HTMLButtonElement>("#no-submit");
+  if (!cancelButton) return;
+
+  cancelButton.addEventListener("click", (e) => {
+    const confirmCancel = window.confirm("Are you sure you want to cancel?");
+    if (!confirmCancel) return;
+
+    e.preventDefault();
+    const form = document.querySelector<HTMLFormElement>("form");
+    form?.reset();
+
+    localStorage.removeItem("chart");
+    renderPage("/");
+  });
 };
 
 const tableEvents = async <

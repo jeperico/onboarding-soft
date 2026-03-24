@@ -7,6 +7,19 @@ const formsEvents = async (handler, form) => {
     if (!element)
         return;
     element.addEventListener("submit", handler);
+    const cancelButton = element.querySelector("#no-submit");
+    if (!cancelButton)
+        return;
+    cancelButton.addEventListener("click", (e) => {
+        const confirmCancel = window.confirm("Are you sure you want to cancel?");
+        if (!confirmCancel)
+            return;
+        e.preventDefault();
+        const form = document.querySelector("form");
+        form?.reset();
+        localStorage.removeItem("chart");
+        renderPage("/");
+    });
 };
 const tableEvents = async (table, variant, render, page) => {
     if (render)

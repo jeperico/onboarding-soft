@@ -18,7 +18,3 @@
 - inputs types mustn't be changeds
 - when (user finish chart)
   - product stock must be reduced
-
-> /chart
-
-- chart finish must finish chart
