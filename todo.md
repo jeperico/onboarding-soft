@@ -12,16 +12,12 @@
 > /category
 
 - category delete must be confirmed via confirm alert
-- when (user delete the last category)
-  - code must return to the last
 - characters limit must to be something betweeen 25 and 30
 - inputs types mustn't be changeds
 - category already with products mustn't be deleted
 
 > /product
 
-- when (user delete the last category)
-  - code must return to the last
 - inputs types mustn't be changeds
 - characters limit must to be something betweeen 25 and 30
 - product already in the chart mustn`t be deleted
