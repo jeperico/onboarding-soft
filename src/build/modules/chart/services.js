@@ -12,7 +12,8 @@ const createChart = async (event) => {
     if (!payload.product_id ||
         !payload.quantity ||
         !payload.price ||
-        !payload.tax)
+        payload.tax === null ||
+        payload.tax === undefined)
         return;
     const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
     if (errors.length > 0) {
@@ -80,15 +81,15 @@ const fieldsListener = () => {
         const id = e.target.value;
         const product = (await serviceView("products"))?.find((el) => el.id === parseInt(id));
         const tax = product?.tax;
-        const chart = (await serviceView("chart"))?.find((el) => el.product_id === product?.id);
         const taxField = document.querySelector("#tax");
-        if (!taxField || !tax)
+        if (!taxField || tax === null || tax === undefined)
             return;
         taxField.value = (tax / 100).toFixed(2);
         const priceField = document.querySelector("#price");
         if (!priceField || !product?.price)
             return;
         priceField.value = (product.price / 100).toFixed(2);
+        const chart = (await serviceView("chart"))?.find((el) => el.product_id === product?.id);
         const quantityField = document.querySelector("#quantity");
         if (!quantityField || !chart)
             return;

@@ -17,7 +17,8 @@ const createChart = async (event: SubmitEvent) => {
     !payload.product_id ||
     !payload.quantity ||
     !payload.price ||
-    !payload.tax
+    payload.tax === null ||
+    payload.tax === undefined
   )
     return;
 
@@ -117,17 +118,18 @@ const fieldsListener = () => {
       (el) => el.id === parseInt(id),
     );
     const tax = product?.tax;
-    const chart = (await serviceView<IChart>("chart"))?.find(
-      (el) => el.product_id === product?.id,
-    );
 
     const taxField = document.querySelector<HTMLInputElement>("#tax");
-    if (!taxField || !tax) return;
+    if (!taxField || tax === null || tax === undefined) return;
     taxField.value = (tax / 100).toFixed(2);
 
     const priceField = document.querySelector<HTMLInputElement>("#price");
     if (!priceField || !product?.price) return;
     priceField.value = (product.price / 100).toFixed(2);
+
+    const chart = (await serviceView<IChart>("chart"))?.find(
+      (el) => el.product_id === product?.id,
+    );
 
     const quantityField = document.querySelector<HTMLInputElement>("#quantity");
     if (!quantityField || !chart) return;

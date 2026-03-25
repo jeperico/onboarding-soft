@@ -34,9 +34,10 @@ const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {
       (e) => e.id === el.product_id,
     );
     const total = el.price * el.quantity;
-    const tax = product?.tax
-      ? formatCurrency(product.tax * el.quantity)
-      : "No data!";
+    const tax =
+      product?.tax === null || product?.tax === undefined
+        ? "No data!"
+        : formatCurrency(product.tax * el.quantity);
 
     payload.push({
       id: el.id.toString(),

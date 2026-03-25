@@ -24,9 +24,9 @@ const ChartViewSerializer = async () => {
     data.map(async (el) => {
         const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
         const total = el.price * el.quantity;
-        const tax = product?.tax
-            ? formatCurrency(product.tax * el.quantity)
-            : "No data!";
+        const tax = product?.tax === null || product?.tax === undefined
+            ? "No data!"
+            : formatCurrency(product.tax * el.quantity);
         payload.push({
             id: el.id.toString(),
             quantity: el.quantity.toString(),
