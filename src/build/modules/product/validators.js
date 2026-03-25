@@ -32,7 +32,7 @@ const validateProductPrice = (price) => {
 };
 const validateProductTax = async (tax, price, category_id) => {
     const category = (await serviceView("categories"))?.find((el) => el.id === category_id)?.tax;
-    if (!category)
+    if (category === null || category === undefined)
         return "No category found";
     const compare = parseInt(((category * price) / 100).toFixed(0));
     if (compare !== tax)

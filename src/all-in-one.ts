@@ -1836,7 +1836,7 @@ const validateProductTax = async (
   const category = (await serviceView<ICategory>("categories"))?.find(
     (el) => el.id === category_id,
   )?.tax;
-  if (!category) return "No category found";
+  if (category === null || category === undefined) return "No category found";
 
   const compare = parseInt(((category * price) / 100).toFixed(0));
 
