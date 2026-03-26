@@ -120,4 +120,19 @@ const renderTransactions = async () => {
   table.appendChild(row);
 };
 
-export { finishPurchase, renderOrders, renderOrderDetails, renderTransactions };
+const listenReturn = () => {
+  const returnButton = document.querySelector("#return");
+  if (!returnButton) return;
+
+  returnButton.addEventListener("click", () => {
+    renderPage("/history");
+  });
+};
+
+export {
+  finishPurchase,
+  renderOrders,
+  renderOrderDetails,
+  renderTransactions,
+  listenReturn,
+};

@@ -9,7 +9,3 @@
 > /charts
 
 - price coming wrong on input
-
-> /details
-
-- add a RETURN button on view

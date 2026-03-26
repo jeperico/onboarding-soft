@@ -296,7 +296,8 @@ const routes = {
         title: "Details",
         href: "/src/app/details.html",
         content: `
-    <section>
+    <section id="details-section">
+      <button class="button-primary" id="return">RETURN</button>
       <!-- Base Table -->
       <table>
         <thead>
@@ -1199,6 +1200,14 @@ const renderTransactions = async () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
+const listenReturn = () => {
+    const returnButton = document.querySelector("#return");
+    if (!returnButton)
+        return;
+    returnButton.addEventListener("click", () => {
+        renderPage("/history");
+    });
+};
 // -----------------------
 // modules/order/spa.ts
 // -----------------------
@@ -1213,6 +1222,7 @@ const loadHistory = async () => {
 const loadDetails = async (id) => {
     await renderContent("/details", { order: id.toString() });
     await tableEvents("transactions", "none", renderTransactions);
+    listenReturn();
 };
 // -----------------------------------------
 // PRODUCT
