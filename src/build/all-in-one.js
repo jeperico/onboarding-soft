@@ -1,4 +1,12 @@
 "use strict";
+// +---------------------------------------------------------------------------------------------------------+
+// |                                               ATENTION!!!                                               |
+// +---------------------------------------------------------------------------------------------------------+
+// | This file is a single entry point for the entire application.                                           |
+// | It contains all the code, interfaces, types, utils, and modules.                                        |
+// | It is not recommended to edit this file directly, as it may cause conflicts with the original files.    |
+// | If you need to edit any part of the code, please edit the original files in their respective folders.   |
+// +---------------------------------------------------------------------------------------------------------+
 // -----------------------------------------
 // FEATURE FLAGS
 // -----------------------------------------
@@ -75,7 +83,7 @@ const routes = {
     <section>
       <!-- Base form -->
       <form id="home-form">
-        <select name="product" id="product" name="product">
+        <select name="product" id="product" name="product" required>
           <option value="" disabled selected hidden>Product</option>
         </select>
         <div>
@@ -85,6 +93,7 @@ const routes = {
             id="quantity"
             placeholder="Quantity"
             min="1"
+            required
           />
           <div class="currency-input">
             <p>R$</p>
@@ -96,6 +105,7 @@ const routes = {
               id="tax"
               placeholder="Tax"
               disabled
+              required
             />
           </div>
           <div class="currency-input">
@@ -109,6 +119,7 @@ const routes = {
               min="0.01"
               placeholder="Unit Price"
               disabled
+              required
             />
           </div>
         </div>
@@ -165,10 +176,10 @@ const routes = {
       <!-- Base form -->
       <form id="product-form">
         <div>
-          <input type="text" id="name" name="name" placeholder="Product" />
+          <input type="text" id="name" name="name" placeholder="Product" required />
         </div>
         <div>
-          <select name="category" id="category">
+          <select name="category" id="category" required>
             <option value="" disabled selected hidden>Category</option>
           </select>
           <div class="currency-input">
@@ -181,6 +192,7 @@ const routes = {
               min="0.01"
               step="0.01"
               placeholder="Price"
+              required
             />
           </div>
           <input
@@ -191,6 +203,7 @@ const routes = {
             min="1"
             max="999999"
             step="1"
+            required
           />
         </div>
 
