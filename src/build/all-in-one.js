@@ -162,7 +162,7 @@ const routes = {
           <button type="button" class="button-secondary" id="no-submit">
             Cancel
           </button>
-          <button type="submit" class="button-primary">Finish</button>
+          <button type="submit" class="button-primary" id="finish">Finish</button>
         </div>
       </form>
     </section>
@@ -468,7 +468,20 @@ const formsEvents = async (handler, form) => {
     const element = document.querySelector(form || "form");
     if (!element)
         return;
-    element.addEventListener("submit", handler);
+    element.addEventListener("submit", (e) => {
+        const finishButton = element.querySelector("#finish");
+        if (!finishButton) {
+            handler(e);
+            return;
+        }
+        const confirmFinish = window.confirm("Are you sure you want to finish?");
+        if (confirmFinish)
+            handler(e);
+        e.preventDefault();
+    });
+    confirmCancel(element);
+};
+const confirmCancel = (element) => {
     const cancelButton = element.querySelector("#no-submit");
     if (!cancelButton)
         return;
