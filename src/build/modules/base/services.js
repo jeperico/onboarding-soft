@@ -44,4 +44,9 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
         parent.appendChild(option);
     });
 };
-export { renderElement, renderActionButton, renderSelect };
+const setFocus = (selector) => {
+    const element = document.querySelector(selector);
+    if (element)
+        element.focus();
+};
+export { renderElement, renderActionButton, renderSelect, setFocus };

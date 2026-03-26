@@ -59,4 +59,11 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
   });
 };
 
-export { renderElement, renderActionButton, renderSelect };
+const setFocus = (selector: string) => {
+  const element = document.querySelector<HTMLInputElement | HTMLSelectElement>(
+    selector,
+  );
+  if (element) element.focus();
+};
+
+export { renderElement, renderActionButton, renderSelect, setFocus };

@@ -16,6 +16,7 @@ const createProduct = async (event) => {
     const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#name");
         return;
     }
     const currentData = await serviceView("products");

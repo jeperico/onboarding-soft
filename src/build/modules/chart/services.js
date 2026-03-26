@@ -15,6 +15,7 @@ const createChart = async (event) => {
     const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#quantity");
         return;
     }
     if (handled) {

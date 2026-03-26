@@ -811,6 +811,13 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
   });
 };
 
+const setFocus = (selector: string) => {
+  const element = document.querySelector<HTMLInputElement | HTMLSelectElement>(
+    selector,
+  );
+  if (element) element.focus();
+};
+
 // -----------------------
 // modules/base/validators.ts
 // -----------------------
@@ -980,6 +987,7 @@ const createCategory = async (event: SubmitEvent) => {
   const errors = await categoryHandler(payload.name, payload.tax);
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#name");
     return;
   }
 
@@ -1074,6 +1082,7 @@ const loadCategory = async () => {
   await formsEvents(createCategory);
   inputMutations();
   formatTaxInput();
+  setFocus("#name");
 };
 
 // -----------------------
@@ -1221,6 +1230,7 @@ const createChart = async (event: SubmitEvent) => {
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#quantity");
     return;
   }
   if (handled) {
@@ -1806,6 +1816,7 @@ const createProduct = async (event: SubmitEvent) => {
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#name");
     return;
   }
 
@@ -1861,6 +1872,7 @@ const loadProducts = async () => {
   await formsEvents(createProduct);
   await renderSelect<ICategory>("categories", "#category", "name", "id");
   inputMutations();
+  setFocus("#name");
 };
 
 // -----------------------

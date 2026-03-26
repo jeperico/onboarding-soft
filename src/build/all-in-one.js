@@ -597,6 +597,11 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
         parent.appendChild(option);
     });
 };
+const setFocus = (selector) => {
+    const element = document.querySelector(selector);
+    if (element)
+        element.focus();
+};
 // -----------------------
 // modules/base/validators.ts
 // -----------------------
@@ -704,6 +709,7 @@ const createCategory = async (event) => {
     const errors = await categoryHandler(payload.name, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#name");
         return;
     }
     const currentData = await serviceView("categories");
@@ -775,6 +781,7 @@ const loadCategory = async () => {
     await formsEvents(createCategory);
     inputMutations();
     formatTaxInput();
+    setFocus("#name");
 };
 // -----------------------
 // modules/base/validators.ts
@@ -884,6 +891,7 @@ const createChart = async (event) => {
     const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#quantity");
         return;
     }
     if (handled) {
@@ -1313,6 +1321,7 @@ const createProduct = async (event) => {
     const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#name");
         return;
     }
     const currentData = await serviceView("products");
@@ -1351,6 +1360,7 @@ const loadProducts = async () => {
     await formsEvents(createProduct);
     await renderSelect("categories", "#category", "name", "id");
     inputMutations();
+    setFocus("#name");
 };
 // -----------------------
 // modules/product/validators.ts

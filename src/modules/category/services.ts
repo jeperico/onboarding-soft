@@ -26,6 +26,7 @@ const createCategory = async (event: SubmitEvent) => {
   const errors = await categoryHandler(payload.name, payload.tax);
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#name");
     return;
   }
 

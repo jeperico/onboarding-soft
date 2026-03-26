@@ -28,6 +28,7 @@ const createChart = async (event: SubmitEvent) => {
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#quantity");
     return;
   }
   if (handled) {
