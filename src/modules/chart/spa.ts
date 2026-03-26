@@ -11,6 +11,7 @@ const loadChart = async () => {
   await renderSelect<IProduct>("products", "#product", "name", "id");
   inputMutations();
   fieldsListener();
+  setFocus("#product");
 };
 
 export default loadChart;

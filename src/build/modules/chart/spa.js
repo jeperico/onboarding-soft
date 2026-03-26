@@ -9,5 +9,6 @@ const loadChart = async () => {
     await renderSelect("products", "#product", "name", "id");
     inputMutations();
     fieldsListener();
+    setFocus("#product");
 };
 export default loadChart;

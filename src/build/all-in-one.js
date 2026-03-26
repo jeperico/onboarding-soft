@@ -981,6 +981,7 @@ const loadChart = async () => {
     await renderSelect("products", "#product", "name", "id");
     inputMutations();
     fieldsListener();
+    setFocus("#product");
 };
 // -----------------------
 // modules/chart/validators.ts
