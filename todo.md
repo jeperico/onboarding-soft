@@ -15,7 +15,6 @@
 
 - price coming wrong on input
 - products coming duplicated on select
-- duplicated product must change stock too
 - turn product.stock = 0 must to soft delete that product
   - Delete category must be permited after that
 
