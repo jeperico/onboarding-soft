@@ -14,7 +14,16 @@ const ChartCreateSerializer = async (form) => {
         tax: parseInt((parseFloat(tax.value) * 100).toFixed(0)),
         product_id: parseInt(product.value),
     };
-    return payload;
+    const requireds = [];
+    if (!payload.quantity)
+        requireds.push({ field: "#quantity", message: "Quantity is required." });
+    if (!payload.price)
+        requireds.push({ field: "#price", message: "Price is required." });
+    if (payload.tax === null || payload.tax === undefined)
+        requireds.push({ field: "#tax", message: "Tax is required." });
+    if (!payload.product_id)
+        requireds.push({ field: "#product", message: "Product is required." });
+    return { payload, requireds };
 };
 const ChartViewSerializer = async () => {
     const data = await serviceView("chart");

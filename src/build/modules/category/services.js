@@ -8,9 +8,11 @@ import { categoryHandler } from "./handlers.js";
 import { CategoryCreateSerializer, CategoryViewSerializer, } from "./serializer.js";
 const createCategory = async (event) => {
     event.preventDefault();
-    const payload = await CategoryCreateSerializer(event.target);
-    if (!payload.name)
+    const { payload, requireds } = await CategoryCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const errors = await categoryHandler(payload.name, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);

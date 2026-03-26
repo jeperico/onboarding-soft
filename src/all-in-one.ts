@@ -48,7 +48,7 @@ interface IChartRender {
 // interfaces/error-response.ts
 // -----------------------
 type ErrorResponse = {
-  field: string;
+  field?: string;
   message: string;
 }[];
 
@@ -183,6 +183,7 @@ const renderErrorMessage = (errors: ErrorResponse) => {
 
     container.appendChild(message);
 
+    if (!error.field) return;
     const clean = document.querySelector(error.field) as HTMLInputElement;
     clean.value = "";
   });
@@ -894,7 +895,7 @@ const validateCategoryDelete = async (categoryId: number) => {
 
 const CategoryCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<ICategory> => {
+): Promise<{ payload: ICategory; requireds: ErrorResponse }> => {
   const id = await autoIncrement("categories");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const tax = form.elements.namedItem("tax") as HTMLInputElement;
@@ -906,7 +907,11 @@ const CategoryCreateSerializer = async (
     is_active: true,
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.name)
+    requireds.push({ field: "#name", message: "Category name is required." });
+
+  return { payload, requireds };
 };
 
 const CategoryViewSerializer = async (): Promise<ICategoryRender[] | null> => {
@@ -934,10 +939,14 @@ const CategoryViewSerializer = async (): Promise<ICategoryRender[] | null> => {
 const createCategory = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await CategoryCreateSerializer(
+  const { payload, requireds } = await CategoryCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name) return;
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
+    return;
+  }
 
   const errors = await categoryHandler(payload.name, payload.tax);
   if (errors.length > 0) {
@@ -1103,7 +1112,7 @@ const chartHandler = async (
 
 const ChartCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<IChart> => {
+): Promise<{ payload: IChart; requireds: ErrorResponse }> => {
   const id = await autoIncrement("chart");
   const quantity = form.elements.namedItem("quantity") as HTMLInputElement;
   const price = form.elements.namedItem("price") as HTMLInputElement;
@@ -1118,7 +1127,17 @@ const ChartCreateSerializer = async (
     product_id: parseInt(product.value),
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.quantity || payload.quantity <= 0)
+    requireds.push({ field: "#quantity", message: "Quantity is required." });
+  if (!payload.price || payload.price <= 0)
+    requireds.push({ field: "#price", message: "Price is required." });
+  if (payload.tax === null || payload.tax === undefined || payload.tax < 0)
+    requireds.push({ field: "#tax", message: "Tax is required." });
+  if (!payload.product_id || payload.product_id <= 0)
+    requireds.push({ field: "#product", message: "Product is required." });
+
+  return { payload, requireds };
 };
 
 const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {
@@ -1156,15 +1175,14 @@ const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {
 const createChart = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await ChartCreateSerializer(event.target as HTMLFormElement);
-  if (
-    !payload.product_id ||
-    !payload.quantity ||
-    !payload.price ||
-    payload.tax === null ||
-    payload.tax === undefined
-  )
+  const { payload, requireds } = await ChartCreateSerializer(
+    event.target as HTMLFormElement,
+  );
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
     return;
+  }
 
   const { errors, handled } = await chartHandler(
     payload.product_id,
@@ -1661,7 +1679,7 @@ const productHandler = async (
 
 const ProductCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<IProduct> => {
+): Promise<{ payload: IProduct; requireds: ErrorResponse }> => {
   const id = await autoIncrement("products");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const stock = form.elements.namedItem("stock") as HTMLInputElement;
@@ -1685,7 +1703,19 @@ const ProductCreateSerializer = async (
     is_active: true,
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.name)
+    requireds.push({ field: "#name", message: "Name is required." });
+  if (!payload.category_id)
+    requireds.push({ field: "#category", message: "Category is required." });
+  if (!payload.stock)
+    requireds.push({ field: "#stock", message: "Stock is required." });
+  if (!payload.price)
+    requireds.push({ field: "#price", message: "Price is required." });
+  if (payload.tax === null || payload.tax === undefined)
+    requireds.push({ field: "#tax", message: "Tax is required." });
+
+  return { payload, requireds };
 };
 
 const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
@@ -1719,11 +1749,14 @@ const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
 const createProduct = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await ProductCreateSerializer(
+  const { payload, requireds } = await ProductCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
     return;
+  }
 
   const errors = await productHandler(
     payload.name,

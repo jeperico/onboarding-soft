@@ -8,3 +8,18 @@
 - lazy validate
 
 ### 001 - JS REVIEWS
+
+### 002 - JS REVIEWS
+
+> /charts
+
+- price coming wrong on input
+- products coming duplicated on select
+- create order must exhibit confirm
+- duplicated product must change stock too
+- turn product.stock = 0 must to soft delete that product
+  - Delete category must be permited after that
+
+> /details
+
+- add a RETURN button on view

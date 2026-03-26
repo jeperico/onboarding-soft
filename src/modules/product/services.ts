@@ -14,11 +14,14 @@ import { renderActionButton, renderElement } from "../base/services.js";
 const createProduct = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await ProductCreateSerializer(
+  const { payload, requireds } = await ProductCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
     return;
+  }
 
   const errors = await productHandler(
     payload.name,

@@ -11,16 +11,14 @@ import { IProduct } from "../../interfaces/product.js";
 const createChart = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  // II - Inputs
-  const payload = await ChartCreateSerializer(event.target as HTMLFormElement);
-  if (
-    !payload.product_id ||
-    !payload.quantity ||
-    !payload.price ||
-    payload.tax === null ||
-    payload.tax === undefined
-  )
+  const { payload, requireds } = await ChartCreateSerializer(
+    event.target as HTMLFormElement,
+  );
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
     return;
+  }
 
   const { errors, handled } = await chartHandler(
     payload.product_id,

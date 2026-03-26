@@ -14,10 +14,14 @@ import {
 const createCategory = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await CategoryCreateSerializer(
+  const { payload, requireds } = await CategoryCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name) return;
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
+    return;
+  }
 
   const errors = await categoryHandler(payload.name, payload.tax);
   if (errors.length > 0) {

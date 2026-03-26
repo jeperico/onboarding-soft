@@ -19,7 +19,18 @@ const ProductCreateSerializer = async (form) => {
         category_id: parseInt(category.value),
         is_active: true,
     };
-    return payload;
+    const requireds = [];
+    if (!payload.name)
+        requireds.push({ field: "#name", message: "Name is required." });
+    if (!payload.category_id)
+        requireds.push({ field: "#category", message: "Category is required." });
+    if (!payload.stock)
+        requireds.push({ field: "#stock", message: "Stock is required." });
+    if (!payload.price)
+        requireds.push({ field: "#price", message: "Price is required." });
+    if (payload.tax === null || payload.tax === undefined)
+        requireds.push({ field: "#tax", message: "Tax is required." });
+    return { payload, requireds };
 };
 const ProductViewSerializer = async () => {
     const data = (await serviceView("products"))?.filter((el) => el.is_active);

@@ -6,7 +6,7 @@ import { formatCurrency } from "../../utils/format-currency.js";
 
 const ChartCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<IChart> => {
+): Promise<{ payload: IChart; requireds: ErrorResponse }> => {
   const id = await autoIncrement("chart");
   const quantity = form.elements.namedItem("quantity") as HTMLInputElement;
   const price = form.elements.namedItem("price") as HTMLInputElement;
@@ -21,7 +21,17 @@ const ChartCreateSerializer = async (
     product_id: parseInt(product.value),
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.quantity)
+    requireds.push({ field: "#quantity", message: "Quantity is required." });
+  if (!payload.price)
+    requireds.push({ field: "#price", message: "Price is required." });
+  if (payload.tax === null || payload.tax === undefined)
+    requireds.push({ field: "#tax", message: "Tax is required." });
+  if (!payload.product_id)
+    requireds.push({ field: "#product", message: "Product is required." });
+
+  return { payload, requireds };
 };
 
 const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {

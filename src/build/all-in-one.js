@@ -55,6 +55,8 @@ const renderErrorMessage = (errors) => {
         message.innerText = error.message;
         message.classList.add("error-form-message");
         container.appendChild(message);
+        if (!error.field)
+            return;
         const clean = document.querySelector(error.field);
         clean.value = "";
     });
@@ -643,7 +645,10 @@ const CategoryCreateSerializer = async (form) => {
         tax: parseFloat(parseFloat(tax.value).toFixed(2)),
         is_active: true,
     };
-    return payload;
+    const requireds = [];
+    if (!payload.name)
+        requireds.push({ field: "#name", message: "Category name is required." });
+    return { payload, requireds };
 };
 const CategoryViewSerializer = async () => {
     const data = (await serviceView("categories"))?.filter((el) => el.is_active);
@@ -664,9 +669,11 @@ const CategoryViewSerializer = async () => {
 // -----------------------
 const createCategory = async (event) => {
     event.preventDefault();
-    const payload = await CategoryCreateSerializer(event.target);
-    if (!payload.name)
+    const { payload, requireds } = await CategoryCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const errors = await categoryHandler(payload.name, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
@@ -804,7 +811,16 @@ const ChartCreateSerializer = async (form) => {
         tax: parseInt((parseFloat(tax.value) * 100).toFixed(0)),
         product_id: parseInt(product.value),
     };
-    return payload;
+    const requireds = [];
+    if (!payload.quantity || payload.quantity <= 0)
+        requireds.push({ field: "#quantity", message: "Quantity is required." });
+    if (!payload.price || payload.price <= 0)
+        requireds.push({ field: "#price", message: "Price is required." });
+    if (payload.tax === null || payload.tax === undefined || payload.tax < 0)
+        requireds.push({ field: "#tax", message: "Tax is required." });
+    if (!payload.product_id || payload.product_id <= 0)
+        requireds.push({ field: "#product", message: "Product is required." });
+    return { payload, requireds };
 };
 const ChartViewSerializer = async () => {
     const data = await serviceView("chart");
@@ -833,13 +849,11 @@ const ChartViewSerializer = async () => {
 // -----------------------
 const createChart = async (event) => {
     event.preventDefault();
-    const payload = await ChartCreateSerializer(event.target);
-    if (!payload.product_id ||
-        !payload.quantity ||
-        !payload.price ||
-        payload.tax === null ||
-        payload.tax === undefined)
+    const { payload, requireds } = await ChartCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
@@ -1220,7 +1234,18 @@ const ProductCreateSerializer = async (form) => {
         category_id: parseInt(category.value),
         is_active: true,
     };
-    return payload;
+    const requireds = [];
+    if (!payload.name)
+        requireds.push({ field: "#name", message: "Name is required." });
+    if (!payload.category_id)
+        requireds.push({ field: "#category", message: "Category is required." });
+    if (!payload.stock)
+        requireds.push({ field: "#stock", message: "Stock is required." });
+    if (!payload.price)
+        requireds.push({ field: "#price", message: "Price is required." });
+    if (payload.tax === null || payload.tax === undefined)
+        requireds.push({ field: "#tax", message: "Tax is required." });
+    return { payload, requireds };
 };
 const ProductViewSerializer = async () => {
     const data = (await serviceView("products"))?.filter((el) => el.is_active);
@@ -1244,9 +1269,11 @@ const ProductViewSerializer = async () => {
 // -----------------------
 const createProduct = async (event) => {
     event.preventDefault();
-    const payload = await ProductCreateSerializer(event.target);
-    if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+    const { payload, requireds } = await ProductCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {
         renderErrorMessage(errors);

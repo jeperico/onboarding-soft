@@ -7,14 +7,11 @@ import { chartHandler } from "./handlers.js";
 import { renderActionButton, renderElement } from "../base/services.js";
 const createChart = async (event) => {
     event.preventDefault();
-    // II - Inputs
-    const payload = await ChartCreateSerializer(event.target);
-    if (!payload.product_id ||
-        !payload.quantity ||
-        !payload.price ||
-        payload.tax === null ||
-        payload.tax === undefined)
+    const { payload, requireds } = await ChartCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
