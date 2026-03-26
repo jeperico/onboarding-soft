@@ -9,7 +9,6 @@
 > /charts
 
 - price coming wrong on input
-- products coming duplicated on select
 
 > /details
 
