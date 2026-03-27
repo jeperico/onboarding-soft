@@ -93,7 +93,6 @@ const routes = {
             id="quantity"
             placeholder="Quantity"
             min="1"
-            required
           />
           <div class="currency-input">
             <p>R$</p>
@@ -839,7 +838,7 @@ const ChartCreateSerializer = async (form) => {
     const price = form.elements.namedItem("price");
     const tax = form.elements.namedItem("tax");
     const product = form.elements.namedItem("product");
-    const payload = {
+    const payload = await {
         id: id,
         quantity: parseInt(quantity.value),
         price: parseInt((parseFloat(price.value) * 100).toFixed(0)),
@@ -847,13 +846,14 @@ const ChartCreateSerializer = async (form) => {
         product_id: parseInt(product.value),
     };
     const requireds = [];
-    if (!payload.quantity || payload.quantity <= 0)
+    if (!payload.quantity)
         requireds.push({ field: "#quantity", message: "Quantity is required." });
-    if (!payload.price || payload.price <= 0)
+    if (!payload.price)
         requireds.push({ field: "#price", message: "Price is required." });
-    if (payload.tax === null || payload.tax === undefined || payload.tax < 0)
+    if (payload.tax === null || payload.tax === undefined)
         requireds.push({ field: "#tax", message: "Tax is required." });
-    if (!payload.product_id || payload.product_id <= 0)
+    console.log(payload.product_id);
+    if (!payload.product_id)
         requireds.push({ field: "#product", message: "Product is required." });
     return { payload, requireds };
 };
@@ -964,12 +964,6 @@ const fieldsListener = () => {
         if (!priceField || !product?.price)
             return;
         priceField.value = (product.price / 100).toFixed(2);
-        const chart = (await serviceView("chart"))?.find((el) => el.product_id === product?.id);
-        const quantityField = document.querySelector("#quantity");
-        if (!quantityField || !chart)
-            return;
-        const stock = product?.stock - chart?.quantity;
-        quantityField.max = stock.toString();
     });
 };
 // -----------------------

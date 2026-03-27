@@ -87,12 +87,6 @@ const fieldsListener = () => {
         if (!priceField || !product?.price)
             return;
         priceField.value = (product.price / 100).toFixed(2);
-        const chart = (await serviceView("chart"))?.find((el) => el.product_id === product?.id);
-        const quantityField = document.querySelector("#quantity");
-        if (!quantityField || !chart)
-            return;
-        const stock = product?.stock - chart?.quantity;
-        quantityField.max = stock.toString();
     });
 };
 export { createChart, renderChart, overwriteProduct, fieldsListener };

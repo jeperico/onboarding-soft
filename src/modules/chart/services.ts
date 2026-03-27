@@ -125,15 +125,6 @@ const fieldsListener = () => {
     const priceField = document.querySelector<HTMLInputElement>("#price");
     if (!priceField || !product?.price) return;
     priceField.value = (product.price / 100).toFixed(2);
-
-    const chart = (await serviceView<IChart>("chart"))?.find(
-      (el) => el.product_id === product?.id,
-    );
-
-    const quantityField = document.querySelector<HTMLInputElement>("#quantity");
-    if (!quantityField || !chart) return;
-    const stock = product?.stock - chart?.quantity;
-    quantityField.max = stock.toString();
   });
 };
 

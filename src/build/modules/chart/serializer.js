@@ -7,7 +7,7 @@ const ChartCreateSerializer = async (form) => {
     const price = form.elements.namedItem("price");
     const tax = form.elements.namedItem("tax");
     const product = form.elements.namedItem("product");
-    const payload = {
+    const payload = await {
         id: id,
         quantity: parseInt(quantity.value),
         price: parseInt((parseFloat(price.value) * 100).toFixed(0)),
@@ -21,6 +21,7 @@ const ChartCreateSerializer = async (form) => {
         requireds.push({ field: "#price", message: "Price is required." });
     if (payload.tax === null || payload.tax === undefined)
         requireds.push({ field: "#tax", message: "Tax is required." });
+    console.log(payload.product_id);
     if (!payload.product_id)
         requireds.push({ field: "#product", message: "Product is required." });
     return { payload, requireds };
