@@ -1179,9 +1179,10 @@ const ChartCreateSerializer = async (
     requireds.push({ field: "#price", message: "Price is required." });
   if (payload.tax === null || payload.tax === undefined)
     requireds.push({ field: "#tax", message: "Tax is required." });
-  console.log(payload.product_id);
-  if (!payload.product_id)
+  const product_id = parseInt(product.value);
+  if (!product.value || isNaN(product_id)) {
     requireds.push({ field: "#product", message: "Product is required." });
+  }
 
   return { payload, requireds };
 };
