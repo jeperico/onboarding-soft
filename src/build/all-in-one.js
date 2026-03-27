@@ -585,6 +585,8 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
     const data = await serviceView(table);
     if (!parent || !data)
         return;
+    parent.innerHTML =
+        "<option value='' disabled selected hidden>Product</option>";
     data.forEach((el) => {
         if (!el.is_active)
             return;

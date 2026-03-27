@@ -795,6 +795,8 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
   const data = await serviceView<IResponseData>(table);
 
   if (!parent || !data) return;
+  parent.innerHTML =
+    "<option value='' disabled selected hidden>Product</option>";
   data.forEach((el: IResponseData) => {
     if (!el.is_active) return;
     const option = document.createElement("option");
