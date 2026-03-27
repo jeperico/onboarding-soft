@@ -468,7 +468,7 @@ const formsEvents = async (handler, form) => {
     const element = document.querySelector(form || "form");
     if (!element)
         return;
-    element.addEventListener("submit", (e) => {
+    const handleSubmit = (e) => {
         const finishButton = element.querySelector("#finish");
         if (!finishButton) {
             handler(e);
@@ -478,7 +478,9 @@ const formsEvents = async (handler, form) => {
         if (confirmFinish)
             handler(e);
         e.preventDefault();
-    });
+    };
+    element.removeEventListener("submit", handleSubmit);
+    element.addEventListener("submit", handleSubmit);
     confirmCancel(element);
 };
 const confirmCancel = (element) => {

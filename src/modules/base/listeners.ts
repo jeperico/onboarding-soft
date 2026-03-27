@@ -21,7 +21,7 @@ const formsEvents = async (
   const element = document.querySelector<HTMLFormElement>(form || "form");
   if (!element) return;
 
-  element.addEventListener("submit", (e: SubmitEvent) => {
+  const handleSubmit = (e: SubmitEvent) => {
     const finishButton = element.querySelector<HTMLButtonElement>("#finish");
     if (!finishButton) {
       handler(e);
@@ -31,7 +31,10 @@ const formsEvents = async (
     const confirmFinish = window.confirm("Are you sure you want to finish?");
     if (confirmFinish) handler(e);
     e.preventDefault();
-  });
+  };
+
+  element.removeEventListener("submit", handleSubmit);
+  element.addEventListener("submit", handleSubmit);
 
   confirmCancel(element);
 };
