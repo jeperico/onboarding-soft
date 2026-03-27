@@ -540,7 +540,6 @@ const inputMutations = () => {
                     const target = mutation.target;
                     target.type = originalType;
                     target.value = "";
-                    console.log(target);
                     observer.observe(target, config);
                 }
             }
@@ -1009,13 +1008,9 @@ const validateChartQuantity = async (quantity, product_id) => {
 };
 const validateChartPrice = async (price, product_id) => {
     const raw = await serviceView("products");
-    console.log("raw: ", raw);
     const product = raw?.find((el) => el.id === product_id && el.is_active);
-    console.log("product: ", product);
     if (!product)
         return `This product doesn't exists`;
-    console.log("price: ", price);
-    console.log("product__price: ", product.price);
     if (price !== product.price)
         return "The price is incorrect";
     return null;

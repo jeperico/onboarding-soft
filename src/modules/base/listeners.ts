@@ -113,7 +113,6 @@ const inputMutations = () => {
           const target = mutation.target as HTMLInputElement;
           target.type = originalType;
           target.value = "";
-          console.log(target);
 
           observer.observe(target, config);
         }

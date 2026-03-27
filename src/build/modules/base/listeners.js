@@ -77,7 +77,6 @@ const inputMutations = () => {
                     const target = mutation.target;
                     target.type = originalType;
                     target.value = "";
-                    console.log(target);
                     observer.observe(target, config);
                 }
             }
