@@ -586,7 +586,7 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
         return;
     parent.innerHTML =
         "<option value='' disabled selected hidden>Product</option>";
-    data.forEach((el) => {
+    data.forEach(async (el) => {
         if (!el.is_active)
             return;
         const option = document.createElement("option");
@@ -595,6 +595,9 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
         option.innerText = String(text);
         option.value = String(value);
         parent.appendChild(option);
+        const chart = (await serviceView("chart"))?.find((e) => e.product_id === el.id)?.quantity;
+        if (chart && el.stock && el.stock - chart === 0)
+            option.disabled = true;
     });
 };
 const setFocus = (selector) => {

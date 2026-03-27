@@ -5,7 +5,11 @@ import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { ChartCreateSerializer, ChartViewSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
 import { IChart } from "../../interfaces/chart.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import {
+  renderActionButton,
+  renderElement,
+  setFocus,
+} from "../base/services.js";
 import { IProduct } from "../../interfaces/product.js";
 
 const createChart = async (event: SubmitEvent) => {

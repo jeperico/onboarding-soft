@@ -1,5 +1,5 @@
 import { IProduct } from "../../interfaces/product.js";
-import { renderSelect } from "../base/services.js";
+import { renderSelect, setFocus } from "../base/services.js";
 import { renderContent } from "../../spa/proxy.js";
 import { tableEvents, formsEvents, inputMutations } from "../base/listeners.js";
 import { renderChart, createChart, fieldsListener } from "./services.js";

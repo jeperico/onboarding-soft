@@ -3,7 +3,7 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement, setFocus, } from "../base/services.js";
 import { categoryHandler } from "./handlers.js";
 import { CategoryCreateSerializer, CategoryViewSerializer, } from "./serializer.js";
 const createCategory = async (event) => {

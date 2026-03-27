@@ -9,7 +9,11 @@ import {
   ProductViewSerializer,
 } from "./serializer.js";
 import { productHandler } from "./handlers.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import {
+  renderActionButton,
+  renderElement,
+  setFocus,
+} from "../base/services.js";
 
 const createProduct = async (event: SubmitEvent) => {
   event.preventDefault();

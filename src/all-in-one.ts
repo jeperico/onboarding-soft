@@ -784,7 +784,9 @@ const renderVoidElement = (row: HTMLTableRowElement) => {
   row.appendChild(td);
 };
 
-const renderSelect = async <IResponseData extends { is_active: boolean }>(
+const renderSelect = async <
+  IResponseData extends { id: number; is_active: boolean; stock?: number },
+>(
   table: Table,
   select: string,
   fieldText: keyof IResponseData,
@@ -796,7 +798,7 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
   if (!parent || !data) return;
   parent.innerHTML =
     "<option value='' disabled selected hidden>Product</option>";
-  data.forEach((el: IResponseData) => {
+  data.forEach(async (el: IResponseData) => {
     if (!el.is_active) return;
     const option = document.createElement("option");
 
@@ -807,6 +809,12 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
     option.value = String(value);
 
     parent.appendChild(option);
+
+    const chart = (await serviceView<IChart>("chart"))?.find(
+      (e) => e.product_id === el.id,
+    )?.quantity;
+
+    if (chart && el.stock && el.stock - chart === 0) option.disabled = true;
   });
 };
 

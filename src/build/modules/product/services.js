@@ -5,7 +5,7 @@ import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { ProductCreateSerializer, ProductViewSerializer, } from "./serializer.js";
 import { productHandler } from "./handlers.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement, setFocus, } from "../base/services.js";
 const createProduct = async (event) => {
     event.preventDefault();
     const { payload, requireds } = await ProductCreateSerializer(event.target);
