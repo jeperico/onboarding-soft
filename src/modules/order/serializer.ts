@@ -11,28 +11,28 @@ import { formatCurrency } from "../../utils/format-currency.js";
 import { serviceView } from "../base/base-services.js";
 
 const OrderCreateSerializer = async (): Promise<IOrder | null> => {
-  const data = await serviceView<IChart>("chart");
-  if (!data) return null;
+  const chart = await serviceView<IChart>("chart");
+  if (!chart) return null;
+
+  const products = await serviceView<IProduct>("products");
+  if (!products) return null;
 
   const id = await autoIncrement("orders");
   let total_tax = 0;
   let total_price = 0;
 
-  data.map(async (el) => {
+  for (const el of chart) {
     total_tax += el.tax * el.quantity;
     total_price += el.price * el.quantity;
 
-    const products = await serviceView<IProduct>("products");
-    if (!products) return;
-    products?.map((e) => {
-      if (e.id === el.product_id) e.stock -= el.quantity;
-    });
+    const product = products.find((e) => e.id === el.product_id);
+    if (product) {
+      product.stock -= el.quantity;
+    }
+  }
 
-    const data = products.filter((e) => e.stock > 0);
-    if (!data) return;
-
-    localStorage.setItem("products", JSON.stringify(data));
-  });
+  const filteredProducts = products.filter((p) => p.stock > 0);
+  localStorage.setItem("products", JSON.stringify(filteredProducts));
 
   const payload: IOrder = {
     id: id,
