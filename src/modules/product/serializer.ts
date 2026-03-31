@@ -50,12 +50,11 @@ const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
     (el) => el.is_active,
   );
   if (!data) return null;
+  const categories = await serviceView<ICategory>("categories");
 
   const payload: IProductRender[] = [];
-  data.map(async (el) => {
-    const category = (await serviceView<ICategory>("categories"))?.find(
-      (e) => e.id === el.category_id,
-    )?.name;
+  data.map((el) => {
+    const category = categories?.find((e) => e.id === el.category_id)?.name;
 
     payload.push({
       id: el.id.toString(),

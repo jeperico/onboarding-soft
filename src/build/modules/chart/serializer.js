@@ -31,9 +31,10 @@ const ChartViewSerializer = async () => {
     const data = await serviceView("chart");
     if (!data)
         return null;
+    const products = await serviceView("products");
     const payload = [];
     data.map(async (el) => {
-        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
+        const product = products?.find((e) => e.id === el.product_id);
         const total = el.price * el.quantity;
         const tax = product?.tax === null || product?.tax === undefined
             ? "No data!"

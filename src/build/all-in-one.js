@@ -867,9 +867,10 @@ const ChartViewSerializer = async () => {
     const data = await serviceView("chart");
     if (!data)
         return null;
+    const products = await serviceView("products");
     const payload = [];
     data.map(async (el) => {
-        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
+        const product = products?.find((e) => e.id === el.product_id);
         const total = el.price * el.quantity;
         const tax = product?.tax === null || product?.tax === undefined
             ? "No data!"
@@ -1092,7 +1093,7 @@ const TransactionCreateSerializer = async (order) => {
         return null;
     const id = (await autoIncrement("transactions")) || 1;
     const payload = [];
-    data.map(async (el, index) => {
+    data.forEach((el, index) => {
         payload.push({
             id: id + index,
             quantity: el.quantity,
@@ -1109,25 +1110,25 @@ const TransactionViewSerializer = async () => {
     const id = url.get("order");
     if (!id)
         return null;
-    const data = (await serviceView("transactions"))?.filter((el) => el.is_active && el.order_id === parseInt(id));
-    if (!data)
+    const transactions = (await serviceView("transactions"))?.filter((el) => el.is_active && el.order_id === parseInt(id));
+    if (!transactions)
         return null;
-    const payload = [];
-    await data.map(async (el) => {
-        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
-        const category = (await serviceView("categories"))?.find((e) => e.id === product?.category_id)?.name;
+    const products = await serviceView("products");
+    const categories = await serviceView("categories");
+    return transactions.map((el) => {
+        const product = products?.find((p) => p.id === el.product_id);
+        const category = categories?.find((c) => c.id === product?.category_id);
         const tax = (product?.tax || 0) * el.quantity;
         const total = el.price * el.quantity;
-        payload.push({
+        return {
             id: el.id.toString(),
             product: product?.name || "No data!",
-            category: category || "No data!",
+            category: category?.name || "No data!",
             quantity: el.quantity.toString(),
             tax: formatCurrency(tax),
             total: formatCurrency(total),
-        });
+        };
     });
-    return payload;
 };
 // -----------------------
 // modules/order/services.ts
@@ -1296,9 +1297,10 @@ const ProductViewSerializer = async () => {
     const data = (await serviceView("products"))?.filter((el) => el.is_active);
     if (!data)
         return null;
+    const categories = await serviceView("categories");
     const payload = [];
-    data.map(async (el) => {
-        const category = (await serviceView("categories"))?.find((e) => e.id === el.category_id)?.name;
+    data.map((el) => {
+        const category = categories?.find((e) => e.id === el.category_id)?.name;
         payload.push({
             id: el.id.toString(),
             name: el.name.toString(),

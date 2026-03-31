@@ -74,7 +74,7 @@ const TransactionCreateSerializer = async (
   const id = (await autoIncrement("transactions")) || 1;
   const payload: ITransaction[] = [];
 
-  data.map(async (el, index) => {
+  data.forEach((el, index) => {
     payload.push({
       id: id + index,
       quantity: el.quantity,
@@ -94,33 +94,31 @@ const TransactionViewSerializer = async (): Promise<
   const url = new URLSearchParams(window.location.search);
   const id = url.get("order");
   if (!id) return null;
-  const data = (await serviceView<ITransaction>("transactions"))?.filter(
-    (el) => el.is_active && el.order_id === parseInt(id),
-  );
-  if (!data) return null;
 
-  const payload: ITransactionRender[] = [];
-  await data.map(async (el) => {
-    const product = (await serviceView<IProduct>("products"))?.find(
-      (e) => e.id === el.product_id,
-    );
-    const category = (await serviceView<ICategory>("categories"))?.find(
-      (e) => e.id === product?.category_id,
-    )?.name;
+  const transactions = (
+    await serviceView<ITransaction>("transactions")
+  )?.filter((el) => el.is_active && el.order_id === parseInt(id));
+  if (!transactions) return null;
+
+  const products = await serviceView<IProduct>("products");
+  const categories = await serviceView<ICategory>("categories");
+
+  return transactions.map((el) => {
+    const product = products?.find((p) => p.id === el.product_id);
+    const category = categories?.find((c) => c.id === product?.category_id);
+
     const tax = (product?.tax || 0) * el.quantity;
     const total = el.price * el.quantity;
 
-    payload.push({
+    return {
       id: el.id.toString(),
       product: product?.name || "No data!",
-      category: category || "No data!",
+      category: category?.name || "No data!",
       quantity: el.quantity.toString(),
       tax: formatCurrency(tax),
       total: formatCurrency(total),
-    });
+    };
   });
-
-  return payload;
 };
 
 export {

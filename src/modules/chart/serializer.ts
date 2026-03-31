@@ -40,11 +40,11 @@ const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {
   const data = await serviceView<IChart>("chart");
   if (!data) return null;
 
+  const products = await serviceView<IProduct>("products");
   const payload: IChartRender[] = [];
+
   data.map(async (el) => {
-    const product = (await serviceView<IProduct>("products"))?.find(
-      (e) => e.id === el.product_id,
-    );
+    const product = products?.find((e) => e.id === el.product_id);
     const total = el.price * el.quantity;
     const tax =
       product?.tax === null || product?.tax === undefined
