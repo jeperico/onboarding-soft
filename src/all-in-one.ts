@@ -1199,7 +1199,8 @@ const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {
 
   data.map(async (el) => {
     const product = products?.find((e) => e.id === el.product_id);
-    const total = el.price * el.quantity;
+    const total = (el.price + el.tax) * el.quantity;
+
     const tax =
       product?.tax === null || product?.tax === undefined
         ? "No data!"
@@ -1450,7 +1451,7 @@ const OrderCreateSerializer = async (): Promise<IOrder | null> => {
 
   for (const el of chart) {
     total_tax += el.tax * el.quantity;
-    total_price += el.price * el.quantity;
+    total_price += (el.price + el.tax) * el.quantity;
 
     const product = products.find((e) => e.id === el.product_id);
     if (product) {
@@ -1505,7 +1506,7 @@ const TransactionCreateSerializer = async (
     payload.push({
       id: id + index,
       quantity: el.quantity,
-      price: el.price,
+      price: el.price + el.tax,
       product_id: el.product_id,
       order_id: order,
       is_active: true,
@@ -1623,7 +1624,10 @@ const renderOrderDetails = async () => {
   }
 
   const tax = data.reduce((sum, el) => (sum += el.tax * el.quantity), 0);
-  const total = data.reduce((sum, el) => (sum += el.price * el.quantity), 0);
+  const total = data.reduce(
+    (sum, el) => (sum += (el.price + el.tax) * el.quantity),
+    0,
+  );
 
   taxField.innerText = formatCurrency(tax);
   totalField.innerText = formatCurrency(total);

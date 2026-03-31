@@ -85,7 +85,10 @@ const renderOrderDetails = async () => {
   }
 
   const tax = data.reduce((sum, el) => (sum += el.tax * el.quantity), 0);
-  const total = data.reduce((sum, el) => (sum += el.price * el.quantity), 0);
+  const total = data.reduce(
+    (sum, el) => (sum += (el.price + el.tax) * el.quantity),
+    0,
+  );
 
   taxField.innerText = formatCurrency(tax);
   totalField.innerText = formatCurrency(total);

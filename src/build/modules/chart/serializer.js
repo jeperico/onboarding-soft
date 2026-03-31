@@ -35,7 +35,7 @@ const ChartViewSerializer = async () => {
     const payload = [];
     data.map(async (el) => {
         const product = products?.find((e) => e.id === el.product_id);
-        const total = el.price * el.quantity;
+        const total = (el.price + el.tax) * el.quantity;
         const tax = product?.tax === null || product?.tax === undefined
             ? "No data!"
             : formatCurrency(product.tax * el.quantity);

@@ -13,7 +13,7 @@ const OrderCreateSerializer = async () => {
     let total_price = 0;
     for (const el of chart) {
         total_tax += el.tax * el.quantity;
-        total_price += el.price * el.quantity;
+        total_price += (el.price + el.tax) * el.quantity;
         const product = products.find((e) => e.id === el.product_id);
         if (product) {
             product.stock -= el.quantity;
@@ -56,7 +56,7 @@ const TransactionCreateSerializer = async (order) => {
         payload.push({
             id: id + index,
             quantity: el.quantity,
-            price: el.price,
+            price: el.price + el.tax,
             product_id: el.product_id,
             order_id: order,
             is_active: true,
