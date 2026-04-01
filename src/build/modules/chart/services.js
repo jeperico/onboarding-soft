@@ -19,7 +19,7 @@ const createChart = async (event) => {
         return;
     }
     if (handled) {
-        renderPage("/");
+        await renderContent("/");
         return;
     }
     const currentData = await serviceView("chart");
@@ -34,6 +34,7 @@ const renderChart = async () => {
         renderVoidTable("#tbody-chart", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, el.product);

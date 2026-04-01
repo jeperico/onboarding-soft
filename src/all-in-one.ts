@@ -1018,6 +1018,7 @@ const renderCategory = async () => {
     renderVoidTable("#tbody-category", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
@@ -1150,6 +1151,7 @@ const chartHandler = async (
   if (duplicatedResult.error)
     errors.push({ field: "#product", message: duplicatedResult.error });
   if (duplicatedResult.handled) handled = true;
+  console.log(duplicatedResult);
 
   return { errors, handled };
 };
@@ -1247,7 +1249,7 @@ const createChart = async (event: SubmitEvent) => {
     return;
   }
   if (handled) {
-    renderPage("/");
+    await renderContent("/");
     return;
   }
 
@@ -1256,7 +1258,7 @@ const createChart = async (event: SubmitEvent) => {
     "chart",
     JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
-  renderPage("/");
+  await renderContent("/");
 };
 
 const renderChart = async () => {
@@ -1268,6 +1270,7 @@ const renderChart = async () => {
     renderVoidTable("#tbody-chart", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
@@ -1426,6 +1429,7 @@ const validateChartDuplicated = async (
   if (!chart || !duplicated) return { handled: false };
 
   const error = await overwriteProduct(duplicated, quantity, chart);
+  console.log(chart, duplicated, error);
   if (error) return { handled: false, error };
   return { handled: true };
 };
@@ -1592,6 +1596,7 @@ const renderOrders = async () => {
     renderVoidTable("#tbody-history", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
@@ -1841,6 +1846,7 @@ const renderProducts = async () => {
     renderVoidTable("#tbody-products", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");

@@ -51,6 +51,7 @@ const renderCategory = async () => {
     renderVoidTable("#tbody-category", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");

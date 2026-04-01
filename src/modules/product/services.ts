@@ -57,6 +57,7 @@ const renderProducts = async () => {
     renderVoidTable("#tbody-products", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");

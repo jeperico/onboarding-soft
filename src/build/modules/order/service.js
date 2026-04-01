@@ -30,6 +30,7 @@ const renderOrders = async () => {
         renderVoidTable("#tbody-history", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));

@@ -729,6 +729,7 @@ const renderCategory = async () => {
         renderVoidTable("#tbody-category", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
@@ -832,6 +833,7 @@ const chartHandler = async (product, quantity, price, tax) => {
         errors.push({ field: "#product", message: duplicatedResult.error });
     if (duplicatedResult.handled)
         handled = true;
+    console.log(duplicatedResult);
     return { errors, handled };
 };
 // -----------------------
@@ -903,12 +905,12 @@ const createChart = async (event) => {
         return;
     }
     if (handled) {
-        renderPage("/");
+        await renderContent("/");
         return;
     }
     const currentData = await serviceView("chart");
     localStorage.setItem("chart", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
-    renderPage("/");
+    await renderContent("/");
 };
 const renderChart = async () => {
     const COLUMNS_COUNT = 6;
@@ -918,6 +920,7 @@ const renderChart = async () => {
         renderVoidTable("#tbody-chart", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, el.product);
@@ -1032,6 +1035,7 @@ const validateChartDuplicated = async (product_id, quantity) => {
     if (!chart || !duplicated)
         return { handled: false };
     const error = await overwriteProduct(duplicated, quantity, chart);
+    console.log(chart, duplicated, error);
     if (error)
         return { handled: false, error };
     return { handled: true };
@@ -1158,6 +1162,7 @@ const renderOrders = async () => {
         renderVoidTable("#tbody-history", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
@@ -1339,6 +1344,7 @@ const renderProducts = async () => {
         renderVoidTable("#tbody-products", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));

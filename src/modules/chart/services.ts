@@ -36,7 +36,7 @@ const createChart = async (event: SubmitEvent) => {
     return;
   }
   if (handled) {
-    renderPage("/");
+    await renderContent("/");
     return;
   }
 
@@ -57,6 +57,7 @@ const renderChart = async () => {
     renderVoidTable("#tbody-chart", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
