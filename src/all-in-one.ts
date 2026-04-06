@@ -1258,7 +1258,7 @@ const createChart = async (event: SubmitEvent) => {
     "chart",
     JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
-  await renderContent("/");
+  await renderPage("/");
 };
 
 const renderChart = async () => {

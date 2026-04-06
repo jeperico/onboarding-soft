@@ -45,7 +45,7 @@ const createChart = async (event: SubmitEvent) => {
     "chart",
     JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
-  renderPage("/");
+  await renderPage("/");
 };
 
 const renderChart = async () => {

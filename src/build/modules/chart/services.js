@@ -24,7 +24,7 @@ const createChart = async (event) => {
     }
     const currentData = await serviceView("chart");
     localStorage.setItem("chart", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
-    renderPage("/");
+    await renderPage("/");
 };
 const renderChart = async () => {
     const COLUMNS_COUNT = 6;
