@@ -10,8 +10,8 @@
 // -----------------------------------------
 // FEATURE FLAGS
 // -----------------------------------------
-const FEATURE_FLAG_ENABLE_ROUTES = false;
-const FEATURE_FLAG_ENABLE_SERVER = false;
+const FEATURE_FLAG_ENABLE_ROUTES = true;
+const FEATURE_FLAG_ENABLE_SERVER = true;
 // -----------------------------------------
 // UTILS
 // -----------------------------------------

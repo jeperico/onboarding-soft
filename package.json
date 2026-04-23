@@ -1,5 +1,25 @@
 {
-  "dependencies": {
-    "typescript": "^5.9.3"
-  }
+    "name": "onboarding-soft",
+    "version": "1.0.0",
+    "description": "Point of Sale (PDV) System - TypeScript SPA",
+    "main": "server.js",
+    "scripts": {
+        "dev": "tsc -w",
+        "build": "tsc",
+        "serve": "node server.js",
+        "start": "npm install && npm run build && npm run serve"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "typescript": "^5.9.3"
+    },
+    "devDependencies": {},
+    "keywords": [
+        "pdv",
+        "pos",
+        "typescript",
+        "spa"
+    ],
+    "author": "",
+    "license": "ISC"
 }
