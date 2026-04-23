@@ -1,5 +1,5 @@
 type ErrorResponse = {
-  field: string;
+  field?: string;
   message: string;
 }[];
 

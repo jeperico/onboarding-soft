@@ -4,28 +4,27 @@ import { serviceView } from "../base/base-services.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { ChartCreateSerializer, ChartViewSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement, setFocus, } from "../base/services.js";
 const createChart = async (event) => {
     event.preventDefault();
-    // II - Inputs
-    const payload = await ChartCreateSerializer(event.target);
-    if (!payload.product_id ||
-        !payload.quantity ||
-        !payload.price ||
-        !payload.tax)
+    const { payload, requireds } = await ChartCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#quantity");
         return;
     }
     if (handled) {
-        renderPage("/");
+        await renderContent("/");
         return;
     }
     const currentData = await serviceView("chart");
     localStorage.setItem("chart", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
-    renderPage("/");
+    await renderPage("/");
 };
 const renderChart = async () => {
     const COLUMNS_COUNT = 6;
@@ -35,6 +34,7 @@ const renderChart = async () => {
         renderVoidTable("#tbody-chart", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, el.product);
@@ -80,20 +80,14 @@ const fieldsListener = () => {
         const id = e.target.value;
         const product = (await serviceView("products"))?.find((el) => el.id === parseInt(id));
         const tax = product?.tax;
-        const chart = (await serviceView("chart"))?.find((el) => el.product_id === product?.id);
         const taxField = document.querySelector("#tax");
-        if (!taxField || !tax)
+        if (!taxField || tax === null || tax === undefined)
             return;
         taxField.value = (tax / 100).toFixed(2);
         const priceField = document.querySelector("#price");
         if (!priceField || !product?.price)
             return;
         priceField.value = (product.price / 100).toFixed(2);
-        const quantityField = document.querySelector("#quantity");
-        if (!quantityField || !chart)
-            return;
-        const stock = product?.stock - chart?.quantity;
-        quantityField.max = stock.toString();
     });
 };
 export { createChart, renderChart, overwriteProduct, fieldsListener };

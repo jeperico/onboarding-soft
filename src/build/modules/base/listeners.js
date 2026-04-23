@@ -1,35 +1,90 @@
 import renderPage from "../../spa/render-page.js";
-import { serviceDelete, serviceRemove } from "./base-services.js";
+import { validateCategoryDelete } from "../category/validators.js";
+import { validateProductDelete } from "../product/validators.js";
+import { serviceDelete } from "./base-services.js";
 const formsEvents = async (handler, form) => {
     const element = document.querySelector(form || "form");
     if (!element)
         return;
-    element.addEventListener("submit", handler);
+    const handleSubmit = (e) => {
+        const finishButton = element.querySelector("#finish");
+        if (!finishButton) {
+            handler(e);
+            return;
+        }
+        const confirmFinish = window.confirm("Are you sure you want to finish?");
+        if (confirmFinish)
+            handler(e);
+        e.preventDefault();
+    };
+    element.removeEventListener("submit", handleSubmit);
+    element.addEventListener("submit", handleSubmit);
+    confirmCancel(element);
+};
+const confirmCancel = (element) => {
+    const cancelButton = element.querySelector("#no-submit");
+    if (!cancelButton)
+        return;
+    cancelButton.addEventListener("click", (e) => {
+        const confirmCancel = window.confirm("Are you sure you want to cancel?");
+        if (!confirmCancel)
+            return;
+        e.preventDefault();
+        const form = document.querySelector("form");
+        form?.reset();
+        localStorage.removeItem("chart");
+        renderPage("/");
+    });
 };
 const tableEvents = async (table, variant, render, page) => {
     if (render)
         await render();
     const buttons = document.querySelectorAll(`.action-${variant}`);
     buttons.forEach((el) => {
-        el.addEventListener("click", () => {
+        el.addEventListener("click", async () => {
             const id = Number(el.id);
+            let validator;
+            if (table === "categories")
+                validator = validateCategoryDelete;
+            if (table === "products")
+                validator = validateProductDelete;
             switch (variant) {
                 case "delete":
-                    serviceDelete(table, id);
-                    if (page)
-                        renderPage(page);
-                    break;
                 case "remove":
-                    serviceRemove(table, id);
+                    await serviceDelete(table, id, validator);
                     if (page)
                         renderPage(page);
                     break;
                 case "view":
-                    // TODO: HERE TO PUT ID
                     renderPage("/details", id);
                     break;
             }
         });
     });
 };
-export { formsEvents, tableEvents };
+const inputMutations = () => {
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+        const originalType = input.type;
+        const config = {
+            attributes: true,
+            childList: false,
+            subtree: false,
+        };
+        const callback = (mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === "attributes" &&
+                    mutation.attributeName === "type") {
+                    observer.disconnect();
+                    const target = mutation.target;
+                    target.type = originalType;
+                    target.value = "";
+                    observer.observe(target, config);
+                }
+            }
+        };
+        const observer = new MutationObserver(callback);
+        observer.observe(input, config);
+    });
+};
+export { formsEvents, tableEvents, inputMutations };

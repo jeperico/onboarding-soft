@@ -6,14 +6,14 @@ import { formatCurrency } from "../../utils/format-currency.js";
 
 const ChartCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<IChart> => {
+): Promise<{ payload: IChart; requireds: ErrorResponse }> => {
   const id = await autoIncrement("chart");
   const quantity = form.elements.namedItem("quantity") as HTMLInputElement;
   const price = form.elements.namedItem("price") as HTMLInputElement;
   const tax = form.elements.namedItem("tax") as HTMLInputElement;
   const product = form.elements.namedItem("product") as HTMLSelectElement;
 
-  const payload: IChart = {
+  const payload: IChart = await {
     id: id,
     quantity: parseInt(quantity.value),
     price: parseInt((parseFloat(price.value) * 100).toFixed(0)),
@@ -21,22 +21,36 @@ const ChartCreateSerializer = async (
     product_id: parseInt(product.value),
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.quantity)
+    requireds.push({ field: "#quantity", message: "Quantity is required." });
+  if (!payload.price)
+    requireds.push({ field: "#price", message: "Price is required." });
+  if (payload.tax === null || payload.tax === undefined)
+    requireds.push({ field: "#tax", message: "Tax is required." });
+  const product_id = parseInt(product.value);
+  if (!product.value || isNaN(product_id)) {
+    requireds.push({ field: "#product", message: "Product is required." });
+  }
+
+  return { payload, requireds };
 };
 
 const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {
   const data = await serviceView<IChart>("chart");
   if (!data) return null;
 
+  const products = await serviceView<IProduct>("products");
   const payload: IChartRender[] = [];
+
   data.map(async (el) => {
-    const product = (await serviceView<IProduct>("products"))?.find(
-      (e) => e.id === el.product_id,
-    );
-    const total = el.price * el.quantity;
-    const tax = product?.tax
-      ? formatCurrency(product.tax * el.quantity)
-      : "No data!";
+    const product = products?.find((e) => e.id === el.product_id);
+    const total = (el.price + el.tax) * el.quantity;
+
+    const tax =
+      product?.tax === null || product?.tax === undefined
+        ? "No data!"
+        : formatCurrency(product.tax * el.quantity);
 
     payload.push({
       id: el.id.toString(),

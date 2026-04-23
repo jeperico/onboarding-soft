@@ -30,6 +30,7 @@ const renderOrders = async () => {
         renderVoidTable("#tbody-history", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
@@ -55,7 +56,7 @@ const renderOrderDetails = async () => {
         return;
     }
     const tax = data.reduce((sum, el) => (sum += el.tax * el.quantity), 0);
-    const total = data.reduce((sum, el) => (sum += el.price * el.quantity), 0);
+    const total = data.reduce((sum, el) => (sum += (el.price + el.tax) * el.quantity), 0);
     taxField.innerText = formatCurrency(tax);
     totalField.innerText = formatCurrency(total);
 };
@@ -82,4 +83,12 @@ const renderTransactions = async () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
-export { finishPurchase, renderOrders, renderOrderDetails, renderTransactions };
+const listenReturn = () => {
+    const returnButton = document.querySelector("#return");
+    if (!returnButton)
+        return;
+    returnButton.addEventListener("click", () => {
+        renderPage("/history");
+    });
+};
+export { finishPurchase, renderOrders, renderOrderDetails, renderTransactions, listenReturn, };

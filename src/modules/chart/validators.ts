@@ -19,7 +19,7 @@ const validateChartQuantity = async (
   );
   if (!max) return `This product doesn't exists`;
 
-  return validateNumber(quantity, "Quantity", {
+  const error = await validateNumber(quantity, "Quantity", {
     min: {
       value: 1,
       label: "1",
@@ -29,15 +29,17 @@ const validateChartQuantity = async (
       label: max.stock.toString(),
     },
   });
+  if (error !== null) alert(error);
+
+  return error;
 };
 
 const validateChartPrice = async (
   price: number,
   product_id: number,
 ): Promise<string | null> => {
-  const product = (await serviceView<IProduct>("products"))?.find(
-    (el) => el.id === product_id && el.is_active,
-  );
+  const raw = await serviceView<IProduct>("products");
+  const product = raw?.find((el) => el.id === product_id && el.is_active);
   if (!product) return `This product doesn't exists`;
 
   if (price !== product.price) return "The price is incorrect";

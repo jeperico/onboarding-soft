@@ -1,8 +1,17 @@
+// +---------------------------------------------------------------------------------------------------------+
+// |                                               ATENTION!!!                                               |
+// +---------------------------------------------------------------------------------------------------------+
+// | This file is a single entry point for the entire application.                                           |
+// | It contains all the code, interfaces, types, utils, and modules.                                        |
+// | It is not recommended to edit this file directly, as it may cause conflicts with the original files.    |
+// | If you need to edit any part of the code, please edit the original files in their respective folders.   |
+// +---------------------------------------------------------------------------------------------------------+
+
 // -----------------------------------------
 // FEATURE FLAGS
 // -----------------------------------------
-const FEATURE_FLAG_ENABLE_ROUTES = false;
-const FEATURE_FLAG_ENABLE_SERVER = false;
+const FEATURE_FLAG_ENABLE_ROUTES = true;
+const FEATURE_FLAG_ENABLE_SERVER = true;
 
 // -----------------------------------------
 // INTERFACES
@@ -48,7 +57,7 @@ interface IChartRender {
 // interfaces/error-response.ts
 // -----------------------
 type ErrorResponse = {
-  field: string;
+  field?: string;
   message: string;
 }[];
 
@@ -129,16 +138,23 @@ type Table = "categories" | "products" | "transactions" | "chart" | "orders";
 const autoIncrement = async (table: Table) => {
   const data = await serviceView<{
     id: number;
+    is_active?: boolean;
   }>(table);
 
   if (!data || data.length === 0) return 1;
-  const lastItem = data[data.length - 1];
+  const hasIsActive = data.some((item) => "is_active" in item);
 
-  if (!lastItem || typeof lastItem.id !== "number") {
+  if (!hasIsActive) return data.length + 1;
+
+  const lastActive = data
+    .filter((item) => item.is_active)
+    .sort((a, b) => b.id - a.id)[0];
+
+  if (!lastActive || typeof lastActive.id !== "number") {
     return 1;
   }
 
-  return lastItem.id + 1;
+  return lastActive.id + 1;
 };
 
 // -----------------------
@@ -176,6 +192,7 @@ const renderErrorMessage = (errors: ErrorResponse) => {
 
     container.appendChild(message);
 
+    if (!error.field) return;
     const clean = document.querySelector(error.field) as HTMLInputElement;
     clean.value = "";
   });
@@ -196,7 +213,7 @@ const routes = {
     <section>
       <!-- Base form -->
       <form id="home-form">
-        <select name="product" id="product" name="product">
+        <select name="product" id="product" name="product" required>
           <option value="" disabled selected hidden>Product</option>
         </select>
         <div>
@@ -217,6 +234,7 @@ const routes = {
               id="tax"
               placeholder="Tax"
               disabled
+              required
             />
           </div>
           <div class="currency-input">
@@ -230,6 +248,7 @@ const routes = {
               min="0.01"
               placeholder="Unit Price"
               disabled
+              required
             />
           </div>
         </div>
@@ -269,8 +288,10 @@ const routes = {
           </div>
         </div>
         <div>
-          <button class="button-secondary">Cancel</button>
-          <button type="submit" class="button-primary">Finish</button>
+          <button type="button" class="button-secondary" id="no-submit">
+            Cancel
+          </button>
+          <button type="submit" class="button-primary" id="finish">Finish</button>
         </div>
       </form>
     </section>
@@ -284,10 +305,10 @@ const routes = {
       <!-- Base form -->
       <form id="product-form">
         <div>
-          <input type="text" id="name" name="name" placeholder="Product" />
+          <input type="text" id="name" name="name" placeholder="Product" required />
         </div>
         <div>
-          <select name="category" id="category">
+          <select name="category" id="category" required>
             <option value="" disabled selected hidden>Category</option>
           </select>
           <div class="currency-input">
@@ -300,6 +321,7 @@ const routes = {
               min="0.01"
               step="0.01"
               placeholder="Price"
+              required
             />
           </div>
           <input
@@ -310,6 +332,7 @@ const routes = {
             min="1"
             max="999999"
             step="1"
+            required
           />
         </div>
 
@@ -354,15 +377,7 @@ const routes = {
           />
           <div class="percent-input">
             <p>%</p>
-            <input
-              type="number"
-              min="1"
-              max="100"
-              id="tax"
-              name="tax"
-              required
-              placeholder="Tax"
-            />
+            <input type="text" id="tax" name="tax" required placeholder="Tax" />
           </div>
         </div>
 
@@ -410,7 +425,8 @@ const routes = {
     title: "Details",
     href: "/src/app/details.html",
     content: `
-    <section>
+    <section id="details-section">
+      <button class="button-primary" id="return">RETURN</button>
       <!-- Base Table -->
       <table>
         <thead>
@@ -569,28 +585,43 @@ const serviceView = async <IResponseData>(
   return JSON.parse(response);
 };
 
-const serviceDelete = async (endpoint: Table, id: number) => {
-  const response = await serviceView<{ id: number; is_active: boolean }>(
-    endpoint,
-  );
-  const payload = await response?.map((el) => {
-    if (el.id === id) el.is_active = false;
-  });
-  if (!payload) return null;
+const serviceDelete = async <
+  IService extends { id: number; is_active?: boolean },
+>(
+  endpoint: Table,
+  id: number,
+  beforeDelete?: (id: number) => Promise<boolean>,
+) => {
+  const confirm = window.confirm("Are you sure you want to delete this item?");
+  if (!confirm) return;
 
-  localStorage.setItem(endpoint, JSON.stringify(response));
-  // window.location.reload();
-};
+  if (beforeDelete) {
+    const canDelete = await beforeDelete(id);
+    if (!canDelete) return;
+  }
 
-const serviceRemove = async (endpoint: Table, id: number) => {
-  const response = await serviceView<{ id: number }>(endpoint);
-  if (!response) return null;
+  const data = await serviceView<IService>(endpoint);
+  if (!data) return null;
 
-  const data = response.filter((el) => el.id !== id);
-  if (data.length !== response.length - 1) return null;
+  const hasIsActive = data.some((item) => "is_active" in item);
+  let updatedData = [];
 
-  localStorage.setItem(endpoint, JSON.stringify(data));
-  // window.location.reload();
+  if (hasIsActive) {
+    updatedData = data.map((item) =>
+      item.id === id ? { ...item, is_active: false } : item,
+    );
+  } else {
+    updatedData = data.filter((item) => item.id !== id);
+  }
+
+  const stillExists = updatedData.find((item) => item.id === id);
+
+  if (!hasIsActive && stillExists) {
+    alert("Error removing item.");
+    return;
+  }
+
+  localStorage.setItem(endpoint, JSON.stringify(updatedData));
 };
 
 // -----------------------
@@ -613,10 +644,44 @@ const formsEvents = async (
   const element = document.querySelector<HTMLFormElement>(form || "form");
   if (!element) return;
 
-  element.addEventListener("submit", handler);
+  const handleSubmit = (e: SubmitEvent) => {
+    const finishButton = element.querySelector<HTMLButtonElement>("#finish");
+    if (!finishButton) {
+      handler(e);
+      return;
+    }
+
+    const confirmFinish = window.confirm("Are you sure you want to finish?");
+    if (confirmFinish) handler(e);
+    e.preventDefault();
+  };
+
+  element.removeEventListener("submit", handleSubmit);
+  element.addEventListener("submit", handleSubmit);
+
+  confirmCancel(element);
 };
 
-const tableEvents = async (
+const confirmCancel = (element: HTMLFormElement) => {
+  const cancelButton = element.querySelector<HTMLButtonElement>("#no-submit");
+  if (!cancelButton) return;
+
+  cancelButton.addEventListener("click", (e) => {
+    const confirmCancel = window.confirm("Are you sure you want to cancel?");
+    if (!confirmCancel) return;
+
+    e.preventDefault();
+    const form = document.querySelector<HTMLFormElement>("form");
+    form?.reset();
+
+    localStorage.removeItem("chart");
+    renderPage("/");
+  });
+};
+
+const tableEvents = async <
+  IValidate extends { id: number; is_active?: boolean },
+>(
   table: EventListenerOptions["table"],
   variant: EventListenerOptions["variant"],
   render: EventListenerOptions["render"],
@@ -629,24 +694,58 @@ const tableEvents = async (
   );
 
   buttons.forEach((el) => {
-    el.addEventListener("click", () => {
+    el.addEventListener("click", async () => {
       const id = Number(el.id);
+
+      let validator: ((id: number) => Promise<boolean>) | undefined;
+      if (table === "categories") validator = validateCategoryDelete;
+      if (table === "products") validator = validateProductDelete;
 
       switch (variant) {
         case "delete":
-          serviceDelete(table, id);
-          if (page) renderPage(page);
-          break;
         case "remove":
-          serviceRemove(table, id);
+          await serviceDelete<IValidate>(table, id, validator);
           if (page) renderPage(page);
           break;
+
         case "view":
-          // TODO: HERE TO PUT ID
           renderPage("/details", id);
           break;
       }
     });
+  });
+};
+
+const inputMutations = () => {
+  const inputs = document.querySelectorAll<HTMLInputElement>("input");
+
+  inputs.forEach((input) => {
+    const originalType = input.type;
+
+    const config = {
+      attributes: true,
+      childList: false,
+      subtree: false,
+    };
+
+    const callback: MutationCallback = (mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "type"
+        ) {
+          observer.disconnect();
+
+          const target = mutation.target as HTMLInputElement;
+          target.type = originalType;
+          target.value = "";
+          observer.observe(target, config);
+        }
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(input, config);
   });
 };
 
@@ -688,7 +787,9 @@ const renderVoidElement = (row: HTMLTableRowElement) => {
   row.appendChild(td);
 };
 
-const renderSelect = async <IResponseData extends { is_active: boolean }>(
+const renderSelect = async <
+  IResponseData extends { id: number; is_active: boolean; stock?: number },
+>(
   table: Table,
   select: string,
   fieldText: keyof IResponseData,
@@ -698,7 +799,9 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
   const data = await serviceView<IResponseData>(table);
 
   if (!parent || !data) return;
-  data.forEach((el: IResponseData) => {
+  parent.innerHTML =
+    "<option value='' disabled selected hidden>Product</option>";
+  data.forEach(async (el: IResponseData) => {
     if (!el.is_active) return;
     const option = document.createElement("option");
 
@@ -709,7 +812,20 @@ const renderSelect = async <IResponseData extends { is_active: boolean }>(
     option.value = String(value);
 
     parent.appendChild(option);
+
+    const chart = (await serviceView<IChart>("chart"))?.find(
+      (e) => e.product_id === el.id,
+    )?.quantity;
+
+    if (chart && el.stock && el.stock - chart === 0) option.disabled = true;
   });
+};
+
+const setFocus = (selector: string) => {
+  const element = document.querySelector<HTMLInputElement | HTMLSelectElement>(
+    selector,
+  );
+  if (element) element.focus();
 };
 
 // -----------------------
@@ -727,7 +843,7 @@ const validateText = async <
   if (!regex.test(value))
     return `${name} name must start with a letter and contain only letters and numbers.`;
 
-  if (value.length > 100) return `${name} name cannot exceed 100 characters.`;
+  if (value.length > 28) return `${name} name cannot exceed 28 characters.`;
   if (value.length < 3)
     return `${name} name must contain at least 2 characters.`;
 
@@ -804,13 +920,28 @@ const categoryHandler = async (
   return errors;
 };
 
+const validateCategoryDelete = async (categoryId: number) => {
+  const products = await serviceView<IProduct>("products");
+
+  const hasProducts = products?.some(
+    (p) => p.category_id === categoryId && p.is_active !== false,
+  );
+
+  if (hasProducts) {
+    alert("Cannot delete category because it has associated products.");
+    return false;
+  }
+
+  return true;
+};
+
 // -----------------------
 // modules/category/serializers.ts
 // -----------------------
 
 const CategoryCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<ICategory> => {
+): Promise<{ payload: ICategory; requireds: ErrorResponse }> => {
   const id = await autoIncrement("categories");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const tax = form.elements.namedItem("tax") as HTMLInputElement;
@@ -822,7 +953,11 @@ const CategoryCreateSerializer = async (
     is_active: true,
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.name)
+    requireds.push({ field: "#name", message: "Category name is required." });
+
+  return { payload, requireds };
 };
 
 const CategoryViewSerializer = async (): Promise<ICategoryRender[] | null> => {
@@ -850,14 +985,19 @@ const CategoryViewSerializer = async (): Promise<ICategoryRender[] | null> => {
 const createCategory = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await CategoryCreateSerializer(
+  const { payload, requireds } = await CategoryCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name || !payload.tax) return;
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
+    return;
+  }
 
   const errors = await categoryHandler(payload.name, payload.tax);
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#name");
     return;
   }
 
@@ -878,6 +1018,7 @@ const renderCategory = async () => {
     renderVoidTable("#tbody-category", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
@@ -896,29 +1037,78 @@ const renderCategory = async () => {
   table.appendChild(row);
 };
 
+const formatTaxInput = () => {
+  const taxInput = document.querySelector<HTMLInputElement>("#tax");
+  if (!taxInput) return;
+
+  const regexTaxInput = (e: Event): void => {
+    if (!e.target || !(e.target instanceof HTMLInputElement)) return;
+    let value = (e.target as HTMLInputElement).value;
+
+    value = value.replace(/[^0-9.,]/g, "");
+    value = value.replace(",", ".");
+    let [integer, decimal] = value.split(".");
+
+    if (value.split(".").length > 2) {
+      value = integer + "." + value.split(".").slice(1).join("");
+      [integer, decimal] = value.split(".");
+    }
+
+    if (decimal !== undefined) {
+      decimal = decimal.slice(0, 2);
+      value = `${integer}.${decimal}`;
+    }
+
+    if (value.endsWith(".")) {
+      e.target.value = value;
+      return;
+    }
+
+    let number: number = parseFloat(value);
+    if (!isNaN(number)) {
+      if (number > 100) number = 100;
+      if (number < 0) number = 0;
+
+      value = number.toString();
+    }
+
+    e.target.value = value;
+  };
+
+  taxInput.addEventListener("input", regexTaxInput);
+};
+
 // -----------------------
 // modules/category/spa.ts
 // -----------------------
 
 const loadCategory = async () => {
   await renderContent("/categories");
-  await tableEvents("categories", "delete", renderCategory, "/categories");
+  await tableEvents<ICategory>(
+    "categories",
+    "delete",
+    renderCategory,
+    "/categories",
+  );
   await formsEvents(createCategory);
+  inputMutations();
+  formatTaxInput();
+  setFocus("#name");
 };
 
 // -----------------------
 // modules/base/validators.ts
 // -----------------------
 
-const validateCategoryName = async (value: string): Promise<string | null> => {
-  return validateText<ICategory>(value, "categories", "Category");
+const validateCategoryName = async (name: string): Promise<string | null> => {
+  return validateText<ICategory>(name, "categories", "Category");
 };
 
-const validateCategoryTax = (value: number): string | null => {
-  return validateNumber(value, "Tax", {
+const validateCategoryTax = (tax: number): string | null => {
+  return validateNumber(tax, "Tax", {
     min: {
-      value: 0.01,
-      label: "0.01%",
+      value: 0,
+      label: "0%",
     },
     max: {
       value: 100,
@@ -961,6 +1151,7 @@ const chartHandler = async (
   if (duplicatedResult.error)
     errors.push({ field: "#product", message: duplicatedResult.error });
   if (duplicatedResult.handled) handled = true;
+  console.log(duplicatedResult);
 
   return { errors, handled };
 };
@@ -971,14 +1162,14 @@ const chartHandler = async (
 
 const ChartCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<IChart> => {
+): Promise<{ payload: IChart; requireds: ErrorResponse }> => {
   const id = await autoIncrement("chart");
   const quantity = form.elements.namedItem("quantity") as HTMLInputElement;
   const price = form.elements.namedItem("price") as HTMLInputElement;
   const tax = form.elements.namedItem("tax") as HTMLInputElement;
   const product = form.elements.namedItem("product") as HTMLSelectElement;
 
-  const payload: IChart = {
+  const payload: IChart = await {
     id: id,
     quantity: parseInt(quantity.value),
     price: parseInt((parseFloat(price.value) * 100).toFixed(0)),
@@ -986,22 +1177,36 @@ const ChartCreateSerializer = async (
     product_id: parseInt(product.value),
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.quantity)
+    requireds.push({ field: "#quantity", message: "Quantity is required." });
+  if (!payload.price)
+    requireds.push({ field: "#price", message: "Price is required." });
+  if (payload.tax === null || payload.tax === undefined)
+    requireds.push({ field: "#tax", message: "Tax is required." });
+  const product_id = parseInt(product.value);
+  if (!product.value || isNaN(product_id)) {
+    requireds.push({ field: "#product", message: "Product is required." });
+  }
+
+  return { payload, requireds };
 };
 
 const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {
   const data = await serviceView<IChart>("chart");
   if (!data) return null;
 
+  const products = await serviceView<IProduct>("products");
   const payload: IChartRender[] = [];
+
   data.map(async (el) => {
-    const product = (await serviceView<IProduct>("products"))?.find(
-      (e) => e.id === el.product_id,
-    );
-    const total = el.price * el.quantity;
-    const tax = product?.tax
-      ? formatCurrency(product.tax * el.quantity)
-      : "No data!";
+    const product = products?.find((e) => e.id === el.product_id);
+    const total = (el.price + el.tax) * el.quantity;
+
+    const tax =
+      product?.tax === null || product?.tax === undefined
+        ? "No data!"
+        : formatCurrency(product.tax * el.quantity);
 
     payload.push({
       id: el.id.toString(),
@@ -1023,14 +1228,14 @@ const ChartViewSerializer = async (): Promise<IChartRender[] | null> => {
 const createChart = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await ChartCreateSerializer(event.target as HTMLFormElement);
-  if (
-    !payload.product_id ||
-    !payload.quantity ||
-    !payload.price ||
-    !payload.tax
-  )
+  const { payload, requireds } = await ChartCreateSerializer(
+    event.target as HTMLFormElement,
+  );
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
     return;
+  }
 
   const { errors, handled } = await chartHandler(
     payload.product_id,
@@ -1040,10 +1245,11 @@ const createChart = async (event: SubmitEvent) => {
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#quantity");
     return;
   }
   if (handled) {
-    renderPage("/");
+    await renderContent("/");
     return;
   }
 
@@ -1052,7 +1258,7 @@ const createChart = async (event: SubmitEvent) => {
     "chart",
     JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
-  renderPage("/");
+  await renderPage("/");
 };
 
 const renderChart = async () => {
@@ -1064,6 +1270,7 @@ const renderChart = async () => {
     renderVoidTable("#tbody-chart", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
@@ -1128,22 +1335,14 @@ const fieldsListener = () => {
       (el) => el.id === parseInt(id),
     );
     const tax = product?.tax;
-    const chart = (await serviceView<IChart>("chart"))?.find(
-      (el) => el.product_id === product?.id,
-    );
 
     const taxField = document.querySelector<HTMLInputElement>("#tax");
-    if (!taxField || !tax) return;
+    if (!taxField || tax === null || tax === undefined) return;
     taxField.value = (tax / 100).toFixed(2);
 
     const priceField = document.querySelector<HTMLInputElement>("#price");
     if (!priceField || !product?.price) return;
     priceField.value = (product.price / 100).toFixed(2);
-
-    const quantityField = document.querySelector<HTMLInputElement>("#quantity");
-    if (!quantityField || !chart) return;
-    const stock = product?.stock - chart?.quantity;
-    quantityField.max = stock.toString();
   });
 };
 
@@ -1153,11 +1352,12 @@ const fieldsListener = () => {
 
 const loadChart = async () => {
   await renderContent("/");
-  await tableEvents("chart", "remove", renderChart, "/");
+  await tableEvents<IChart>("chart", "remove", renderChart, "/");
   await formsEvents(createChart, "#home-form");
-  // TODO: Remove products without stock from selection
   await renderSelect<IProduct>("products", "#product", "name", "id");
+  inputMutations();
   fieldsListener();
+  setFocus("#product");
 };
 
 // -----------------------
@@ -1179,7 +1379,7 @@ const validateChartQuantity = async (
   );
   if (!max) return `This product doesn't exists`;
 
-  return validateNumber(quantity, "Quantity", {
+  const error = await validateNumber(quantity, "Quantity", {
     min: {
       value: 1,
       label: "1",
@@ -1189,15 +1389,17 @@ const validateChartQuantity = async (
       label: max.stock.toString(),
     },
   });
+  if (error !== null) alert(error);
+
+  return error;
 };
 
 const validateChartPrice = async (
   price: number,
   product_id: number,
 ): Promise<string | null> => {
-  const product = (await serviceView<IProduct>("products"))?.find(
-    (el) => el.id === product_id && el.is_active,
-  );
+  const raw = await serviceView<IProduct>("products");
+  const product = raw?.find((el) => el.id === product_id && el.is_active);
   if (!product) return `This product doesn't exists`;
 
   if (price !== product.price) return "The price is incorrect";
@@ -1227,6 +1429,7 @@ const validateChartDuplicated = async (
   if (!chart || !duplicated) return { handled: false };
 
   const error = await overwriteProduct(duplicated, quantity, chart);
+  console.log(chart, duplicated, error);
   if (error) return { handled: false, error };
   return { handled: true };
 };
@@ -1240,17 +1443,28 @@ const validateChartDuplicated = async (
 // -----------------------
 
 const OrderCreateSerializer = async (): Promise<IOrder | null> => {
-  const data = await serviceView<IChart>("chart");
-  if (!data) return null;
+  const chart = await serviceView<IChart>("chart");
+  if (!chart) return null;
+
+  const products = await serviceView<IProduct>("products");
+  if (!products) return null;
 
   const id = await autoIncrement("orders");
   let total_tax = 0;
   let total_price = 0;
 
-  data.map((el) => {
+  for (const el of chart) {
     total_tax += el.tax * el.quantity;
-    total_price += el.price * el.quantity;
-  });
+    total_price += (el.price + el.tax) * el.quantity;
+
+    const product = products.find((e) => e.id === el.product_id);
+    if (product) {
+      product.stock -= el.quantity;
+    }
+  }
+
+  const filteredProducts = products.filter((p) => p.stock > 0);
+  localStorage.setItem("products", JSON.stringify(filteredProducts));
 
   const payload: IOrder = {
     id: id,
@@ -1292,11 +1506,11 @@ const TransactionCreateSerializer = async (
   const id = (await autoIncrement("transactions")) || 1;
   const payload: ITransaction[] = [];
 
-  data.map(async (el, index) => {
+  data.forEach((el, index) => {
     payload.push({
       id: id + index,
       quantity: el.quantity,
-      price: el.price,
+      price: el.price + el.tax,
       product_id: el.product_id,
       order_id: order,
       is_active: true,
@@ -1312,33 +1526,31 @@ const TransactionViewSerializer = async (): Promise<
   const url = new URLSearchParams(window.location.search);
   const id = url.get("order");
   if (!id) return null;
-  const data = (await serviceView<ITransaction>("transactions"))?.filter(
-    (el) => el.is_active && el.order_id === parseInt(id),
-  );
-  if (!data) return null;
 
-  const payload: ITransactionRender[] = [];
-  await data.map(async (el) => {
-    const product = (await serviceView<IProduct>("products"))?.find(
-      (e) => e.id === el.product_id,
-    );
-    const category = (await serviceView<ICategory>("categories"))?.find(
-      (e) => e.id === product?.category_id,
-    )?.name;
+  const transactions = (
+    await serviceView<ITransaction>("transactions")
+  )?.filter((el) => el.is_active && el.order_id === parseInt(id));
+  if (!transactions) return null;
+
+  const products = await serviceView<IProduct>("products");
+  const categories = await serviceView<ICategory>("categories");
+
+  return transactions.map((el) => {
+    const product = products?.find((p) => p.id === el.product_id);
+    const category = categories?.find((c) => c.id === product?.category_id);
+
     const tax = (product?.tax || 0) * el.quantity;
     const total = el.price * el.quantity;
 
-    payload.push({
+    return {
       id: el.id.toString(),
       product: product?.name || "No data!",
-      category: category || "No data!",
+      category: category?.name || "No data!",
       quantity: el.quantity.toString(),
       tax: formatCurrency(tax),
       total: formatCurrency(total),
-    });
+    };
   });
-
-  return payload;
 };
 
 // -----------------------
@@ -1384,6 +1596,7 @@ const renderOrders = async () => {
     renderVoidTable("#tbody-history", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
@@ -1416,7 +1629,10 @@ const renderOrderDetails = async () => {
   }
 
   const tax = data.reduce((sum, el) => (sum += el.tax * el.quantity), 0);
-  const total = data.reduce((sum, el) => (sum += el.price * el.quantity), 0);
+  const total = data.reduce(
+    (sum, el) => (sum += (el.price + el.tax) * el.quantity),
+    0,
+  );
 
   taxField.innerText = formatCurrency(tax);
   totalField.innerText = formatCurrency(total);
@@ -1451,6 +1667,15 @@ const renderTransactions = async () => {
   table.appendChild(row);
 };
 
+const listenReturn = () => {
+  const returnButton = document.querySelector("#return");
+  if (!returnButton) return;
+
+  returnButton.addEventListener("click", () => {
+    renderPage("/history");
+  });
+};
+
 // -----------------------
 // modules/order/spa.ts
 // -----------------------
@@ -1468,6 +1693,7 @@ const loadHistory = async () => {
 const loadDetails = async (id: number) => {
   await renderContent("/details", { order: id.toString() });
   await tableEvents("transactions", "none", renderTransactions);
+  listenReturn();
 };
 
 // -----------------------------------------
@@ -1512,7 +1738,7 @@ const productHandler = async (
 
 const ProductCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<IProduct> => {
+): Promise<{ payload: IProduct; requireds: ErrorResponse }> => {
   const id = await autoIncrement("products");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const stock = form.elements.namedItem("stock") as HTMLInputElement;
@@ -1536,7 +1762,19 @@ const ProductCreateSerializer = async (
     is_active: true,
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.name)
+    requireds.push({ field: "#name", message: "Name is required." });
+  if (!payload.category_id)
+    requireds.push({ field: "#category", message: "Category is required." });
+  if (!payload.stock)
+    requireds.push({ field: "#stock", message: "Stock is required." });
+  if (!payload.price)
+    requireds.push({ field: "#price", message: "Price is required." });
+  if (payload.tax === null || payload.tax === undefined)
+    requireds.push({ field: "#tax", message: "Tax is required." });
+
+  return { payload, requireds };
 };
 
 const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
@@ -1544,12 +1782,11 @@ const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
     (el) => el.is_active,
   );
   if (!data) return null;
+  const categories = await serviceView<ICategory>("categories");
 
   const payload: IProductRender[] = [];
-  data.map(async (el) => {
-    const category = (await serviceView<ICategory>("categories"))?.find(
-      (e) => e.id === el.category_id,
-    )?.name;
+  data.map((el) => {
+    const category = categories?.find((e) => e.id === el.category_id)?.name;
 
     payload.push({
       id: el.id.toString(),
@@ -1570,11 +1807,14 @@ const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
 const createProduct = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await ProductCreateSerializer(
+  const { payload, requireds } = await ProductCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
     return;
+  }
 
   const errors = await productHandler(
     payload.name,
@@ -1585,6 +1825,7 @@ const createProduct = async (event: SubmitEvent) => {
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#name");
     return;
   }
 
@@ -1605,6 +1846,7 @@ const renderProducts = async () => {
     renderVoidTable("#tbody-products", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
@@ -1631,9 +1873,16 @@ const renderProducts = async () => {
 
 const loadProducts = async () => {
   await renderContent("/products");
-  await tableEvents("products", "delete", renderProducts, "/products");
+  await tableEvents<IProduct>(
+    "products",
+    "delete",
+    renderProducts,
+    "/products",
+  );
   await formsEvents(createProduct);
   await renderSelect<ICategory>("categories", "#category", "name", "id");
+  inputMutations();
+  setFocus("#name");
 };
 
 // -----------------------
@@ -1684,13 +1933,26 @@ const validateProductTax = async (
   const category = (await serviceView<ICategory>("categories"))?.find(
     (el) => el.id === category_id,
   )?.tax;
-  if (!category) return "No category found";
+  if (category === null || category === undefined) return "No category found";
 
   const compare = parseInt(((category * price) / 100).toFixed(0));
 
   if (compare !== tax) return "Invalid tax value";
 
   return null;
+};
+
+const validateProductDelete = async (productId: number) => {
+  const charts = await serviceView<IChart>("chart");
+
+  const hasChart = charts?.some((c) => c.product_id === productId);
+
+  if (hasChart) {
+    alert("Cannot delete product because it is used in chart.");
+    return false;
+  }
+
+  return true;
 };
 
 // RENDER HEADER

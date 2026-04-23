@@ -9,16 +9,23 @@ import {
   ProductViewSerializer,
 } from "./serializer.js";
 import { productHandler } from "./handlers.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import {
+  renderActionButton,
+  renderElement,
+  setFocus,
+} from "../base/services.js";
 
 const createProduct = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  const payload = await ProductCreateSerializer(
+  const { payload, requireds } = await ProductCreateSerializer(
     event.target as HTMLFormElement,
   );
-  if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
     return;
+  }
 
   const errors = await productHandler(
     payload.name,
@@ -29,6 +36,7 @@ const createProduct = async (event: SubmitEvent) => {
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#name");
     return;
   }
 
@@ -49,6 +57,7 @@ const renderProducts = async () => {
     renderVoidTable("#tbody-products", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");

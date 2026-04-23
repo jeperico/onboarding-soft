@@ -6,7 +6,7 @@ import { formatCurrency } from "../../utils/format-currency.js";
 
 const ProductCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<IProduct> => {
+): Promise<{ payload: IProduct; requireds: ErrorResponse }> => {
   const id = await autoIncrement("products");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const stock = form.elements.namedItem("stock") as HTMLInputElement;
@@ -30,7 +30,19 @@ const ProductCreateSerializer = async (
     is_active: true,
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.name)
+    requireds.push({ field: "#name", message: "Name is required." });
+  if (!payload.category_id)
+    requireds.push({ field: "#category", message: "Category is required." });
+  if (!payload.stock)
+    requireds.push({ field: "#stock", message: "Stock is required." });
+  if (!payload.price)
+    requireds.push({ field: "#price", message: "Price is required." });
+  if (payload.tax === null || payload.tax === undefined)
+    requireds.push({ field: "#tax", message: "Tax is required." });
+
+  return { payload, requireds };
 };
 
 const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
@@ -38,12 +50,11 @@ const ProductViewSerializer = async (): Promise<IProductRender[] | null> => {
     (el) => el.is_active,
   );
   if (!data) return null;
+  const categories = await serviceView<ICategory>("categories");
 
   const payload: IProductRender[] = [];
-  data.map(async (el) => {
-    const category = (await serviceView<ICategory>("categories"))?.find(
-      (e) => e.id === el.category_id,
-    )?.name;
+  data.map((el) => {
+    const category = categories?.find((e) => e.id === el.category_id)?.name;
 
     payload.push({
       id: el.id.toString(),

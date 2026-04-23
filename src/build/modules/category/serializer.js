@@ -10,7 +10,10 @@ const CategoryCreateSerializer = async (form) => {
         tax: parseFloat(parseFloat(tax.value).toFixed(2)),
         is_active: true,
     };
-    return payload;
+    const requireds = [];
+    if (!payload.name)
+        requireds.push({ field: "#name", message: "Category name is required." });
+    return { payload, requireds };
 };
 const CategoryViewSerializer = async () => {
     const data = (await serviceView("categories"))?.filter((el) => el.is_active);

@@ -33,7 +33,9 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
     const data = await serviceView(table);
     if (!parent || !data)
         return;
-    data.forEach((el) => {
+    parent.innerHTML =
+        "<option value='' disabled selected hidden>Product</option>";
+    data.forEach(async (el) => {
         if (!el.is_active)
             return;
         const option = document.createElement("option");
@@ -42,6 +44,14 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
         option.innerText = String(text);
         option.value = String(value);
         parent.appendChild(option);
+        const chart = (await serviceView("chart"))?.find((e) => e.product_id === el.id)?.quantity;
+        if (chart && el.stock && el.stock - chart === 0)
+            option.disabled = true;
     });
 };
-export { renderElement, renderActionButton, renderSelect };
+const setFocus = (selector) => {
+    const element = document.querySelector(selector);
+    if (element)
+        element.focus();
+};
+export { renderElement, renderActionButton, renderSelect, setFocus };

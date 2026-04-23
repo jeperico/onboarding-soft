@@ -5,21 +5,24 @@ import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { ChartCreateSerializer, ChartViewSerializer } from "./serializer.js";
 import { chartHandler } from "./handlers.js";
 import { IChart } from "../../interfaces/chart.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import {
+  renderActionButton,
+  renderElement,
+  setFocus,
+} from "../base/services.js";
 import { IProduct } from "../../interfaces/product.js";
 
 const createChart = async (event: SubmitEvent) => {
   event.preventDefault();
 
-  // II - Inputs
-  const payload = await ChartCreateSerializer(event.target as HTMLFormElement);
-  if (
-    !payload.product_id ||
-    !payload.quantity ||
-    !payload.price ||
-    !payload.tax
-  )
+  const { payload, requireds } = await ChartCreateSerializer(
+    event.target as HTMLFormElement,
+  );
+
+  if (requireds.length > 0) {
+    renderErrorMessage(requireds);
     return;
+  }
 
   const { errors, handled } = await chartHandler(
     payload.product_id,
@@ -29,10 +32,11 @@ const createChart = async (event: SubmitEvent) => {
   );
   if (errors.length > 0) {
     renderErrorMessage(errors);
+    setFocus(errors[0].field || "#quantity");
     return;
   }
   if (handled) {
-    renderPage("/");
+    await renderContent("/");
     return;
   }
 
@@ -41,7 +45,7 @@ const createChart = async (event: SubmitEvent) => {
     "chart",
     JSON.stringify(currentData ? [...currentData, payload] : [payload]),
   );
-  renderPage("/");
+  await renderPage("/");
 };
 
 const renderChart = async () => {
@@ -53,6 +57,7 @@ const renderChart = async () => {
     renderVoidTable("#tbody-chart", COLUMNS_COUNT);
     return;
   }
+  table.innerHTML = "";
 
   data.map((el) => {
     const row = document.createElement("tr");
@@ -117,22 +122,14 @@ const fieldsListener = () => {
       (el) => el.id === parseInt(id),
     );
     const tax = product?.tax;
-    const chart = (await serviceView<IChart>("chart"))?.find(
-      (el) => el.product_id === product?.id,
-    );
 
     const taxField = document.querySelector<HTMLInputElement>("#tax");
-    if (!taxField || !tax) return;
+    if (!taxField || tax === null || tax === undefined) return;
     taxField.value = (tax / 100).toFixed(2);
 
     const priceField = document.querySelector<HTMLInputElement>("#price");
     if (!priceField || !product?.price) return;
     priceField.value = (product.price / 100).toFixed(2);
-
-    const quantityField = document.querySelector<HTMLInputElement>("#quantity");
-    if (!quantityField || !chart) return;
-    const stock = product?.stock - chart?.quantity;
-    quantityField.max = stock.toString();
   });
 };
 

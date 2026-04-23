@@ -1,9 +1,17 @@
 "use strict";
+// +---------------------------------------------------------------------------------------------------------+
+// |                                               ATENTION!!!                                               |
+// +---------------------------------------------------------------------------------------------------------+
+// | This file is a single entry point for the entire application.                                           |
+// | It contains all the code, interfaces, types, utils, and modules.                                        |
+// | It is not recommended to edit this file directly, as it may cause conflicts with the original files.    |
+// | If you need to edit any part of the code, please edit the original files in their respective folders.   |
+// +---------------------------------------------------------------------------------------------------------+
 // -----------------------------------------
 // FEATURE FLAGS
 // -----------------------------------------
-const FEATURE_FLAG_ENABLE_ROUTES = false;
-const FEATURE_FLAG_ENABLE_SERVER = false;
+const FEATURE_FLAG_ENABLE_ROUTES = true;
+const FEATURE_FLAG_ENABLE_SERVER = true;
 // -----------------------------------------
 // UTILS
 // -----------------------------------------
@@ -14,11 +22,16 @@ const autoIncrement = async (table) => {
     const data = await serviceView(table);
     if (!data || data.length === 0)
         return 1;
-    const lastItem = data[data.length - 1];
-    if (!lastItem || typeof lastItem.id !== "number") {
+    const hasIsActive = data.some((item) => "is_active" in item);
+    if (!hasIsActive)
+        return data.length + 1;
+    const lastActive = data
+        .filter((item) => item.is_active)
+        .sort((a, b) => b.id - a.id)[0];
+    if (!lastActive || typeof lastActive.id !== "number") {
         return 1;
     }
-    return lastItem.id + 1;
+    return lastActive.id + 1;
 };
 // -----------------------
 // utils/format-code.ts
@@ -50,6 +63,8 @@ const renderErrorMessage = (errors) => {
         message.innerText = error.message;
         message.classList.add("error-form-message");
         container.appendChild(message);
+        if (!error.field)
+            return;
         const clean = document.querySelector(error.field);
         clean.value = "";
     });
@@ -68,7 +83,7 @@ const routes = {
     <section>
       <!-- Base form -->
       <form id="home-form">
-        <select name="product" id="product" name="product">
+        <select name="product" id="product" name="product" required>
           <option value="" disabled selected hidden>Product</option>
         </select>
         <div>
@@ -89,6 +104,7 @@ const routes = {
               id="tax"
               placeholder="Tax"
               disabled
+              required
             />
           </div>
           <div class="currency-input">
@@ -102,6 +118,7 @@ const routes = {
               min="0.01"
               placeholder="Unit Price"
               disabled
+              required
             />
           </div>
         </div>
@@ -141,8 +158,10 @@ const routes = {
           </div>
         </div>
         <div>
-          <button class="button-secondary">Cancel</button>
-          <button type="submit" class="button-primary">Finish</button>
+          <button type="button" class="button-secondary" id="no-submit">
+            Cancel
+          </button>
+          <button type="submit" class="button-primary" id="finish">Finish</button>
         </div>
       </form>
     </section>
@@ -156,10 +175,10 @@ const routes = {
       <!-- Base form -->
       <form id="product-form">
         <div>
-          <input type="text" id="name" name="name" placeholder="Product" />
+          <input type="text" id="name" name="name" placeholder="Product" required />
         </div>
         <div>
-          <select name="category" id="category">
+          <select name="category" id="category" required>
             <option value="" disabled selected hidden>Category</option>
           </select>
           <div class="currency-input">
@@ -172,6 +191,7 @@ const routes = {
               min="0.01"
               step="0.01"
               placeholder="Price"
+              required
             />
           </div>
           <input
@@ -182,6 +202,7 @@ const routes = {
             min="1"
             max="999999"
             step="1"
+            required
           />
         </div>
 
@@ -226,15 +247,7 @@ const routes = {
           />
           <div class="percent-input">
             <p>%</p>
-            <input
-              type="number"
-              min="1"
-              max="100"
-              id="tax"
-              name="tax"
-              required
-              placeholder="Tax"
-            />
+            <input type="text" id="tax" name="tax" required placeholder="Tax" />
           </div>
         </div>
 
@@ -282,7 +295,8 @@ const routes = {
         title: "Details",
         href: "/src/app/details.html",
         content: `
-    <section>
+    <section id="details-section">
+      <button class="button-primary" id="return">RETURN</button>
       <!-- Base Table -->
       <table>
         <thead>
@@ -423,57 +437,116 @@ const serviceView = async (endpoint) => {
         return null;
     return JSON.parse(response);
 };
-const serviceDelete = async (endpoint, id) => {
-    const response = await serviceView(endpoint);
-    const payload = await response?.map((el) => {
-        if (el.id === id)
-            el.is_active = false;
-    });
-    if (!payload)
+const serviceDelete = async (endpoint, id, beforeDelete) => {
+    const confirm = window.confirm("Are you sure you want to delete this item?");
+    if (!confirm)
+        return;
+    if (beforeDelete) {
+        const canDelete = await beforeDelete(id);
+        if (!canDelete)
+            return;
+    }
+    const data = await serviceView(endpoint);
+    if (!data)
         return null;
-    localStorage.setItem(endpoint, JSON.stringify(response));
-    // window.location.reload();
-};
-const serviceRemove = async (endpoint, id) => {
-    const response = await serviceView(endpoint);
-    if (!response)
-        return null;
-    const data = response.filter((el) => el.id !== id);
-    if (data.length !== response.length - 1)
-        return null;
-    localStorage.setItem(endpoint, JSON.stringify(data));
-    // window.location.reload();
+    const hasIsActive = data.some((item) => "is_active" in item);
+    let updatedData = [];
+    if (hasIsActive) {
+        updatedData = data.map((item) => item.id === id ? { ...item, is_active: false } : item);
+    }
+    else {
+        updatedData = data.filter((item) => item.id !== id);
+    }
+    const stillExists = updatedData.find((item) => item.id === id);
+    if (!hasIsActive && stillExists) {
+        alert("Error removing item.");
+        return;
+    }
+    localStorage.setItem(endpoint, JSON.stringify(updatedData));
 };
 const formsEvents = async (handler, form) => {
     const element = document.querySelector(form || "form");
     if (!element)
         return;
-    element.addEventListener("submit", handler);
+    const handleSubmit = (e) => {
+        const finishButton = element.querySelector("#finish");
+        if (!finishButton) {
+            handler(e);
+            return;
+        }
+        const confirmFinish = window.confirm("Are you sure you want to finish?");
+        if (confirmFinish)
+            handler(e);
+        e.preventDefault();
+    };
+    element.removeEventListener("submit", handleSubmit);
+    element.addEventListener("submit", handleSubmit);
+    confirmCancel(element);
+};
+const confirmCancel = (element) => {
+    const cancelButton = element.querySelector("#no-submit");
+    if (!cancelButton)
+        return;
+    cancelButton.addEventListener("click", (e) => {
+        const confirmCancel = window.confirm("Are you sure you want to cancel?");
+        if (!confirmCancel)
+            return;
+        e.preventDefault();
+        const form = document.querySelector("form");
+        form?.reset();
+        localStorage.removeItem("chart");
+        renderPage("/");
+    });
 };
 const tableEvents = async (table, variant, render, page) => {
     if (render)
         await render();
     const buttons = document.querySelectorAll(`.action-${variant}`);
     buttons.forEach((el) => {
-        el.addEventListener("click", () => {
+        el.addEventListener("click", async () => {
             const id = Number(el.id);
+            let validator;
+            if (table === "categories")
+                validator = validateCategoryDelete;
+            if (table === "products")
+                validator = validateProductDelete;
             switch (variant) {
                 case "delete":
-                    serviceDelete(table, id);
-                    if (page)
-                        renderPage(page);
-                    break;
                 case "remove":
-                    serviceRemove(table, id);
+                    await serviceDelete(table, id, validator);
                     if (page)
                         renderPage(page);
                     break;
                 case "view":
-                    // TODO: HERE TO PUT ID
                     renderPage("/details", id);
                     break;
             }
         });
+    });
+};
+const inputMutations = () => {
+    const inputs = document.querySelectorAll("input");
+    inputs.forEach((input) => {
+        const originalType = input.type;
+        const config = {
+            attributes: true,
+            childList: false,
+            subtree: false,
+        };
+        const callback = (mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === "attributes" &&
+                    mutation.attributeName === "type") {
+                    observer.disconnect();
+                    const target = mutation.target;
+                    target.type = originalType;
+                    target.value = "";
+                    observer.observe(target, config);
+                }
+            }
+        };
+        const observer = new MutationObserver(callback);
+        observer.observe(input, config);
     });
 };
 // -----------------------
@@ -513,7 +586,9 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
     const data = await serviceView(table);
     if (!parent || !data)
         return;
-    data.forEach((el) => {
+    parent.innerHTML =
+        "<option value='' disabled selected hidden>Product</option>";
+    data.forEach(async (el) => {
         if (!el.is_active)
             return;
         const option = document.createElement("option");
@@ -522,7 +597,15 @@ const renderSelect = async (table, select, fieldText, fieldValue) => {
         option.innerText = String(text);
         option.value = String(value);
         parent.appendChild(option);
+        const chart = (await serviceView("chart"))?.find((e) => e.product_id === el.id)?.quantity;
+        if (chart && el.stock && el.stock - chart === 0)
+            option.disabled = true;
     });
+};
+const setFocus = (selector) => {
+    const element = document.querySelector(selector);
+    if (element)
+        element.focus();
 };
 // -----------------------
 // modules/base/validators.ts
@@ -531,8 +614,8 @@ const validateText = async (value, table, name) => {
     const regex = /^\p{L}[\p{L}\p{N}]*(?: [\p{L}\p{N}]+)*$/u;
     if (!regex.test(value))
         return `${name} name must start with a letter and contain only letters and numbers.`;
-    if (value.length > 100)
-        return `${name} name cannot exceed 100 characters.`;
+    if (value.length > 28)
+        return `${name} name cannot exceed 28 characters.`;
     if (value.length < 3)
         return `${name} name must contain at least 2 characters.`;
     const data = (await serviceView(table))?.filter((e) => e.is_active);
@@ -577,6 +660,15 @@ const categoryHandler = async (name, tax) => {
         errors.push({ field: "#tax", message: taxError });
     return errors;
 };
+const validateCategoryDelete = async (categoryId) => {
+    const products = await serviceView("products");
+    const hasProducts = products?.some((p) => p.category_id === categoryId && p.is_active !== false);
+    if (hasProducts) {
+        alert("Cannot delete category because it has associated products.");
+        return false;
+    }
+    return true;
+};
 // -----------------------
 // modules/category/serializers.ts
 // -----------------------
@@ -590,7 +682,10 @@ const CategoryCreateSerializer = async (form) => {
         tax: parseFloat(parseFloat(tax.value).toFixed(2)),
         is_active: true,
     };
-    return payload;
+    const requireds = [];
+    if (!payload.name)
+        requireds.push({ field: "#name", message: "Category name is required." });
+    return { payload, requireds };
 };
 const CategoryViewSerializer = async () => {
     const data = (await serviceView("categories"))?.filter((el) => el.is_active);
@@ -611,12 +706,15 @@ const CategoryViewSerializer = async () => {
 // -----------------------
 const createCategory = async (event) => {
     event.preventDefault();
-    const payload = await CategoryCreateSerializer(event.target);
-    if (!payload.name || !payload.tax)
+    const { payload, requireds } = await CategoryCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const errors = await categoryHandler(payload.name, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#name");
         return;
     }
     const currentData = await serviceView("categories");
@@ -631,6 +729,7 @@ const renderCategory = async () => {
         renderVoidTable("#tbody-category", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
@@ -644,6 +743,41 @@ const renderCategory = async () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
+const formatTaxInput = () => {
+    const taxInput = document.querySelector("#tax");
+    if (!taxInput)
+        return;
+    const regexTaxInput = (e) => {
+        if (!e.target || !(e.target instanceof HTMLInputElement))
+            return;
+        let value = e.target.value;
+        value = value.replace(/[^0-9.,]/g, "");
+        value = value.replace(",", ".");
+        let [integer, decimal] = value.split(".");
+        if (value.split(".").length > 2) {
+            value = integer + "." + value.split(".").slice(1).join("");
+            [integer, decimal] = value.split(".");
+        }
+        if (decimal !== undefined) {
+            decimal = decimal.slice(0, 2);
+            value = `${integer}.${decimal}`;
+        }
+        if (value.endsWith(".")) {
+            e.target.value = value;
+            return;
+        }
+        let number = parseFloat(value);
+        if (!isNaN(number)) {
+            if (number > 100)
+                number = 100;
+            if (number < 0)
+                number = 0;
+            value = number.toString();
+        }
+        e.target.value = value;
+    };
+    taxInput.addEventListener("input", regexTaxInput);
+};
 // -----------------------
 // modules/category/spa.ts
 // -----------------------
@@ -651,18 +785,21 @@ const loadCategory = async () => {
     await renderContent("/categories");
     await tableEvents("categories", "delete", renderCategory, "/categories");
     await formsEvents(createCategory);
+    inputMutations();
+    formatTaxInput();
+    setFocus("#name");
 };
 // -----------------------
 // modules/base/validators.ts
 // -----------------------
-const validateCategoryName = async (value) => {
-    return validateText(value, "categories", "Category");
+const validateCategoryName = async (name) => {
+    return validateText(name, "categories", "Category");
 };
-const validateCategoryTax = (value) => {
-    return validateNumber(value, "Tax", {
+const validateCategoryTax = (tax) => {
+    return validateNumber(tax, "Tax", {
         min: {
-            value: 0.01,
-            label: "0.01%",
+            value: 0,
+            label: "0%",
         },
         max: {
             value: 100,
@@ -696,6 +833,7 @@ const chartHandler = async (product, quantity, price, tax) => {
         errors.push({ field: "#product", message: duplicatedResult.error });
     if (duplicatedResult.handled)
         handled = true;
+    console.log(duplicatedResult);
     return { errors, handled };
 };
 // -----------------------
@@ -707,26 +845,38 @@ const ChartCreateSerializer = async (form) => {
     const price = form.elements.namedItem("price");
     const tax = form.elements.namedItem("tax");
     const product = form.elements.namedItem("product");
-    const payload = {
+    const payload = await {
         id: id,
         quantity: parseInt(quantity.value),
         price: parseInt((parseFloat(price.value) * 100).toFixed(0)),
         tax: parseInt((parseFloat(tax.value) * 100).toFixed(0)),
         product_id: parseInt(product.value),
     };
-    return payload;
+    const requireds = [];
+    if (!payload.quantity)
+        requireds.push({ field: "#quantity", message: "Quantity is required." });
+    if (!payload.price)
+        requireds.push({ field: "#price", message: "Price is required." });
+    if (payload.tax === null || payload.tax === undefined)
+        requireds.push({ field: "#tax", message: "Tax is required." });
+    const product_id = parseInt(product.value);
+    if (!product.value || isNaN(product_id)) {
+        requireds.push({ field: "#product", message: "Product is required." });
+    }
+    return { payload, requireds };
 };
 const ChartViewSerializer = async () => {
     const data = await serviceView("chart");
     if (!data)
         return null;
+    const products = await serviceView("products");
     const payload = [];
     data.map(async (el) => {
-        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
-        const total = el.price * el.quantity;
-        const tax = product?.tax
-            ? formatCurrency(product.tax * el.quantity)
-            : "No data!";
+        const product = products?.find((e) => e.id === el.product_id);
+        const total = (el.price + el.tax) * el.quantity;
+        const tax = product?.tax === null || product?.tax === undefined
+            ? "No data!"
+            : formatCurrency(product.tax * el.quantity);
         payload.push({
             id: el.id.toString(),
             quantity: el.quantity.toString(),
@@ -743,24 +893,24 @@ const ChartViewSerializer = async () => {
 // -----------------------
 const createChart = async (event) => {
     event.preventDefault();
-    const payload = await ChartCreateSerializer(event.target);
-    if (!payload.product_id ||
-        !payload.quantity ||
-        !payload.price ||
-        !payload.tax)
+    const { payload, requireds } = await ChartCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const { errors, handled } = await chartHandler(payload.product_id, payload.quantity, payload.price, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#quantity");
         return;
     }
     if (handled) {
-        renderPage("/");
+        await renderContent("/");
         return;
     }
     const currentData = await serviceView("chart");
     localStorage.setItem("chart", JSON.stringify(currentData ? [...currentData, payload] : [payload]));
-    renderPage("/");
+    await renderPage("/");
 };
 const renderChart = async () => {
     const COLUMNS_COUNT = 6;
@@ -770,6 +920,7 @@ const renderChart = async () => {
         renderVoidTable("#tbody-chart", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, el.product);
@@ -815,20 +966,14 @@ const fieldsListener = () => {
         const id = e.target.value;
         const product = (await serviceView("products"))?.find((el) => el.id === parseInt(id));
         const tax = product?.tax;
-        const chart = (await serviceView("chart"))?.find((el) => el.product_id === product?.id);
         const taxField = document.querySelector("#tax");
-        if (!taxField || !tax)
+        if (!taxField || tax === null || tax === undefined)
             return;
         taxField.value = (tax / 100).toFixed(2);
         const priceField = document.querySelector("#price");
         if (!priceField || !product?.price)
             return;
         priceField.value = (product.price / 100).toFixed(2);
-        const quantityField = document.querySelector("#quantity");
-        if (!quantityField || !chart)
-            return;
-        const stock = product?.stock - chart?.quantity;
-        quantityField.max = stock.toString();
     });
 };
 // -----------------------
@@ -838,9 +983,10 @@ const loadChart = async () => {
     await renderContent("/");
     await tableEvents("chart", "remove", renderChart, "/");
     await formsEvents(createChart, "#home-form");
-    // TODO: Remove products without stock from selection
     await renderSelect("products", "#product", "name", "id");
+    inputMutations();
     fieldsListener();
+    setFocus("#product");
 };
 // -----------------------
 // modules/chart/validators.ts
@@ -852,7 +998,7 @@ const validateChartQuantity = async (quantity, product_id) => {
     const max = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
     if (!max)
         return `This product doesn't exists`;
-    return validateNumber(quantity, "Quantity", {
+    const error = await validateNumber(quantity, "Quantity", {
         min: {
             value: 1,
             label: "1",
@@ -862,9 +1008,13 @@ const validateChartQuantity = async (quantity, product_id) => {
             label: max.stock.toString(),
         },
     });
+    if (error !== null)
+        alert(error);
+    return error;
 };
 const validateChartPrice = async (price, product_id) => {
-    const product = (await serviceView("products"))?.find((el) => el.id === product_id && el.is_active);
+    const raw = await serviceView("products");
+    const product = raw?.find((el) => el.id === product_id && el.is_active);
     if (!product)
         return `This product doesn't exists`;
     if (price !== product.price)
@@ -885,6 +1035,7 @@ const validateChartDuplicated = async (product_id, quantity) => {
     if (!chart || !duplicated)
         return { handled: false };
     const error = await overwriteProduct(duplicated, quantity, chart);
+    console.log(chart, duplicated, error);
     if (error)
         return { handled: false, error };
     return { handled: true };
@@ -896,16 +1047,25 @@ const validateChartDuplicated = async (product_id, quantity) => {
 // modules/order/serializers.ts
 // -----------------------
 const OrderCreateSerializer = async () => {
-    const data = await serviceView("chart");
-    if (!data)
+    const chart = await serviceView("chart");
+    if (!chart)
+        return null;
+    const products = await serviceView("products");
+    if (!products)
         return null;
     const id = await autoIncrement("orders");
     let total_tax = 0;
     let total_price = 0;
-    data.map((el) => {
+    for (const el of chart) {
         total_tax += el.tax * el.quantity;
-        total_price += el.price * el.quantity;
-    });
+        total_price += (el.price + el.tax) * el.quantity;
+        const product = products.find((e) => e.id === el.product_id);
+        if (product) {
+            product.stock -= el.quantity;
+        }
+    }
+    const filteredProducts = products.filter((p) => p.stock > 0);
+    localStorage.setItem("products", JSON.stringify(filteredProducts));
     const payload = {
         id: id,
         total_tax: total_tax,
@@ -937,11 +1097,11 @@ const TransactionCreateSerializer = async (order) => {
         return null;
     const id = (await autoIncrement("transactions")) || 1;
     const payload = [];
-    data.map(async (el, index) => {
+    data.forEach((el, index) => {
         payload.push({
             id: id + index,
             quantity: el.quantity,
-            price: el.price,
+            price: el.price + el.tax,
             product_id: el.product_id,
             order_id: order,
             is_active: true,
@@ -954,25 +1114,25 @@ const TransactionViewSerializer = async () => {
     const id = url.get("order");
     if (!id)
         return null;
-    const data = (await serviceView("transactions"))?.filter((el) => el.is_active && el.order_id === parseInt(id));
-    if (!data)
+    const transactions = (await serviceView("transactions"))?.filter((el) => el.is_active && el.order_id === parseInt(id));
+    if (!transactions)
         return null;
-    const payload = [];
-    await data.map(async (el) => {
-        const product = (await serviceView("products"))?.find((e) => e.id === el.product_id);
-        const category = (await serviceView("categories"))?.find((e) => e.id === product?.category_id)?.name;
+    const products = await serviceView("products");
+    const categories = await serviceView("categories");
+    return transactions.map((el) => {
+        const product = products?.find((p) => p.id === el.product_id);
+        const category = categories?.find((c) => c.id === product?.category_id);
         const tax = (product?.tax || 0) * el.quantity;
         const total = el.price * el.quantity;
-        payload.push({
+        return {
             id: el.id.toString(),
             product: product?.name || "No data!",
-            category: category || "No data!",
+            category: category?.name || "No data!",
             quantity: el.quantity.toString(),
             tax: formatCurrency(tax),
             total: formatCurrency(total),
-        });
+        };
     });
-    return payload;
 };
 // -----------------------
 // modules/order/services.ts
@@ -1002,6 +1162,7 @@ const renderOrders = async () => {
         renderVoidTable("#tbody-history", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
@@ -1027,7 +1188,7 @@ const renderOrderDetails = async () => {
         return;
     }
     const tax = data.reduce((sum, el) => (sum += el.tax * el.quantity), 0);
-    const total = data.reduce((sum, el) => (sum += el.price * el.quantity), 0);
+    const total = data.reduce((sum, el) => (sum += (el.price + el.tax) * el.quantity), 0);
     taxField.innerText = formatCurrency(tax);
     totalField.innerText = formatCurrency(total);
 };
@@ -1054,6 +1215,14 @@ const renderTransactions = async () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
+const listenReturn = () => {
+    const returnButton = document.querySelector("#return");
+    if (!returnButton)
+        return;
+    returnButton.addEventListener("click", () => {
+        renderPage("/history");
+    });
+};
 // -----------------------
 // modules/order/spa.ts
 // -----------------------
@@ -1068,6 +1237,7 @@ const loadHistory = async () => {
 const loadDetails = async (id) => {
     await renderContent("/details", { order: id.toString() });
     await tableEvents("transactions", "none", renderTransactions);
+    listenReturn();
 };
 // -----------------------------------------
 // PRODUCT
@@ -1115,15 +1285,27 @@ const ProductCreateSerializer = async (form) => {
         category_id: parseInt(category.value),
         is_active: true,
     };
-    return payload;
+    const requireds = [];
+    if (!payload.name)
+        requireds.push({ field: "#name", message: "Name is required." });
+    if (!payload.category_id)
+        requireds.push({ field: "#category", message: "Category is required." });
+    if (!payload.stock)
+        requireds.push({ field: "#stock", message: "Stock is required." });
+    if (!payload.price)
+        requireds.push({ field: "#price", message: "Price is required." });
+    if (payload.tax === null || payload.tax === undefined)
+        requireds.push({ field: "#tax", message: "Tax is required." });
+    return { payload, requireds };
 };
 const ProductViewSerializer = async () => {
     const data = (await serviceView("products"))?.filter((el) => el.is_active);
     if (!data)
         return null;
+    const categories = await serviceView("categories");
     const payload = [];
-    data.map(async (el) => {
-        const category = (await serviceView("categories"))?.find((e) => e.id === el.category_id)?.name;
+    data.map((el) => {
+        const category = categories?.find((e) => e.id === el.category_id)?.name;
         payload.push({
             id: el.id.toString(),
             name: el.name.toString(),
@@ -1139,12 +1321,15 @@ const ProductViewSerializer = async () => {
 // -----------------------
 const createProduct = async (event) => {
     event.preventDefault();
-    const payload = await ProductCreateSerializer(event.target);
-    if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+    const { payload, requireds } = await ProductCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#name");
         return;
     }
     const currentData = await serviceView("products");
@@ -1159,6 +1344,7 @@ const renderProducts = async () => {
         renderVoidTable("#tbody-products", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
@@ -1182,6 +1368,8 @@ const loadProducts = async () => {
     await tableEvents("products", "delete", renderProducts, "/products");
     await formsEvents(createProduct);
     await renderSelect("categories", "#category", "name", "id");
+    inputMutations();
+    setFocus("#name");
 };
 // -----------------------
 // modules/product/validators.ts
@@ -1218,12 +1406,21 @@ const validateProductPrice = (price) => {
 };
 const validateProductTax = async (tax, price, category_id) => {
     const category = (await serviceView("categories"))?.find((el) => el.id === category_id)?.tax;
-    if (!category)
+    if (category === null || category === undefined)
         return "No category found";
     const compare = parseInt(((category * price) / 100).toFixed(0));
     if (compare !== tax)
         return "Invalid tax value";
     return null;
+};
+const validateProductDelete = async (productId) => {
+    const charts = await serviceView("chart");
+    const hasChart = charts?.some((c) => c.product_id === productId);
+    if (hasChart) {
+        alert("Cannot delete product because it is used in chart.");
+        return false;
+    }
+    return true;
 };
 // RENDER HEADER
 window.addEventListener("DOMContentLoaded", () => {

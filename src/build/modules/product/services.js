@@ -5,15 +5,18 @@ import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
 import { ProductCreateSerializer, ProductViewSerializer, } from "./serializer.js";
 import { productHandler } from "./handlers.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement, setFocus, } from "../base/services.js";
 const createProduct = async (event) => {
     event.preventDefault();
-    const payload = await ProductCreateSerializer(event.target);
-    if (!payload.name || !payload.stock || !payload.price || !payload.category_id)
+    const { payload, requireds } = await ProductCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const errors = await productHandler(payload.name, payload.stock, payload.price, payload.tax, payload.category_id);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#name");
         return;
     }
     const currentData = await serviceView("products");
@@ -28,6 +31,7 @@ const renderProducts = async () => {
         renderVoidTable("#tbody-products", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));

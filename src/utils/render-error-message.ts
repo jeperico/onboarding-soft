@@ -12,6 +12,7 @@ const renderErrorMessage = (errors: ErrorResponse) => {
 
     container.appendChild(message);
 
+    if (!error.field) return;
     const clean = document.querySelector(error.field) as HTMLInputElement;
     clean.value = "";
   });

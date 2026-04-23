@@ -5,6 +5,7 @@ import {
   renderOrderDetails,
   renderOrders,
   renderTransactions,
+  listenReturn,
 } from "./service.js";
 
 const loadTransaction = async () => {
@@ -20,6 +21,7 @@ const loadHistory = async () => {
 const loadDetails = async (id: number) => {
   await renderContent("/details", { order: id.toString() });
   await tableEvents("transactions", "none", renderTransactions);
+  listenReturn();
 };
 
 export default loadTransaction;

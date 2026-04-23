@@ -4,7 +4,7 @@ import { serviceView } from "../base/base-services.js";
 
 const CategoryCreateSerializer = async (
   form: HTMLFormElement,
-): Promise<ICategory> => {
+): Promise<{ payload: ICategory; requireds: ErrorResponse }> => {
   const id = await autoIncrement("categories");
   const name = form.elements.namedItem("name") as HTMLInputElement;
   const tax = form.elements.namedItem("tax") as HTMLInputElement;
@@ -16,7 +16,11 @@ const CategoryCreateSerializer = async (
     is_active: true,
   };
 
-  return payload;
+  const requireds: ErrorResponse = [];
+  if (!payload.name)
+    requireds.push({ field: "#name", message: "Category name is required." });
+
+  return { payload, requireds };
 };
 
 const CategoryViewSerializer = async (): Promise<ICategoryRender[] | null> => {

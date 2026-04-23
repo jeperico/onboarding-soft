@@ -84,3 +84,14 @@ header {
 #home-form #price {
   cursor: not-allowed;
 }
+
+/* DETAILS  */
+#details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  & #return {
+    align-self: flex-start;
+  }
+}

@@ -3,17 +3,20 @@ import { renderVoidTable } from "../../spa/render-void-table.js";
 import { serviceView } from "../base/base-services.js";
 import { formatCode } from "../../utils/format-code.js";
 import { renderErrorMessage } from "../../utils/render-error-message.js";
-import { renderActionButton, renderElement } from "../base/services.js";
+import { renderActionButton, renderElement, setFocus, } from "../base/services.js";
 import { categoryHandler } from "./handlers.js";
 import { CategoryCreateSerializer, CategoryViewSerializer, } from "./serializer.js";
 const createCategory = async (event) => {
     event.preventDefault();
-    const payload = await CategoryCreateSerializer(event.target);
-    if (!payload.name || !payload.tax)
+    const { payload, requireds } = await CategoryCreateSerializer(event.target);
+    if (requireds.length > 0) {
+        renderErrorMessage(requireds);
         return;
+    }
     const errors = await categoryHandler(payload.name, payload.tax);
     if (errors.length > 0) {
         renderErrorMessage(errors);
+        setFocus(errors[0].field || "#name");
         return;
     }
     const currentData = await serviceView("categories");
@@ -28,6 +31,7 @@ const renderCategory = async () => {
         renderVoidTable("#tbody-category", COLUMNS_COUNT);
         return;
     }
+    table.innerHTML = "";
     data.map((el) => {
         const row = document.createElement("tr");
         renderElement(row, formatCode(parseInt(el.id)));
@@ -41,4 +45,39 @@ const renderCategory = async () => {
         row.appendChild(document.createElement("td"));
     table.appendChild(row);
 };
-export { createCategory, renderCategory };
+const formatTaxInput = () => {
+    const taxInput = document.querySelector("#tax");
+    if (!taxInput)
+        return;
+    const regexTaxInput = (e) => {
+        if (!e.target || !(e.target instanceof HTMLInputElement))
+            return;
+        let value = e.target.value;
+        value = value.replace(/[^0-9.,]/g, "");
+        value = value.replace(",", ".");
+        let [integer, decimal] = value.split(".");
+        if (value.split(".").length > 2) {
+            value = integer + "." + value.split(".").slice(1).join("");
+            [integer, decimal] = value.split(".");
+        }
+        if (decimal !== undefined) {
+            decimal = decimal.slice(0, 2);
+            value = `${integer}.${decimal}`;
+        }
+        if (value.endsWith(".")) {
+            e.target.value = value;
+            return;
+        }
+        let number = parseFloat(value);
+        if (!isNaN(number)) {
+            if (number > 100)
+                number = 100;
+            if (number < 0)
+                number = 0;
+            value = number.toString();
+        }
+        e.target.value = value;
+    };
+    taxInput.addEventListener("input", regexTaxInput);
+};
+export { createCategory, renderCategory, formatTaxInput };

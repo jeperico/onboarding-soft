@@ -8,6 +8,8 @@ const renderErrorMessage = (errors) => {
         message.innerText = error.message;
         message.classList.add("error-form-message");
         container.appendChild(message);
+        if (!error.field)
+            return;
         const clean = document.querySelector(error.field);
         clean.value = "";
     });
